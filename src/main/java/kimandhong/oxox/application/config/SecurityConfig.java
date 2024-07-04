@@ -15,16 +15,16 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
-//  @Bean
-//  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//    return http.csrf(AbstractHttpConfigurer::disable)
-//        .formLogin(AbstractHttpConfigurer::disable)
-//        .httpBasic(AbstractHttpConfigurer::disable)
-//        .sessionManagement(session -> session
-//            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//        )
-//        .build();
-//  }
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    return http.csrf(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .sessionManagement(session -> session
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        )
+        .build();
+  }
 
   @Bean
   public PasswordEncoder passwordEncoder() {

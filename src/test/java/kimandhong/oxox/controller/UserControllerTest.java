@@ -1,0 +1,68 @@
+package kimandhong.oxox.controller;
+
+import kimandhong.oxox.common.AbstractRestDocsTest;
+import kimandhong.oxox.dto.user.JoinDto;
+import kimandhong.oxox.dto.user.UserDto;
+import kimandhong.oxox.service.UserService;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(UserController.class)
+class UserControllerTest extends AbstractRestDocsTest {
+  @MockBean
+  UserService userService;
+
+  @Test
+  public void join() throws Exception {
+    UserDto userDto = new UserDto(1L, "test email", "test nickname", 1L);
+    when(userService.join(any(JoinDto.class))).thenReturn(userDto);
+
+    JoinDto joinDto = new JoinDto(userDto.email(), "test password", userDto.nickname());
+    mockMvc.perform(post("/api/users")
+            .contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(joinDto)))
+        .andExpect(status().isOk())
+        .andExpect(content().json(objectMapper.writeValueAsString(userDto)))
+        .andDo(document("join",
+            preprocessRequest(prettyPrint()),
+            preprocessResponse(prettyPrint()),
+            requestFields(
+                fieldWithPath("email")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 이메일"),
+                fieldWithPath("nickname")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 닉네임"),
+                fieldWithPath("password")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 패스워드")),
+            responseFields(
+                fieldWithPath("id")
+                    .type(JsonFieldType.NUMBER)
+                    .description("사용자 고유 번호"),
+                fieldWithPath("email")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 이메일"),
+                fieldWithPath("nickname")
+                    .type(JsonFieldType.STRING)
+                    .description("사용자 닉네임"),
+                fieldWithPath("sequence")
+                    .type(JsonFieldType.NUMBER)
+                    .description("닉네임 입력 순번")
+            )));
+  }
+}

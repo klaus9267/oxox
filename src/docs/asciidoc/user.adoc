@@ -1,0 +1,7 @@
+[[USER-API]]
+= USER API
+---
+[[일반-회원가입]]
+=== 일반 회원가입
+
+operation::join[snippets='curl-request,http-request,request-fields,http-response,response-fields']
