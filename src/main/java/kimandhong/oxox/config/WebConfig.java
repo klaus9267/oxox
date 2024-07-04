@@ -1,4 +1,4 @@
-package kimandhong.oxox.application.config;
+package kimandhong.oxox.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
