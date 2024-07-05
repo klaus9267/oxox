@@ -25,10 +25,11 @@ public class Nickname {
   @OneToOne(cascade = CascadeType.ALL)
   private User user;
 
-  public static Nickname from(final String name, final User user) {
+  public static Nickname from(final String name, final User user, final int sequence) {
     return Nickname.builder()
         .name(name)
         .user(user)
+        .sequence((long) sequence + 1)
         .build();
   }
 }

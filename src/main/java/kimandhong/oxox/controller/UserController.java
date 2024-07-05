@@ -14,7 +14,7 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("join")
-  public ResponseEntity<UserDto> join(final JoinDto joinDto) {
+  public ResponseEntity<UserDto> join(final @RequestBody JoinDto joinDto) {
     final UserDto userDto = userService.join(joinDto);
     return ResponseEntity.ok(userDto);
   }

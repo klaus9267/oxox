@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -20,10 +21,15 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
 
   public UserDto join(final JoinDto joinDto) {
+    if (userRepository.existsByEmail(joinDto.email())) {
+      throw new RuntimeException("중복된 이메일");
+    }
+
     final String password = passwordEncoder.encode(joinDto.password());
     final User user = User.from(joinDto, password);
 
-    final Nickname nickname = Nickname.from(joinDto.nickname(), user);
+    List<Nickname> nicknames = nicknameRepository.findByName(joinDto.nickname());
+    final Nickname nickname = Nickname.from(joinDto.nickname(), user, nicknames.size());
     final Nickname savedNickname = nicknameRepository.save(nickname);
 
     return UserDto.from(savedNickname);
