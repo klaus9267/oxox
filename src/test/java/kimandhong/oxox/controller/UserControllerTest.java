@@ -7,14 +7,13 @@ import kimandhong.oxox.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
+import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -32,12 +31,13 @@ class UserControllerTest extends AbstractRestDocsTest {
     when(userService.join(any(JoinDto.class))).thenReturn(userDto);
 
     JoinDto joinDto = new JoinDto(userDto.email(), "test password", userDto.nickname());
-    mockMvc.perform(post("/api/users")
+    mockMvc.perform(post("/api/users/join")
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(joinDto)))
         .andExpect(status().isOk())
         .andExpect(content().json(objectMapper.writeValueAsString(userDto)))
-        .andDo(document("join",
+        .andDo(document("user-join",
+            resourceDetails().description("일반 회원가입"),
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
             requestFields(

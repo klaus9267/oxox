@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @Import(SecurityConfig.class)
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
-@SpringBootTest
 public class AbstractRestDocsTest {
   @Autowired
   protected MockMvc mockMvc;
