@@ -24,18 +24,16 @@ public class UserController {
   public ResponseEntity<UserDto> join(final @RequestBody @Valid JoinDto joinDto, final HttpServletResponse response) {
     final User user = userService.join(joinDto);
     final String token = jwtUtil.createAccessToken(user);
-    response.setHeader("Authorization", token);
 
-    return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.from(user));
+    return ResponseEntity.status(HttpStatus.CREATED).header("Authorization", token).body(UserDto.from(user));
   }
 
   @PostMapping("login")
   public ResponseEntity<UserDto> login(final @RequestBody LoginDto loginDto, final HttpServletResponse response) {
-    final UserDto userDto = userService.login(loginDto);
-//    final String token = jwtUtil.createAccessToken(user);
-//    response.setHeader("Authorization", token);
+    final User user = userService.login(loginDto);
+    final String token = jwtUtil.createAccessToken(user);
 
-    return ResponseEntity.ok(userDto);
+    return ResponseEntity.status(HttpStatus.OK).header("Authorization", token).body(UserDto.from(user));
   }
 
   @GetMapping({"id"})

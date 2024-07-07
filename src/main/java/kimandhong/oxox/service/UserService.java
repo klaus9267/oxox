@@ -39,12 +39,11 @@ public class UserService {
     return UserDto.from(user);
   }
 
-  public UserDto login(final LoginDto loginDto) {
+  public User login(final LoginDto loginDto) {
     User user = userRepository.findByEmail(loginDto.email()).orElseThrow(() -> new RuntimeException("없는 email"));
     if (!passwordEncoder.matches(loginDto.password(), user.getPassword())) {
       throw new RuntimeException("잘못된 비밀번호");
     }
-
-    return UserDto.from(user);
+    return user;
   }
 }
