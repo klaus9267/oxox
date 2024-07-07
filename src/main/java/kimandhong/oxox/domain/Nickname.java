@@ -1,5 +1,6 @@
 package kimandhong.oxox.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ public class Nickname {
   private Long sequence;
 
   @OneToOne(cascade = CascadeType.ALL)
+  @JsonIgnore
   private User user;
 
   public static Nickname from(final String name, final User user, final int sequence) {

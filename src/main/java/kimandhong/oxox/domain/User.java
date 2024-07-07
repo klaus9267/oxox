@@ -1,5 +1,6 @@
 package kimandhong.oxox.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import kimandhong.oxox.dto.user.JoinDto;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,8 @@ public class User {
   private String password;
   private String uid;
 
-  @OneToOne(mappedBy = "user")
+  @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+  @JsonIgnore
   private Nickname nickname;
 
   @OneToMany(mappedBy = "user", orphanRemoval = true)
@@ -36,10 +38,13 @@ public class User {
   @OneToMany(mappedBy = "user", orphanRemoval = true)
   private final List<Comment> comments = new ArrayList<>();
 
-  public static User from(final JoinDto joinDto, final String password) {
-    return User.builder()
-        .email(joinDto.email())
-        .password(password)
-        .build();
+  private User(final JoinDto joinDto, final String password, final int sequence) {
+    this.email = joinDto.email();
+    this.password = password;
+    this.nickname = Nickname.from(joinDto.nickname(), this, sequence);
+  }
+
+  public static User from(final JoinDto joinDto, final String password, final int sequence) {
+    return new User(joinDto, password, sequence);
   }
 }

@@ -28,13 +28,10 @@ public class UserService {
         });
 
     final String password = passwordEncoder.encode(joinDto.password());
-    final User user = User.from(joinDto, password);
-
     List<Nickname> nicknames = nicknameRepository.findByName(joinDto.nickname());
-    final Nickname nickname = Nickname.from(joinDto.nickname(), user, nicknames.size());
-    final Nickname savedNickname = nicknameRepository.save(nickname);
+    final User user = User.from(joinDto, password, nicknames.size());
 
-    return savedNickname.getUser();
+    return userRepository.save(user);
   }
 
   public UserDto readUser(final Long userId) {

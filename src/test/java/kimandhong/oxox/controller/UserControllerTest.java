@@ -1,6 +1,7 @@
 package kimandhong.oxox.controller;
 
 import kimandhong.oxox.common.AbstractRestDocsTest;
+import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
 import kimandhong.oxox.dto.user.UserDto;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
@@ -28,10 +30,13 @@ class UserControllerTest extends AbstractRestDocsTest {
 
   @Test
   public void join() throws Exception {
-    UserDto userDto = new UserDto(1L, "test email", "test nickname", 1L);
-    when(userService.join(any(JoinDto.class))).thenReturn(userDto);
+    JoinDto joinDto = new JoinDto("test@email.com", "test password", "test nickname");
+    User user = User.from(joinDto, joinDto.password(), 1);
+    ReflectionTestUtils.setField(user, "id", 1L);
+    UserDto userDto = UserDto.from(user);
 
-    JoinDto joinDto = new JoinDto(userDto.email(), "test password", userDto.nickname());
+    when(userService.join(any(JoinDto.class))).thenReturn(user);
+
     mockMvc.perform(post("/api/users/join")
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(joinDto)))
@@ -69,7 +74,7 @@ class UserControllerTest extends AbstractRestDocsTest {
 
   @Test
   public void login() throws Exception {
-    UserDto userDto = new UserDto(1L, "test email", "test nickname", 1L);
+    UserDto userDto = new UserDto(1L, "test@email.com", "test nickname", 1L);
     when(userService.login(any(LoginDto.class))).thenReturn(userDto);
 
     LoginDto loginDto = new LoginDto(userDto.email(), "test password");
