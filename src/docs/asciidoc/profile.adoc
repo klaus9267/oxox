@@ -1,0 +1,7 @@
+[[PROFILE-API]]
+= PROFILE API
+---
+[[프로필-수정]]
+=== PATCH :: 프로필 수정
+operation::profile-updateProfile[snippets='curl-request,http-request,request-fields,http-response,response-fields']
+

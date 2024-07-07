@@ -6,6 +6,7 @@ import kimandhong.oxox.auth.JwtUtil;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
+import kimandhong.oxox.dto.profile.UpdateProfileDto;
 import kimandhong.oxox.dto.user.UserDto;
 import kimandhong.oxox.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class UserController {
   private final JwtUtil jwtUtil;
 
   @PostMapping("join")
-  public ResponseEntity<UserDto> join(final @RequestBody @Valid JoinDto joinDto, final HttpServletResponse response) {
+  public ResponseEntity<UserDto> join( @RequestBody @Valid final JoinDto joinDto, final HttpServletResponse response) {
     final User user = userService.join(joinDto);
     final String token = jwtUtil.createAccessToken(user);
 
@@ -29,16 +30,12 @@ public class UserController {
   }
 
   @PostMapping("login")
-  public ResponseEntity<UserDto> login(final @RequestBody LoginDto loginDto, final HttpServletResponse response) {
+  public ResponseEntity<UserDto> login(@RequestBody @Valid final LoginDto loginDto, final HttpServletResponse response) {
     final User user = userService.login(loginDto);
     final String token = jwtUtil.createAccessToken(user);
 
     return ResponseEntity.status(HttpStatus.OK).header("Authorization", token).body(UserDto.from(user));
   }
 
-  @PatchMapping
-  public ResponseEntity<UserDto> updateUser(@PathVariable final Long userId) {
-    final UserDto userDto = userService.readUser(userId);
-    return ResponseEntity.ok(userDto);
-  }
+
 }

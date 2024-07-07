@@ -1,18 +1,14 @@
 package kimandhong.oxox.service;
 
-import kimandhong.oxox.domain.Profile;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
-import kimandhong.oxox.dto.user.UserDto;
 import kimandhong.oxox.repository.ProfileRepository;
 import kimandhong.oxox.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.NoSuchElementException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +17,7 @@ public class UserService {
   private final ProfileRepository profileRepository;
   private final PasswordEncoder passwordEncoder;
 
+  @Transactional
   public User join(final JoinDto joinDto) {
     userRepository.findByEmail(joinDto.email())
         .ifPresent(i -> {
@@ -28,15 +25,12 @@ public class UserService {
         });
 
     final String password = passwordEncoder.encode(joinDto.password());
-    List<Profile> profiles = profileRepository.findByNickname(joinDto.nickname());
-    final User user = User.from(joinDto, password, profiles.size());
+    final Long sequence = profileRepository.findFirstByNicknameOrderBySequenceDesc(joinDto.nickname())
+        .map(profile -> profile.getSequence() + 1).orElse(1L);
+
+    final User user = User.from(joinDto, password, sequence);
 
     return userRepository.save(user);
-  }
-
-  public UserDto readUser(final Long userId) {
-    final User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
-    return UserDto.from(user);
   }
 
   public User login(final LoginDto loginDto) {

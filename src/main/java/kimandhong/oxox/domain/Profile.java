@@ -2,6 +2,7 @@ package kimandhong.oxox.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import kimandhong.oxox.dto.profile.UpdateProfileDto;
 import kimandhong.oxox.dto.user.JoinDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,13 +32,19 @@ public class Profile {
   @JsonIgnore
   private User user;
 
-  public static Profile from(final JoinDto joinDto, final User user, final int sequence) {
+  public static Profile from(final JoinDto joinDto, final User user, final Long sequence) {
     return Profile.builder()
         .nickname(joinDto.nickname())
         .user(user)
         .emoji(joinDto.profileEmoji())
-        .sequence((long) sequence + 1)
+        .sequence(sequence)
         .build();
+  }
+
+  public void updateProfile(final UpdateProfileDto updateProfileDto, final Long sequence) {
+    this.emoji = updateProfileDto.profileEmoji();
+    this.nickname = updateProfileDto.nickname();
+    this.sequence = sequence;
   }
 }
 

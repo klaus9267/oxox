@@ -31,7 +31,7 @@ class UserControllerTest extends AbstractRestDocsTest {
   @Test
   public void join() throws Exception {
     JoinDto joinDto = new JoinDto("test@email.com", "test password", "test nickname", "test emoji");
-    User user = User.from(joinDto, joinDto.password(), 1);
+    User user = User.from(joinDto, joinDto.password(), 1L);
     ReflectionTestUtils.setField(user, "id", 1L);
     UserDto userDto = UserDto.from(user);
 
@@ -43,7 +43,7 @@ class UserControllerTest extends AbstractRestDocsTest {
         .andExpect(status().isCreated())
         .andExpect(content().json(objectMapper.writeValueAsString(userDto)))
         .andDo(document("user-join",
-            resourceDetails().description("일반 회원가입"),
+            resourceDetails().description("일반 회원가입").tag("USER API"),
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
             requestFields(
@@ -62,7 +62,7 @@ class UserControllerTest extends AbstractRestDocsTest {
             responseFields(
                 fieldWithPath("id")
                     .type(JsonFieldType.NUMBER)
-                    .description("사용자 고유 번호"),
+                    .description("사용자 인덱스"),
                 fieldWithPath("email")
                     .type(JsonFieldType.STRING)
                     .description("사용자 이메일"),
@@ -71,7 +71,7 @@ class UserControllerTest extends AbstractRestDocsTest {
                     .description("사용자 닉네임"),
                 fieldWithPath("sequence")
                     .type(JsonFieldType.NUMBER)
-                    .description("닉네임 입력 순번"),
+                    .description("닉네임 사용 순번"),
                 fieldWithPath("profileEmoji")
                     .type(JsonFieldType.STRING)
                     .description("프로필 이모지")
@@ -81,7 +81,7 @@ class UserControllerTest extends AbstractRestDocsTest {
   @Test
   public void login() throws Exception {
     JoinDto joinDto = new JoinDto("test@email.com", "test password", "test nickname", "test emoji");
-    User user = User.from(joinDto, joinDto.password(), 1);
+    User user = User.from(joinDto, joinDto.password(), 1L);
     ReflectionTestUtils.setField(user, "id", 1L);
     UserDto userDto = UserDto.from(user);
 
@@ -94,7 +94,7 @@ class UserControllerTest extends AbstractRestDocsTest {
         .andExpect(status().isOk())
         .andExpect(content().json(objectMapper.writeValueAsString(userDto)))
         .andDo(document("user-login",
-            resourceDetails().description("일반 로그인"),
+            resourceDetails().description("일반 로그인").tag("USER API"),
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
             requestFields(

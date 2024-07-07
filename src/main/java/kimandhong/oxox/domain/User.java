@@ -38,13 +38,13 @@ public class User {
   @OneToMany(mappedBy = "user", orphanRemoval = true)
   private final List<Comment> comments = new ArrayList<>();
 
-  private User(final JoinDto joinDto, final String password, final int sequence) {
+  private User(final JoinDto joinDto, final String password, final Long sequence) {
     this.email = joinDto.email();
     this.password = password;
     this.profile = Profile.from(joinDto, this, sequence);
   }
 
-  public static User from(final JoinDto joinDto, final String password, final int sequence) {
+  public static User from(final JoinDto joinDto, final String password, final Long sequence) {
     return new User(joinDto, password, sequence);
   }
 }
