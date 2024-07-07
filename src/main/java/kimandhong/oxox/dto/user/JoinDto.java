@@ -13,6 +13,8 @@ public record JoinDto(
     String password,
     @Length(max = 20, message = "닉네임은 20자 이하여야 합니다.")
     @NotBlank(message = "nickname is required")
-    String nickname
+    String nickname,
+    @NotBlank(message = "profileEmoji is required")
+    String profileEmoji
 ) {
 }

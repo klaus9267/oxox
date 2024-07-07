@@ -30,7 +30,7 @@ public class User {
 
   @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
   @JsonIgnore
-  private Nickname nickname;
+  private Profile profile;
 
   @OneToMany(mappedBy = "user", orphanRemoval = true)
   private final List<Poll> polls = new ArrayList<>();
@@ -41,7 +41,7 @@ public class User {
   private User(final JoinDto joinDto, final String password, final int sequence) {
     this.email = joinDto.email();
     this.password = password;
-    this.nickname = Nickname.from(joinDto.nickname(), this, sequence);
+    this.profile = Profile.from(joinDto, this, sequence);
   }
 
   public static User from(final JoinDto joinDto, final String password, final int sequence) {

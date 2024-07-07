@@ -36,8 +36,8 @@ public class UserController {
     return ResponseEntity.status(HttpStatus.OK).header("Authorization", token).body(UserDto.from(user));
   }
 
-  @GetMapping({"id"})
-  public ResponseEntity<UserDto> readUser(@PathVariable final Long userId) {
+  @PatchMapping
+  public ResponseEntity<UserDto> updateUser(@PathVariable final Long userId) {
     final UserDto userDto = userService.readUser(userId);
     return ResponseEntity.ok(userDto);
   }

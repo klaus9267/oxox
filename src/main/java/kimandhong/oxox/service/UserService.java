@@ -1,11 +1,11 @@
 package kimandhong.oxox.service;
 
-import kimandhong.oxox.domain.Nickname;
+import kimandhong.oxox.domain.Profile;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
 import kimandhong.oxox.dto.user.UserDto;
-import kimandhong.oxox.repository.NicknameRepository;
+import kimandhong.oxox.repository.ProfileRepository;
 import kimandhong.oxox.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 @RequiredArgsConstructor
 public class UserService {
   private final UserRepository userRepository;
-  private final NicknameRepository nicknameRepository;
+  private final ProfileRepository profileRepository;
   private final PasswordEncoder passwordEncoder;
 
   public User join(final JoinDto joinDto) {
@@ -28,8 +28,8 @@ public class UserService {
         });
 
     final String password = passwordEncoder.encode(joinDto.password());
-    List<Nickname> nicknames = nicknameRepository.findByName(joinDto.nickname());
-    final User user = User.from(joinDto, password, nicknames.size());
+    List<Profile> profiles = profileRepository.findByNickname(joinDto.nickname());
+    final User user = User.from(joinDto, password, profiles.size());
 
     return userRepository.save(user);
   }

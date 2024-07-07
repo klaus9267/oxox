@@ -1,6 +1,6 @@
 package kimandhong.oxox.dto.user;
 
-import kimandhong.oxox.domain.Nickname;
+import kimandhong.oxox.domain.Profile;
 import kimandhong.oxox.domain.User;
 import lombok.Builder;
 
@@ -8,26 +8,29 @@ import lombok.Builder;
 public record UserDto(
     Long id,
     String email,
+    String profileEmoji,
     String nickname,
     Long sequence
 ) {
-  public static UserDto from(final Nickname nickname) {
-    final User user = nickname.getUser();
+  public static UserDto from(final Profile profile) {
+    final User user = profile.getUser();
     return UserDto.builder()
         .id(user.getId())
         .email(user.getEmail())
-        .nickname(nickname.getName())
-        .sequence(nickname.getSequence())
+        .profileEmoji(profile.getEmoji())
+        .nickname(profile.getNickname())
+        .sequence(profile.getSequence())
         .build();
   }
 
   public static UserDto from(final User user) {
-    final Nickname nickname = user.getNickname();
+    final Profile profile = user.getProfile();
     return UserDto.builder()
         .id(user.getId())
         .email(user.getEmail())
-        .nickname(nickname.getName())
-        .sequence(nickname.getSequence())
+        .profileEmoji(profile.getEmoji())
+        .nickname(profile.getNickname())
+        .sequence(profile.getSequence())
         .build();
   }
 }

@@ -30,7 +30,7 @@ class UserControllerTest extends AbstractRestDocsTest {
 
   @Test
   public void join() throws Exception {
-    JoinDto joinDto = new JoinDto("test@email.com", "test password", "test nickname");
+    JoinDto joinDto = new JoinDto("test@email.com", "test password", "test nickname", "test emoji");
     User user = User.from(joinDto, joinDto.password(), 1);
     ReflectionTestUtils.setField(user, "id", 1L);
     UserDto userDto = UserDto.from(user);
@@ -55,7 +55,10 @@ class UserControllerTest extends AbstractRestDocsTest {
                     .description("사용자 닉네임"),
                 fieldWithPath("password")
                     .type(JsonFieldType.STRING)
-                    .description("사용자 패스워드")),
+                    .description("사용자 패스워드"),
+                fieldWithPath("profileEmoji")
+                    .type(JsonFieldType.STRING)
+                    .description("프로필 이모지")),
             responseFields(
                 fieldWithPath("id")
                     .type(JsonFieldType.NUMBER)
@@ -68,14 +71,21 @@ class UserControllerTest extends AbstractRestDocsTest {
                     .description("사용자 닉네임"),
                 fieldWithPath("sequence")
                     .type(JsonFieldType.NUMBER)
-                    .description("닉네임 입력 순번")
+                    .description("닉네임 입력 순번"),
+                fieldWithPath("profileEmoji")
+                    .type(JsonFieldType.STRING)
+                    .description("프로필 이모지")
             )));
   }
 
   @Test
   public void login() throws Exception {
-    UserDto userDto = new UserDto(1L, "test@email.com", "test nickname", 1L);
-    when(userService.login(any(LoginDto.class))).thenReturn(userDto);
+    JoinDto joinDto = new JoinDto("test@email.com", "test password", "test nickname", "test emoji");
+    User user = User.from(joinDto, joinDto.password(), 1);
+    ReflectionTestUtils.setField(user, "id", 1L);
+    UserDto userDto = UserDto.from(user);
+
+    when(userService.login(any(LoginDto.class))).thenReturn(user);
 
     LoginDto loginDto = new LoginDto(userDto.email(), "test password");
     mockMvc.perform(post("/api/users/login")
@@ -106,7 +116,10 @@ class UserControllerTest extends AbstractRestDocsTest {
                     .description("사용자 닉네임"),
                 fieldWithPath("sequence")
                     .type(JsonFieldType.NUMBER)
-                    .description("닉네임 입력 순번")
+                    .description("닉네임 입력 순번"),
+                fieldWithPath("profileEmoji")
+                    .type(JsonFieldType.STRING)
+                    .description("프로필 이모지")
             )));
   }
 }
