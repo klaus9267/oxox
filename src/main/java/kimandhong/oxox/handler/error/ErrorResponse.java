@@ -2,24 +2,30 @@ package kimandhong.oxox.handler.error;
 
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class ErrorResponse {
-  private final LocalDateTime timestamp = LocalDateTime.now();
   private final int statusCode;
   private final String error;
-  private final String message;
+  private final List<String> message = new ArrayList<>();
 
   public ErrorResponse(final ErrorCode errorCode) {
     this.statusCode = errorCode.getHttpStatus().value();
     this.error = errorCode.getHttpStatus().name();
-    this.message = errorCode.getMessage();
+    this.message.add(errorCode.getMessage());
   }
 
   public ErrorResponse(final ErrorCode errorCode, final String message) {
     this.statusCode = errorCode.getHttpStatus().value();
     this.error = errorCode.getHttpStatus().name();
-    this.message = message;
+    this.message.add(message);
+  }
+
+  public ErrorResponse(final ErrorCode errorCode, final List<String> message) {
+    this.statusCode = errorCode.getHttpStatus().value();
+    this.error = errorCode.getHttpStatus().name();
+    this.message.addAll(message);
   }
 }

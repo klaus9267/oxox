@@ -3,4 +3,10 @@
 ---
 [[일반-회원가입]]
 === POST :: 일반 회원가입
-operation::join[snippets='curl-request,http-request,request-fields,http-response,response-fields']
+operation::user-join[snippets='curl-request,http-request,request-fields,http-response,response-fields']
+
+---
+
+[[일반-로그인]]
+=== POST :: 일반 로그인
+operation::user-login[snippets='curl-request,http-request,request-fields,http-response,response-fields']
