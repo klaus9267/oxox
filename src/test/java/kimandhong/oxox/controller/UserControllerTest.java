@@ -1,6 +1,8 @@
 package kimandhong.oxox.controller;
 
 import kimandhong.oxox.common.AbstractRestDocsTest;
+import kimandhong.oxox.common.FieldDescriptorHelper;
+import kimandhong.oxox.common.FieldEnum;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
@@ -9,7 +11,6 @@ import kimandhong.oxox.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
@@ -19,7 +20,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,35 +49,20 @@ class UserControllerTest extends AbstractRestDocsTest {
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
             requestFields(
-                fieldWithPath("email")
-                    .type(JsonFieldType.STRING)
-                    .description("사용자 이메일"),
-                fieldWithPath("nickname")
-                    .type(JsonFieldType.STRING)
-                    .description("사용자 닉네임"),
-                fieldWithPath("password")
-                    .type(JsonFieldType.STRING)
-                    .description("사용자 패스워드"),
-                fieldWithPath("profileEmoji")
-                    .type(JsonFieldType.STRING)
-                    .description("프로필 이모지")),
+                FieldDescriptorHelper.createFields(
+                    FieldEnum.EMAIL,
+                    FieldEnum.NICKNAME,
+                    FieldEnum.PASSWORD,
+                    FieldEnum.EMOJI
+                )),
             responseFields(
-                fieldWithPath("id")
-                    .type(JsonFieldType.NUMBER)
-                    .description("사용자 인덱스"),
-                fieldWithPath("email")
-                    .type(JsonFieldType.STRING)
-                    .description("사용자 이메일"),
-                fieldWithPath("nickname")
-                    .type(JsonFieldType.STRING)
-                    .description("사용자 닉네임"),
-                fieldWithPath("sequence")
-                    .type(JsonFieldType.NUMBER)
-                    .description("닉네임 사용 순번"),
-                fieldWithPath("profileEmoji")
-                    .type(JsonFieldType.STRING)
-                    .description("프로필 이모지")
-            )));
+                FieldDescriptorHelper.createFields(
+                    FieldEnum.USER_ID,
+                    FieldEnum.EMAIL,
+                    FieldEnum.NICKNAME,
+                    FieldEnum.SEQUENCE,
+                    FieldEnum.EMOJI
+                ))));
   }
 
   @Test
@@ -98,28 +85,17 @@ class UserControllerTest extends AbstractRestDocsTest {
             preprocessRequest(prettyPrint()),
             preprocessResponse(prettyPrint()),
             requestFields(
-                fieldWithPath("email")
-                    .type(JsonFieldType.STRING)
-                    .description("사용자 이메일"),
-                fieldWithPath("password")
-                    .type(JsonFieldType.STRING)
-                    .description("사용자 패스워드")),
+                FieldDescriptorHelper.createFields(
+                    FieldEnum.EMAIL,
+                    FieldEnum.PASSWORD
+                )),
             responseFields(
-                fieldWithPath("id")
-                    .type(JsonFieldType.NUMBER)
-                    .description("사용자 고유 번호"),
-                fieldWithPath("email")
-                    .type(JsonFieldType.STRING)
-                    .description("사용자 이메일"),
-                fieldWithPath("nickname")
-                    .type(JsonFieldType.STRING)
-                    .description("사용자 닉네임"),
-                fieldWithPath("sequence")
-                    .type(JsonFieldType.NUMBER)
-                    .description("닉네임 입력 순번"),
-                fieldWithPath("profileEmoji")
-                    .type(JsonFieldType.STRING)
-                    .description("프로필 이모지")
-            )));
+                FieldDescriptorHelper.createFields(
+                    FieldEnum.USER_ID,
+                    FieldEnum.EMAIL,
+                    FieldEnum.NICKNAME,
+                    FieldEnum.SEQUENCE,
+                    FieldEnum.EMOJI
+                ))));
   }
 }
