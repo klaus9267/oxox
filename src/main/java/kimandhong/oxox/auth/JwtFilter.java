@@ -21,10 +21,14 @@ public class JwtFilter extends OncePerRequestFilter {
   private final JwtUtil jwtUtil;
   private final UserRepository userRepository;
 
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-    final String authorizationHeader = request.getHeader("Authorization");
+  private static final String HEADER_STRING = "Authorization";
+  private static final String TOKEN_PREFIX = "Bearer ";
 
-    if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+    final String authorizationHeader = request.getHeader(HEADER_STRING);
+
+    if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
       final String token = authorizationHeader.substring(7);
       if (jwtUtil.validateToken(token)) {
         final Long userId = jwtUtil.getUserId(token);

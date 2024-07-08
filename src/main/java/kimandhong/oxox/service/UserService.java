@@ -3,6 +3,10 @@ package kimandhong.oxox.service;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
+import kimandhong.oxox.handler.error.ErrorCode;
+import kimandhong.oxox.handler.error.exception.BadRequestException;
+import kimandhong.oxox.handler.error.exception.ConflictException;
+import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.ProfileRepository;
 import kimandhong.oxox.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +23,11 @@ public class UserService {
 
   @Transactional
   public User join(final JoinDto joinDto) {
-    userRepository.findByEmail(joinDto.email())
-        .ifPresent(i -> {
-          throw new RuntimeException("중복된 email");
-        });
+    userRepository.findByEmail(joinDto.email()).ifPresent(user -> {
+      if (user.getEmail().equals(joinDto.email())) {
+        throw new ConflictException(user.getUid() == null ? ErrorCode.CONFLICT_EMAIL : ErrorCode.CONFLICT_GOOGLE);
+      }
+    });
 
     final String password = passwordEncoder.encode(joinDto.password());
     final Long sequence = profileRepository.findFirstByNicknameOrderBySequenceDesc(joinDto.nickname())
@@ -34,9 +39,9 @@ public class UserService {
   }
 
   public User login(final LoginDto loginDto) {
-    User user = userRepository.findByEmail(loginDto.email()).orElseThrow(() -> new RuntimeException("없는 email"));
+    User user = userRepository.findByEmail(loginDto.email()).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER));
     if (!passwordEncoder.matches(loginDto.password(), user.getPassword())) {
-      throw new RuntimeException("잘못된 비밀번호");
+      throw new BadRequestException(ErrorCode.WRONG_PASSWORD);
     }
     return user;
   }
