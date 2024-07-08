@@ -8,7 +8,7 @@ public record JoinDto(
     @Email
     @NotBlank(message = "email is required")
     String email,
-    @Length(max = 20, message = "비밀번호는 20자 이하여야 합니다.")
+    @Length(min = 6, max = 20, message = "비밀번호는 20자 이하여야 합니다.")
     @NotBlank(message = "password is required")
     String password,
     @Length(max = 20, message = "닉네임은 20자 이하여야 합니다.")
