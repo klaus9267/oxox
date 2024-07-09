@@ -86,7 +86,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-tasks.named('asciidoctor') {
+asciidoctor {
     dependsOn test
     configurations 'asciidoctorExt'
     inputs.dir snippetsDir
@@ -101,7 +101,7 @@ tasks.named('asciidoctor') {
 }
 
 task copyDocument(type: Copy) {
-    dependsOn asciidoctor
+    dependsOn ('asciidoctor', ':openapi3')
     from file("build/docs/asciidoc")
     into file("src/main/resources/static/docs")
 }
@@ -115,24 +115,10 @@ openapi3 {
     outputDirectory = 'build/resources/main/static/docs/swagger'
 }
 
-tasks.withType(GenerateSwaggerUI) {
-    dependsOn(':openapi3')
-    doFirst {
-        delete file("src/main/resources/static/docs/swagger")
-    }
-    copy {
-        from "build/resources/main/static/docs/swagger"
-        into "src/main/resources/static/docs/swagger"
-    }
-}
-
 build {
-    dependsOn copyDocument, tasks.withType(GenerateSwaggerUI)
+    dependsOn copyDocument
 }
 
 bootJar {
-    dependsOn(':openapi3', 'asciidoctor')
-    from("${asciidoctor.outputDir}/html5") {
-        into 'static/docs'
-    }
+    dependsOn copyDocument
 }

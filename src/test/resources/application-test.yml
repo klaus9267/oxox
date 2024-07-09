@@ -37,5 +37,5 @@ cloud:
     stack.auto: false
     region.static: ap-northeast-2
     credentials:
-      accessKey: AKIAZI2LHNJMB3MJYNHR
-      secretKey: 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
+      accessKey: ${S3_ACCESS_KEY}
+      secretKey: ${S3_SECRET_KEY}
