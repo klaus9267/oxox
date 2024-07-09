@@ -28,13 +28,14 @@ class UserControllerTest extends AbstractRestDocsTest {
 
   @Test
   public void join() throws Exception {
-    JoinDto joinDto = new JoinDto("test3@email.com", "password", "test nickname", "test emoji");
+    Integer id = userRepository.findAll().size() + 1;
+    JoinDto joinDto = new JoinDto("test@email.com", "test password", "test nickname", "test emoji");
 
     mockMvc.perform(post("/api/users/join")
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(joinDto)))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath(("$.id")).value(2L))
+        .andExpect(jsonPath(("$.id")).value((long) id))
         .andExpect(jsonPath(("$.email")).value(joinDto.email()))
         .andExpect(jsonPath(("$.nickname")).value(joinDto.nickname()))
         .andExpect(jsonPath(("$.profileEmoji")).value(joinDto.profileEmoji()))
@@ -45,17 +46,17 @@ class UserControllerTest extends AbstractRestDocsTest {
             requestFields(
                 FieldDescriptorHelper.createFields(
                     FieldEnum.EMAIL,
-                    FieldEnum.NICKNAME,
                     FieldEnum.PASSWORD,
+                    FieldEnum.NICKNAME,
                     FieldEnum.EMOJI
                 )),
             responseFields(
                 FieldDescriptorHelper.createFields(
                     FieldEnum.USER_ID,
                     FieldEnum.EMAIL,
+                    FieldEnum.EMOJI,
                     FieldEnum.NICKNAME,
-                    FieldEnum.SEQUENCE,
-                    FieldEnum.EMOJI
+                    FieldEnum.SEQUENCE
                 ))));
   }
 
