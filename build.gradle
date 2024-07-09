@@ -45,6 +45,10 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    // h2 for test
+    testImplementation 'com.h2database:h2'
+    runtimeOnly 'com.h2database:h2'
+
     // lombok
     annotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
@@ -58,7 +62,7 @@ dependencies {
     //  swager
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
-    // queryDsl -> exists을 위해 후에 적용 예정
+    // queryDsl -> change query for "exists"
 //    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 //    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
 //    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
@@ -84,8 +88,6 @@ tasks.named('asciidoctor') {
     configurations 'asciidoctorExt'
     inputs.dir snippetsDir
 
-    // source가 없으면 .adoc파일을 전부 html로 만들어버림
-    // source 지정시 특정 adoc만 HTML로 만든다.
     sources {
         include("**/index.adoc", "**/common/*.adoc")
     }

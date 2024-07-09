@@ -6,44 +6,38 @@ import kimandhong.oxox.common.FieldEnum;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
-import kimandhong.oxox.dto.user.UserDto;
-import kimandhong.oxox.service.UserService;
+import kimandhong.oxox.repository.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.NoSuchElementException;
 
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.document;
 import static com.epages.restdocs.apispec.MockMvcRestDocumentationWrapper.resourceDetails;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserController.class)
 class UserControllerTest extends AbstractRestDocsTest {
-  @MockBean
-  UserService userService;
+  @Autowired
+  UserRepository userRepository;
 
   @Test
   public void join() throws Exception {
-    JoinDto joinDto = new JoinDto("test@email.com", "test password", "test nickname", "test emoji");
-    User user = User.from(joinDto, joinDto.password(), 1L);
-    ReflectionTestUtils.setField(user, "id", 1L);
-    UserDto userDto = UserDto.from(user);
-
-    when(userService.join(any(JoinDto.class))).thenReturn(user);
+    JoinDto joinDto = new JoinDto("test3@email.com", "password", "test nickname", "test emoji");
 
     mockMvc.perform(post("/api/users/join")
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(joinDto)))
         .andExpect(status().isCreated())
-        .andExpect(content().json(objectMapper.writeValueAsString(userDto)))
+        .andExpect(jsonPath(("$.id")).value(2L))
+        .andExpect(jsonPath(("$.email")).value(joinDto.email()))
+        .andExpect(jsonPath(("$.nickname")).value(joinDto.nickname()))
+        .andExpect(jsonPath(("$.profileEmoji")).value(joinDto.profileEmoji()))
         .andDo(document("user-join",
             resourceDetails().description("일반 회원가입").tag("USER API"),
             preprocessRequest(prettyPrint()),
@@ -67,19 +61,17 @@ class UserControllerTest extends AbstractRestDocsTest {
 
   @Test
   public void login() throws Exception {
-    JoinDto joinDto = new JoinDto("test@email.com", "test password", "test nickname", "test emoji");
-    User user = User.from(joinDto, joinDto.password(), 1L);
-    ReflectionTestUtils.setField(user, "id", 1L);
-    UserDto userDto = UserDto.from(user);
+    User user = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
 
-    when(userService.login(any(LoginDto.class))).thenReturn(user);
-
-    LoginDto loginDto = new LoginDto(userDto.email(), "test password");
+    LoginDto loginDto = new LoginDto(user.getEmail(), "test password");
     mockMvc.perform(post("/api/users/login")
             .contentType(APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(loginDto)))
         .andExpect(status().isOk())
-        .andExpect(content().json(objectMapper.writeValueAsString(userDto)))
+        .andExpect(jsonPath(("$.id")).value(user.getId()))
+        .andExpect(jsonPath(("$.email")).value(user.getEmail()))
+        .andExpect(jsonPath(("$.nickname")).value(user.getProfile().getNickname()))
+        .andExpect(jsonPath(("$.profileEmoji")).value(user.getProfile().getEmoji()))
         .andDo(document("user-login",
             resourceDetails().description("일반 로그인").tag("USER API"),
             preprocessRequest(prettyPrint()),

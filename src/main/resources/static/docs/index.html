@@ -477,8 +477,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/api/users/join' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -d '{
-  "email" : "test@email.com",
-  "password" : "test password",
+  "email" : "test3@email.com",
+  "password" : "password",
   "nickname" : "test nickname",
   "profileEmoji" : "test emoji"
 }'</code></pre>
@@ -491,12 +491,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/users/join HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 134
+Content-Length: 130
 Host: localhost:8080
 
 {
-  "email" : "test@email.com",
-  "password" : "test password",
+  "email" : "test3@email.com",
+  "password" : "password",
   "nickname" : "test nickname",
   "profileEmoji" : "test emoji"
 }</code></pre>
@@ -550,6 +550,7 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTAyMjMyLCJleHAiOjE4MDY5MDIyMzJ9.QfO854WXqnh3ogNMVn1YfwMnZykghNAxf1-6SFKXJ4A
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 0
@@ -557,14 +558,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 133
+Content-Length: 134
 
 {
-  "id" : 1,
-  "email" : "test@email.com",
+  "id" : 2,
+  "email" : "test3@email.com",
   "profileEmoji" : "test emoji",
   "nickname" : "test nickname",
-  "sequence" : 1
+  "sequence" : 2
 }</code></pre>
 </div>
 </div>
@@ -683,6 +684,7 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTAyMjMyLCJleHAiOjE4MDY5MDIyMzJ9.uOm0gBRyKKXdIPgbU9EhRlTj-kUhepACqq_6qwbxxtU
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 0
@@ -761,6 +763,7 @@ Content-Length: 133
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/api/profiles' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTAyMjMwLCJleHAiOjE4MDY5MDIyMzB9.PoTX1JD4W4OJgS-Ri_H6BWmF1xVbnE9K9GRsafuFRu4' \
     -d '{
   "nickname" : "test nickname",
   "profileEmoji" : "test emoji"
@@ -774,6 +777,7 @@ Content-Length: 133
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/profiles HTTP/1.1
 Content-Type: application/json;charset=UTF-8
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTAyMjMwLCJleHAiOjE4MDY5MDIyMzB9.PoTX1JD4W4OJgS-Ri_H6BWmF1xVbnE9K9GRsafuFRu4
 Content-Length: 70
 Host: localhost:8080
 

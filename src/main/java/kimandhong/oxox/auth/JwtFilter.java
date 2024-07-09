@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import kimandhong.oxox.domain.User;
+import kimandhong.oxox.handler.error.ErrorCode;
+import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,7 +36,7 @@ public class JwtFilter extends OncePerRequestFilter {
         final Long userId = jwtUtil.getUserId(token);
         final Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
-          throw new RuntimeException("사용자를 찾을 수 없습니다.");
+          throw new NotFoundException(ErrorCode.NOT_FOUND_USER);
         }
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
             new UsernamePasswordAuthenticationToken(userOptional.get().getId(), null, List.of(new SimpleGrantedAuthority("USER")));
