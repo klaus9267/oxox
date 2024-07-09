@@ -477,8 +477,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/api/users/join' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -d '{
-  "email" : "test3@email.com",
-  "password" : "password",
+  "email" : "test@email.com",
+  "password" : "test password",
   "nickname" : "test nickname",
   "profileEmoji" : "test emoji"
 }'</code></pre>
@@ -491,12 +491,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/users/join HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 130
+Content-Length: 134
 Host: localhost:8080
 
 {
-  "email" : "test3@email.com",
-  "password" : "password",
+  "email" : "test@email.com",
+  "password" : "test password",
   "nickname" : "test nickname",
   "profileEmoji" : "test emoji"
 }</code></pre>
@@ -525,14 +525,14 @@ Host: localhost:8080
 <td class="tableblock halign-left valign-top"><p class="tableblock">사용자 이메일</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nickname</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 닉네임(최대 20자)</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>password</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">사용자 비밀번호(최대 20자)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>nickname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">사용자 닉네임(최대 20자)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>profileEmoji</code></p></td>
@@ -550,7 +550,7 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTAyMjMyLCJleHAiOjE4MDY5MDIyMzJ9.QfO854WXqnh3ogNMVn1YfwMnZykghNAxf1-6SFKXJ4A
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTIyOTEyLCJleHAiOjE4MDY5MjI5MTJ9.j8be83AuERG7xHsyn6oGADYnVI4c7yyhDwDcmivoeCc
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 0
@@ -558,14 +558,14 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 134
+Content-Length: 133
 
 {
-  "id" : 2,
-  "email" : "test3@email.com",
+  "id" : 3,
+  "email" : "test@email.com",
   "profileEmoji" : "test emoji",
   "nickname" : "test nickname",
-  "sequence" : 2
+  "sequence" : 1
 }</code></pre>
 </div>
 </div>
@@ -597,6 +597,11 @@ Content-Length: 134
 <td class="tableblock halign-left valign-top"><p class="tableblock">사용자 이메일</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>profileEmoji</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">프로필 이모지</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>nickname</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">사용자 닉네임(최대 20자)</p></td>
@@ -605,11 +610,6 @@ Content-Length: 134
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>sequence</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>Number</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">닉네임 사용 순번</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>profileEmoji</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">프로필 이모지</p></td>
 </tr>
 </tbody>
 </table>
@@ -625,7 +625,7 @@ Content-Length: 134
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/api/users/login' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -d '{
-  "email" : "test@email.com",
+  "email" : "test1@email.com",
   "password" : "test password"
 }'</code></pre>
 </div>
@@ -637,11 +637,11 @@ Content-Length: 134
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/users/login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 67
+Content-Length: 68
 Host: localhost:8080
 
 {
-  "email" : "test@email.com",
+  "email" : "test1@email.com",
   "password" : "test password"
 }</code></pre>
 </div>
@@ -684,7 +684,7 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTAyMjMyLCJleHAiOjE4MDY5MDIyMzJ9.uOm0gBRyKKXdIPgbU9EhRlTj-kUhepACqq_6qwbxxtU
+Authorization: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTIyOTEyLCJleHAiOjE4MDY5MjI5MTJ9.INLGsBaU03xI59kSqR9gMkKT5WAE388U1MW5DgLmKXs
 Content-Type: application/json
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 0
@@ -692,13 +692,13 @@ Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
 X-Frame-Options: DENY
-Content-Length: 133
+Content-Length: 125
 
 {
   "id" : 1,
-  "email" : "test@email.com",
-  "profileEmoji" : "test emoji",
-  "nickname" : "test nickname",
+  "email" : "test1@email.com",
+  "profileEmoji" : "emoji",
+  "nickname" : "nickname1",
   "sequence" : 1
 }</code></pre>
 </div>
@@ -763,7 +763,7 @@ Content-Length: 133
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">$ curl 'http://localhost:8080/api/profiles' -i -X PATCH \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTAyMjMwLCJleHAiOjE4MDY5MDIyMzB9.PoTX1JD4W4OJgS-Ri_H6BWmF1xVbnE9K9GRsafuFRu4' \
+    -H 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTIyOTA5LCJleHAiOjE4MDY5MjI5MDl9.rx6yVQ2Vm8IdzeTt9LBn1ve_Aw3Deu5-sYjEAsHcDJE' \
     -d '{
   "nickname" : "test nickname",
   "profileEmoji" : "test emoji"
@@ -777,7 +777,7 @@ Content-Length: 133
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PATCH /api/profiles HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTAyMjMwLCJleHAiOjE4MDY5MDIyMzB9.PoTX1JD4W4OJgS-Ri_H6BWmF1xVbnE9K9GRsafuFRu4
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzIwNTIyOTA5LCJleHAiOjE4MDY5MjI5MDl9.rx6yVQ2Vm8IdzeTt9LBn1ve_Aw3Deu5-sYjEAsHcDJE
 Content-Length: 70
 Host: localhost:8080
 

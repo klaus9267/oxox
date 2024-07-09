@@ -26,6 +26,7 @@ public enum ErrorCode {
 
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Server error."),
   S3_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "s3 upload failed"),
+  S3_DELETE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "s3 delete failed"),
   POLL_CREATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "Poll creation failed.");
 
   private final HttpStatus httpStatus;

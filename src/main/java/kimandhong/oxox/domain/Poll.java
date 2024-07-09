@@ -1,6 +1,7 @@
 package kimandhong.oxox.domain;
 
 import jakarta.persistence.*;
+import kimandhong.oxox.dto.poll.CreatePollDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +26,6 @@ public class Poll {
   @Column(nullable = false)
   private String content;
 
-  @Column(nullable = false)
   private String thumbnail;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -33,4 +33,13 @@ public class Poll {
 
   @OneToMany(mappedBy = "poll", orphanRemoval = true)
   private final List<Comment> comments = new ArrayList<>();
+
+  public static Poll from(final CreatePollDto pollDto, final User user, final String thumbnailUrl) {
+    return Poll.builder()
+        .title(pollDto.title())
+        .content(pollDto.content())
+        .user(user)
+        .thumbnail(thumbnailUrl)
+        .build();
+  }
 }

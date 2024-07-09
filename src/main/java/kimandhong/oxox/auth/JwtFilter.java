@@ -9,6 +9,7 @@ import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Slf4j
 public class JwtFilter extends OncePerRequestFilter {
   private final JwtUtil jwtUtil;
   private final UserRepository userRepository;
@@ -34,7 +36,9 @@ public class JwtFilter extends OncePerRequestFilter {
       final String token = authorizationHeader.substring(7);
       if (jwtUtil.validateToken(token)) {
         final Long userId = jwtUtil.getUserId(token);
+        log.info("--------------------------------------- login(userId = " + userId + ") ---------------------------------------");
         final Optional<User> userOptional = userRepository.findById(userId);
+        log.info("-------------------------------------------------------------------------------------------------");
         if (userOptional.isEmpty()) {
           throw new NotFoundException(ErrorCode.NOT_FOUND_USER);
         }
