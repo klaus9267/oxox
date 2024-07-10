@@ -16,3 +16,11 @@ CREATE TABLE "profiles" (
     user_id BIGINT,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+CREATE TABLE "polls" (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    thumbnail VARCHAR(255),
+    user_id BIGINT,
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)

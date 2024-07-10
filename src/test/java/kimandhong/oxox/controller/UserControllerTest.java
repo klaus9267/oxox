@@ -52,7 +52,7 @@ class UserControllerTest extends AbstractRestDocsTest {
                 )),
             responseFields(
                 FieldDescriptorHelper.createFields(
-                    FieldEnum.USER_ID,
+                    FieldEnum.ID,
                     FieldEnum.EMAIL,
                     FieldEnum.EMOJI,
                     FieldEnum.NICKNAME,
@@ -84,7 +84,7 @@ class UserControllerTest extends AbstractRestDocsTest {
                 )),
             responseFields(
                 FieldDescriptorHelper.createFields(
-                    FieldEnum.USER_ID,
+                    FieldEnum.ID,
                     FieldEnum.EMAIL,
                     FieldEnum.NICKNAME,
                     FieldEnum.SEQUENCE,
