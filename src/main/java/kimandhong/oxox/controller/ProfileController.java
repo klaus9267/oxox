@@ -19,7 +19,7 @@ public class ProfileController {
   private final ProfileService profileService;
 
   @PatchMapping
-  @SwaggerOK(summary = "프로필 수정")
+  @SwaggerOK(summary = "프로필 수정",description = "이모지 enum으로 변경 예정")
   public ResponseEntity<ProfileDto> updateProfile(@RequestBody @Valid final UpdateProfileDto updateProfileDto) {
     final ProfileDto profileDto = profileService.updateProfile(updateProfileDto);
     return ResponseEntity.ok(profileDto);

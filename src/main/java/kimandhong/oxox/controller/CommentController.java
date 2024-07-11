@@ -27,7 +27,7 @@ public class CommentController {
   }
 
   @GetMapping("{postId}")
-  @SwaggerOK(summary = "댓글 목록 조회", description = "댓글에 대한 반응 목록 추가 예정")
+  @SwaggerOK(summary = "댓글 목록 조회",description = "반응 갯수들 추가 예정")
   //todo: add reaction list
   public ResponseEntity<List<CommentDto>> readAllComments(@PathVariable("postId") final Long postId) {
     final List<CommentDto> commentDtos = commentService.readAllComments(postId);

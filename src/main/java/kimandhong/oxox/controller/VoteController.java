@@ -15,7 +15,7 @@ public class VoteController {
   private final VoteService voteService;
 
   @PostMapping
-  @SwaggerOK(summary = "투표하기")
+  @SwaggerOK(summary = "투표하기",description = "isYes = null 이면 투표 취소로 변경 예정")
   public void vote(@RequestParam final Long postId,
                    @RequestParam final boolean isYes) {
     voteService.vote(postId, isYes);

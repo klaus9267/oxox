@@ -32,7 +32,7 @@ public class PostController {
   }
 
   @GetMapping("{postId}")
-  @SwaggerOK(summary = "게시글 상세조회")
+  @SwaggerOK(summary = "게시글 상세조회",description = "양측 투표 수 추가 예정")
   public ResponseEntity<PostDto> readPost(@PathVariable("postId") final Long postId) {
     final PostDto postDto = postService.readPost(postId);
     return ResponseEntity.ok(postDto);
