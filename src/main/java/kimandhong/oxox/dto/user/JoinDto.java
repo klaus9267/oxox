@@ -14,7 +14,7 @@ public record JoinDto(
     @Length(max = 20, message = "닉네임은 20자 이하여야 합니다.")
     @NotBlank(message = "nickname is required")
     String nickname,
-    @NotBlank(message = "profileEmoji is required")
+    @NotBlank(message = "emoji is required")
     String profileEmoji
 ) {
 }

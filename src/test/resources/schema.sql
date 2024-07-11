@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS profiles CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS polls CASCADE;
 
 CREATE TABLE "users" (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -24,3 +25,4 @@ CREATE TABLE "polls" (
     thumbnail VARCHAR(255),
     user_id BIGINT,
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)
+);

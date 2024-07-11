@@ -1,16 +1,7 @@
-buildscript {
-    ext {
-        restdocsApiSpecVersion = '0.18.2' // restdocsApiSpecVersion 버전 변수 설정
-    }
-}
-
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.1'
     id 'io.spring.dependency-management' version '1.1.5'
-    id 'org.asciidoctor.jvm.convert' version '3.3.2'
-    id 'com.epages.restdocs-api-spec' version '0.18.4'
-    id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
 group = 'kimandhong'
@@ -23,7 +14,6 @@ java {
 }
 
 configurations {
-    asciidoctorExt
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -57,11 +47,6 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    //	spring rest docs
-    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testImplementation 'com.epages:restdocs-api-spec-mockmvc:0.18.4'
-
     //  swager
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
@@ -77,48 +62,6 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 }
 
-ext {
-    snippetsDir = file('build/generated-snippets')
-}
-
 tasks.named('test') {
-    outputs.dir snippetsDir
     useJUnitPlatform()
-}
-
-asciidoctor {
-    dependsOn test
-    configurations 'asciidoctorExt'
-    inputs.dir snippetsDir
-
-    sources {
-        include("**/index.adoc", "**/common/*.adoc")
-    }
-    doFirst {
-        delete file('src/main/resources/static/docs')
-    }
-    baseDirFollowsSourceFile()
-}
-
-task copyDocument(type: Copy) {
-    dependsOn ('asciidoctor', ':openapi3')
-    from file("build/docs/asciidoc")
-    into file("src/main/resources/static/docs")
-}
-
-openapi3 {
-    server = "http://localhost:8080"
-    title = "OXOX API 문서"
-    description = "Spring REST Docs with SwaggerUI."
-    version = "0.0.1"
-    format = 'json'
-    outputDirectory = 'build/resources/main/static/docs/swagger'
-}
-
-build {
-    dependsOn copyDocument
-}
-
-bootJar {
-    dependsOn copyDocument
 }

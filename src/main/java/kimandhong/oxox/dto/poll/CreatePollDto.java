@@ -10,7 +10,6 @@ public record CreatePollDto(
     String title,
     @Length(max = 255, message = "제목은 255자 이하여야 합니다.")
     @NotBlank(message = "content is required")
-    String content,
-    MultipartFile thumbnail
+    String content
 ) {
 }
