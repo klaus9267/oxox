@@ -32,6 +32,10 @@ public class CommentService {
     return CommentDto.from(comments);
   }
 
+  public Comment findById(final Long commentId) {
+    return commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
+  }
+
   @Transactional
   public void updateComment(final Long commentId, final String content) {
     final Comment comment = commentRepository.findByIdAndUserId(commentId, securityUtil.getCustomUserId())
