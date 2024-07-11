@@ -30,4 +30,16 @@ public class Comment extends TimeEntity {
 
   @OneToMany(mappedBy = "comment", orphanRemoval = true)
   private final List<Reaction> reactions = new ArrayList<>();
+
+  public static Comment from(final String content, final User user, final Post post) {
+    return Comment.builder()
+        .content(content)
+        .user(user)
+        .post(post)
+        .build();
+  }
+
+  public void updateContent(final String content) {
+    this.content = content;
+  }
 }
