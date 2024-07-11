@@ -24,4 +24,16 @@ public class Vote {
 
   @ManyToOne(fetch = FetchType.LAZY)
   private Post post;
+
+  public static Vote from(final boolean isYes, final User user, final Post post) {
+    return Vote.builder()
+        .isYes(isYes)
+        .user(user)
+        .post(post)
+        .build();
+  }
+
+  public void updateIsYes(final boolean isYes) {
+    this.isYes = isYes;
+  }
 }

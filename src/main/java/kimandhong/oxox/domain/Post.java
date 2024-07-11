@@ -34,7 +34,7 @@ public class Post extends TimeEntity {
   @OneToMany(mappedBy = "post", orphanRemoval = true)
   private final List<Comment> comments = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post", orphanRemoval = true)
+  @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
   private final List<Vote> votes = new ArrayList<>();
 
   public static Post from(final CreatePostDto postDto, final User user, final String thumbnailUrl) {
