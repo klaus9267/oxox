@@ -42,7 +42,7 @@ public class Profile {
   }
 
   public void updateProfile(final UpdateProfileDto updateProfileDto, final Long sequence) {
-    this.emoji = updateProfileDto.profileEmoji();
+    this.emoji = updateProfileDto.emoji();
     this.nickname = updateProfileDto.nickname();
     this.sequence = sequence;
   }

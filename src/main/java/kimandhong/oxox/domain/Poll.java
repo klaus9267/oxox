@@ -42,4 +42,13 @@ public class Poll {
         .thumbnail(thumbnailUrl)
         .build();
   }
+
+  public static Poll from(final String title, final String content, final User user, final String thumbnailUrl) {
+    return Poll.builder()
+        .title(title)
+        .content(content)
+        .user(user)
+        .thumbnail(thumbnailUrl)
+        .build();
+  }
 }
