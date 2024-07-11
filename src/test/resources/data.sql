@@ -6,6 +6,6 @@ INSERT INTO profiles (sequence, user_id, emoji, nickname) VALUES
 (1, 1, 'emoji', 'nickname1'),
 (1, 2, 'emoji', 'nickname2');
 
-INSERT INTO polls (title, content, thumbnail, user_id) VALUES
+INSERT INTO posts (title, content, thumbnail, user_id) VALUES
 ('test title1', 'test content1', 'test thumbnail1', 1),
 ('test title2', 'test content2', 'test thumbnail2', 2)

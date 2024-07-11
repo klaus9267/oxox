@@ -1,9 +1,9 @@
 package kimandhong.oxox.controller;
 
 import kimandhong.oxox.common.AbstractTest;
-import kimandhong.oxox.domain.Poll;
-import kimandhong.oxox.dto.poll.CreatePollDto;
-import kimandhong.oxox.repository.PollRepository;
+import kimandhong.oxox.domain.Post;
+import kimandhong.oxox.dto.post.CreatePostDto;
+import kimandhong.oxox.repository.PostRepository;
 import kimandhong.oxox.service.S3Service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,45 +21,45 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class PollControllerTest extends AbstractTest {
-  private final String END_POINT = "/api/polls";
+class PostControllerTest extends AbstractTest {
+  private final String END_POINT = "/api/posts";
   @MockBean
   S3Service s3Service;
 
   @Autowired
-  PollRepository pollRepository;
+  PostRepository postRepository;
 
   @Test
-  public void createPoll() throws Exception {
-    int id = pollRepository.findAll().size() + 1;
-    CreatePollDto createPollDto = new CreatePollDto("Test Title", "Test Content");
-    String createPollDtoJson = objectMapper.writeValueAsString(createPollDto);
-    MockMultipartFile createPollDtoPart = new MockMultipartFile("createPollDto", null, MediaType.APPLICATION_JSON_VALUE, createPollDtoJson.getBytes());
+  public void createPost() throws Exception {
+    int id = postRepository.findAll().size() + 1;
+    CreatePostDto createPostDto = new CreatePostDto("Test Title", "Test Content");
+    String createPostDtoJson = objectMapper.writeValueAsString(createPostDto);
+    MockMultipartFile createPostDtoPart = new MockMultipartFile("createPostDto", null, MediaType.APPLICATION_JSON_VALUE, createPostDtoJson.getBytes());
     MockMultipartFile thumbnail = new MockMultipartFile("thumbnail", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "test image required".getBytes());
 
     when(s3Service.uploadThumbnail(any(MultipartFile.class))).thenReturn("thumbnail url");
 
     mockMvc.perform(multipart(END_POINT)
             .file(thumbnail)
-            .file(createPollDtoPart)
+            .file(createPostDtoPart)
             .header("Authorization", token))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").value((long) id))
-        .andExpect(jsonPath("$.title").value(createPollDto.title()))
-        .andExpect(jsonPath("$.content").value(createPollDto.content()))
+        .andExpect(jsonPath("$.title").value(createPostDto.title()))
+        .andExpect(jsonPath("$.content").value(createPostDto.content()))
         .andExpect(jsonPath("$.thumbnailUrl").value("thumbnail url"));
   }
 
   @Test
-  public void readPoll() throws Exception {
-    Poll poll = pollRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+  public void readPost() throws Exception {
+    Post post = postRepository.findById(1L).orElseThrow(NoSuchElementException::new);
 
-    mockMvc.perform(get(END_POINT + "/" + poll.getId())
+    mockMvc.perform(get(END_POINT + "/" + post.getId())
             .header("Authorization", token))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(poll.getId()))
-        .andExpect(jsonPath("$.title").value(poll.getTitle()))
-        .andExpect(jsonPath("$.content").value(poll.getContent()))
-        .andExpect(jsonPath("$.thumbnailUrl").value(poll.getThumbnail()));
+        .andExpect(jsonPath("$.id").value(post.getId()))
+        .andExpect(jsonPath("$.title").value(post.getTitle()))
+        .andExpect(jsonPath("$.content").value(post.getContent()))
+        .andExpect(jsonPath("$.thumbnailUrl").value(post.getThumbnail()));
   }
 }
