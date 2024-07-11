@@ -2,6 +2,7 @@ package kimandhong.oxox.service;
 
 import kimandhong.oxox.domain.Poll;
 import kimandhong.oxox.domain.User;
+import kimandhong.oxox.dto.poll.CreatePollDto;
 import kimandhong.oxox.dto.poll.PollDto;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
@@ -19,12 +20,12 @@ public class PollService {
   private final S3Service s3Service;
 
   @Transactional
-  public PollDto createPoll(final String title, final String content, final MultipartFile thumbnail) {
+  public PollDto createPoll(final CreatePollDto createPollDto, final MultipartFile thumbnail) {
     final User user = userService.findCurrentUser();
     final String thumbnailUrl = thumbnail != null ? s3Service.uploadThumbnail(thumbnail) : null;
 
     try {
-      final Poll poll = Poll.from(title, content, user, thumbnailUrl);
+      final Poll poll = Poll.from(createPollDto.title(), createPollDto.content(), user, thumbnailUrl);
       final Poll savedPoll = pollRepository.save(poll);
 
       return PollDto.from(savedPoll);

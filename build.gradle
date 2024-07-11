@@ -48,7 +48,7 @@ dependencies {
     testAnnotationProcessor 'org.projectlombok:lombok'
 
     //  swager
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
 
     // queryDsl -> change query for "exists"
 //    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
