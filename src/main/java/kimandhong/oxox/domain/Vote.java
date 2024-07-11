@@ -6,21 +6,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@Entity(name = "comments")
+@Entity(name = "votes")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-public class Comment extends TimeEntity {
+public class Vote {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @Column(nullable = false)
-  private String content;
+  private boolean isYes;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
@@ -28,18 +25,15 @@ public class Comment extends TimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private Post post;
 
-  @OneToMany(mappedBy = "comment", orphanRemoval = true)
-  private final List<Reaction> reactions = new ArrayList<>();
-
-  public static Comment from(final String content, final User user, final Post post) {
-    return Comment.builder()
-        .content(content)
+  public static Vote from(final boolean isYes, final User user, final Post post) {
+    return Vote.builder()
+        .isYes(isYes)
         .user(user)
         .post(post)
         .build();
   }
 
-  public void updateContent(final String content) {
-    this.content = content;
+  public void updateIsYes(final boolean isYes) {
+    this.isYes = isYes;
   }
 }

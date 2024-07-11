@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class User {
+public class User extends TimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -33,10 +33,13 @@ public class User {
   private Profile profile;
 
   @OneToMany(mappedBy = "user", orphanRemoval = true)
-  private final List<Poll> polls = new ArrayList<>();
+  private final List<Post> posts = new ArrayList<>();
 
   @OneToMany(mappedBy = "user", orphanRemoval = true)
   private final List<Comment> comments = new ArrayList<>();
+
+  @OneToMany(mappedBy = "user", orphanRemoval = true)
+  private final List<Vote> votes = new ArrayList<>();
 
   private User(final JoinDto joinDto, final String password, final Long sequence) {
     this.email = joinDto.email();

@@ -20,7 +20,6 @@ public class UserService {
   private final UserRepository userRepository;
   private final ProfileRepository profileRepository;
   private final PasswordEncoder passwordEncoder;
-  private final SecurityUtil securityUtil;
 
   @Transactional
   public User join(final JoinDto joinDto) {
@@ -43,10 +42,5 @@ public class UserService {
     return userRepository.findByEmail(loginDto.email())
         .filter(foundUser -> passwordEncoder.matches(loginDto.password(), foundUser.getPassword()))
         .orElseThrow(() -> new NotFoundException(ErrorCode.BAD_REQUEST_LOGIN));
-  }
-
-  public User findCurrentUser() {
-    final Long userId = securityUtil.getCustomUserId();
-    return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER));
   }
 }

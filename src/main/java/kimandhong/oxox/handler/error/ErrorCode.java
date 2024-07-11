@@ -13,10 +13,13 @@ public enum ErrorCode {
 
   UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED, "Unauthorized."),
   FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "Forbidden."),
+  FORBIDDEN_ACCESS_VOTE(HttpStatus.FORBIDDEN, ""),
 
   NOT_FOUND(HttpStatus.NOT_FOUND, "Not found."),
   NOT_FOUND_USER(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
-  NOT_FOUND_POLL(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
+  NOT_FOUND_POST(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다."),
+  NOT_FOUND_VOTE(HttpStatus.NOT_FOUND, "투표내역을 찾을 수 없습니다."),
+  NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다."),
 
   METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "Not allowed method."),
 
@@ -27,7 +30,7 @@ public enum ErrorCode {
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Server error."),
   S3_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "s3 upload failed"),
   S3_DELETE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "s3 delete failed"),
-  POLL_CREATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "Poll creation failed.");
+  POST_CREATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "Post creation failed.");
 
   private final HttpStatus httpStatus;
   private final String message;

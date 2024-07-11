@@ -43,7 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
           throw new NotFoundException(ErrorCode.NOT_FOUND_USER);
         }
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-            new UsernamePasswordAuthenticationToken(userOptional.get().getId(), null, List.of(new SimpleGrantedAuthority("USER")));
+            new UsernamePasswordAuthenticationToken(userOptional.get(), null, List.of(new SimpleGrantedAuthority("USER")));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
       }
     }
