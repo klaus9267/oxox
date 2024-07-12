@@ -1,7 +1,6 @@
 package kimandhong.oxox.controller.param;
 
 import io.swagger.v3.oas.annotations.Parameter;
-import lombok.Getter;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 

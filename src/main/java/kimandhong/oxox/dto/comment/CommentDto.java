@@ -5,6 +5,7 @@ import kimandhong.oxox.domain.enums.ReactionEmoji;
 import kimandhong.oxox.dto.user.UserDto;
 import lombok.Builder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ public record CommentDto(
     Long id,
     String content,
     UserDto user,
+    LocalDateTime createAt,
     Map<ReactionEmoji, Integer> reactions
 ) {
   public static List<CommentDto> from(final List<Comment> comments) {
@@ -21,6 +23,7 @@ public record CommentDto(
             .id(comment.getId())
             .content(comment.getContent())
             .user(UserDto.from(comment.getUser()))
+            .createAt(comment.getCreateAt())
             .reactions(comment.getEmojiCounts())
             .build())
         .toList();
