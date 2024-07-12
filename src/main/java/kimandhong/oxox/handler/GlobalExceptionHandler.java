@@ -22,7 +22,7 @@ import java.util.List;
 public class GlobalExceptionHandler {
   @ExceptionHandler(RuntimeException.class)
   public ResponseEntity<ErrorResponse> handleException(final RuntimeException exception, final HttpServletRequest request) {
-    log.error("[Runtime] : " + exception.getMessage());
+    log.error("[Runtime] : " , exception);
     final ErrorResponse errorResponse = new ErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, exception.getMessage());
 
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);

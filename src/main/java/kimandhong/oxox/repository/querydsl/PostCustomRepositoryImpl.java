@@ -11,9 +11,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import static kimandhong.oxox.domain.QComment.comment;
 import static kimandhong.oxox.domain.QPost.post;
+import static kimandhong.oxox.domain.QReaction.reaction;
 import static kimandhong.oxox.domain.QVote.vote;
 
 @Repository
@@ -35,13 +38,25 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     final PaginationSortType sortType = param.sortType();
 
     if (PaginationSortType.POPULARITY.equals(sortType)) {
-      query.orderBy(post.votes.size().asc());
+      query.leftJoin(post.votes, vote)
+          .where(post.isDone.isFalse())
+          .groupBy(post.id)
+          .orderBy(vote.count().desc(), post.id.desc());
+    } else if (PaginationSortType.HOT.equals(sortType)) {
+      final LocalDateTime time = LocalDateTime.now().minusHours(1);
+      query.leftJoin(post.votes, vote)
+          .where(vote.createAt.after(time))
+          .groupBy(post.id)
+          .orderBy(vote.count().desc(), post.id.desc());
+    } else if (PaginationSortType.BEST_REACTION.equals(sortType)) {
+      query.leftJoin(post.comments, comment)
+          .leftJoin(comment.reactions, reaction)
+          .where(post.isDone.isFalse())
+          .groupBy(post.id)
+          .orderBy(reaction.count().desc(), post.id.desc());
     }
-//    else if (PaginationSortType.JOIN.equals(sortType)) {
-//
-//    }
 
-    List<Post> posts = jpaQueryFactory.selectFrom(post)
+    List<Post> posts = query
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize())
         .fetch();
@@ -56,10 +71,10 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     final JPAQuery<Post> query = jpaQueryFactory.selectFrom(post);
 
     if (PaginationSortType.WRITER.equals(sortType)) {
-      query.where(post.user.id.eq(userId));
+      query.where(post.user.id.eq(userId), post.isDone.isFalse());
     } else if (PaginationSortType.JOIN.equals(sortType)) {
       query.leftJoin(post.votes, vote)
-          .where(vote.user.id.eq(userId));
+          .where(vote.user.id.eq(userId), post.isDone.isFalse());
     }
 
     List<Post> posts = query

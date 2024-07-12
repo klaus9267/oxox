@@ -13,7 +13,6 @@ import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -59,9 +58,13 @@ public class PostService {
   }
 
   public PostPagination readAllWithPagination(final PostPaginationParam paginationParam) {
-    PageImpl<Post> postPage = PaginationSortType.WRITER.equals(paginationParam.sortType()) || PaginationSortType.JOIN.equals(paginationParam.sortType())
-        ? postRepository.findAllWithPaginationAndUserId(paginationParam, securityUtil.getCustomUserId())
-        : postRepository.findAllWithPagination(paginationParam);
+    PageImpl<Post> postPage = null;
+    if (PaginationSortType.WRITER.equals(paginationParam.sortType()) || PaginationSortType.JOIN.equals(paginationParam.sortType())) {
+      securityUtil.loginCheck();
+      postPage = postRepository.findAllWithPaginationAndUserId(paginationParam, securityUtil.getCustomUserId());
+    } else {
+      postPage = postRepository.findAllWithPagination(paginationParam);
+    }
 
     return PostPagination.from(postPage);
   }

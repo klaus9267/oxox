@@ -15,6 +15,7 @@ public enum ErrorCode {
   UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED, "Unauthorized."),
   FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "Forbidden."),
   FORBIDDEN_ACCESS_VOTE(HttpStatus.FORBIDDEN, ""),
+  LOGIN_REQUIRED(HttpStatus.FORBIDDEN, "로그인이 필요한 api입니다."),
 
   NOT_FOUND(HttpStatus.NOT_FOUND, "Not found."),
   NOT_FOUND_USER(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),

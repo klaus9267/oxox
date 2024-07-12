@@ -27,6 +27,7 @@ public class SecurityConfig {
 
   private static final String[] AUTH_WHITELIST = {
       "api/users/**",
+      "api/bulks/**",
       "swagger/**",
       "swagger-ui/**",
       "v3/**",
@@ -43,7 +44,7 @@ public class SecurityConfig {
 
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(AUTH_WHITELIST).permitAll()
-            .requestMatchers(HttpMethod.GET, "api/posts").permitAll()
+            .requestMatchers(HttpMethod.GET, "api/posts","api/posts/**").permitAll()
             .anyRequest().authenticated()
         )
 
