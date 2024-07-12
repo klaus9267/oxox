@@ -1,17 +1,19 @@
 package kimandhong.oxox.dto.comment;
 
 import kimandhong.oxox.domain.Comment;
+import kimandhong.oxox.domain.enums.ReactionEmoji;
 import kimandhong.oxox.dto.user.UserDto;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.Map;
 
 @Builder
 public record CommentDto(
     Long id,
     String content,
-    UserDto user
-// reactions will add
+    UserDto user,
+    Map<ReactionEmoji, Integer> reactions
 ) {
   public static List<CommentDto> from(final List<Comment> comments) {
     return comments.stream()
@@ -19,7 +21,7 @@ public record CommentDto(
             .id(comment.getId())
             .content(comment.getContent())
             .user(UserDto.from(comment.getUser()))
-            //todo: reactions will add
+            .reactions(comment.getEmojiCounts())
             .build())
         .toList();
   }
