@@ -6,12 +6,15 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ReactionEmoji {
-  BELL("🔔"),
-  COMPUTER("🖥️"),
-  EYE("️👀"),
-  SMILE("😊"),
-  DICE("🎲"),
-  HEART("❤️");
+  SMILE("😆", "smile"),
+  LOVE("🥰", "love"),
+  SHOCK("🫨", "shock"),
+  ODD("🥴", "odd"),
+  ANGRY("😡", "angry"),
+  CRY("️😭", "cry"),
+  POOP("️💩", "poop"),
+  SCARED("😨", "scared");
 
   private final String emoji;
+  private final String name;
 }

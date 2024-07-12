@@ -21,17 +21,22 @@ public class ReactionService {
   @Transactional
   public void react(final Long commentId, final ReactionEmoji emoji) {
     final Comment comment = commentService.findById(commentId);
+
     reactionRepository.findByCommentIdAndUserId(commentId, securityUtil.getCustomUserId())
         .ifPresentOrElse(reaction -> {
           if (emoji != null) {
+            comment.decrementCount(reaction.getReactionEmoji());
             reaction.updateEmoji(emoji);
+            comment.incrementCount(emoji);
           } else {
+            comment.decrementCount(reaction.getReactionEmoji());
             reactionRepository.delete(reaction);
           }
         }, () -> {
           if (emoji != null) {
             final Reaction reaction = Reaction.from(emoji, securityUtil.getCurrentUser(), comment);
             reactionRepository.save(reaction);
+            comment.incrementCount(emoji);
           } else {
             throw new NotFoundException(ErrorCode.NOT_FOUND_COMMENT);
           }

@@ -17,7 +17,7 @@ public class Reaction {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Enumerated
+  @Enumerated(EnumType.STRING)
   private ReactionEmoji reactionEmoji;
 
   @ManyToOne(fetch = FetchType.LAZY)

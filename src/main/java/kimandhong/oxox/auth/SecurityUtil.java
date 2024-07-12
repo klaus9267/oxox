@@ -21,4 +21,11 @@ public class SecurityUtil {
 
     return (User) authentication.getPrincipal();
   }
+
+  public void loginCheck() {
+    final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication.getPrincipal().equals("anonymousUser")) {
+      throw new NotFoundException(ErrorCode.LOGIN_REQUIRED);
+    }
+  }
 }

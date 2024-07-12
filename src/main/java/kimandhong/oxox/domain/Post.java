@@ -28,6 +28,9 @@ public class Post extends TimeEntity {
 
   private String thumbnail;
 
+  @Builder.Default
+  private boolean isDone = false;
+
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
@@ -46,12 +49,7 @@ public class Post extends TimeEntity {
         .build();
   }
 
-  public static Post from(final String title, final String content, final User user, final String thumbnailUrl) {
-    return Post.builder()
-        .title(title)
-        .content(content)
-        .user(user)
-        .thumbnail(thumbnailUrl)
-        .build();
+  public void done() {
+    this.isDone = true;
   }
 }

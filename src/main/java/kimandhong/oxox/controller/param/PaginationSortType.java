@@ -1,20 +1,16 @@
 package kimandhong.oxox.controller.param;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
 
 @Getter
-@RequiredArgsConstructor
 public enum PaginationSortType {
-  BEST_REACTION("best"),
-  BEST_VOTE("best"),
-  HOT("hot"),
-  CLOSE("hot");
+  // 최고의 반응글
+  BEST_REACTION, HOT, CLOSE,
 
-  private final String field;
+  // 목록 조회
+  POPULARITY,
 
-  public Sort toSort(Sort.Direction direction) {
-    return Sort.by(direction, field);
-  }
+  // 마이 페이지
+  WRITER,
+  JOIN
 }

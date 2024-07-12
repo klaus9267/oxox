@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
-public class Vote {
+public class Vote extends TimeEntity{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

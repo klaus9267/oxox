@@ -22,5 +22,5 @@ public class TimeEntity {
 
     @LastModifiedDate
     @Column(name = "updated_at")
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 }

@@ -10,10 +10,12 @@ public enum ErrorCode {
   BAD_REQUEST(HttpStatus.BAD_REQUEST, "Invalid request."),
   BAD_REQUEST_LOGIN(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호를 확인해주세요"),
   WRONG_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호를 확인해주세요."),
+  WRONG_PARAMETER(HttpStatus.BAD_REQUEST, "정렬 종류를 확인해주세요."),
 
   UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED, "Unauthorized."),
   FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "Forbidden."),
   FORBIDDEN_ACCESS_VOTE(HttpStatus.FORBIDDEN, ""),
+  LOGIN_REQUIRED(HttpStatus.FORBIDDEN, "로그인이 필요한 api입니다."),
 
   NOT_FOUND(HttpStatus.NOT_FOUND, "Not found."),
   NOT_FOUND_USER(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),

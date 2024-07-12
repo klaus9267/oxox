@@ -50,11 +50,11 @@ dependencies {
     //  swager
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.2.0'
 
-    // queryDsl -> change query for "exists"
-//    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-//    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
-//    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-//    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+    // queryDsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
     // jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
