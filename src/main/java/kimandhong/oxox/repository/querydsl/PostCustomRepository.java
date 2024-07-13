@@ -1,11 +1,12 @@
 package kimandhong.oxox.repository.querydsl;
 
-import kimandhong.oxox.controller.param.PostPaginationParam;
+import kimandhong.oxox.controller.param.SortType;
 import kimandhong.oxox.domain.Post;
-import org.springframework.data.domain.PageImpl;
+
+import java.util.List;
 
 public interface PostCustomRepository {
-  PageImpl<Post> findAllWithPagination(final PostPaginationParam param);
+  List<Post> findAllWithPagination(final SortType sortType);
 
-  PageImpl<Post> findAllWithPaginationAndUserId(final PostPaginationParam param, final Long userId);
+  List<Post> findAllWithPaginationAndUserId(final SortType sortType, final Long userId);
 }

@@ -5,16 +5,12 @@ import jakarta.validation.Valid;
 import kimandhong.oxox.common.swagger.SwaggerCreated;
 import kimandhong.oxox.common.swagger.SwaggerNoContent;
 import kimandhong.oxox.common.swagger.SwaggerOK;
-import kimandhong.oxox.controller.param.PostPaginationParam;
+import kimandhong.oxox.controller.param.SortType;
+import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.dto.post.CreatePostDto;
 import kimandhong.oxox.dto.post.PostDto;
-import kimandhong.oxox.dto.post.PostPagination;
 import kimandhong.oxox.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Request;
-import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.boot.actuate.web.exchanges.HttpExchange;
-import org.springframework.boot.autoconfigure.cassandra.CassandraProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -54,9 +50,9 @@ public class PostController {
 
   @GetMapping
   @SwaggerOK(summary = "게시글 페이지네이션", description = "join, writier은 로그인 필요 / HOY, CLOSE 사용 불가")
-  public ResponseEntity<PostPagination> paginationPosts(@ParameterObject @Valid final PostPaginationParam postPaginationParam) {
-    final PostPagination postPagination = postService.readAllWithPagination(postPaginationParam);
-    return ResponseEntity.ok(postPagination);
+  public ResponseEntity<List<Post>> paginationPosts(@Valid final SortType sortType) {
+    final List<Post> posts = postService.readAllPosts(sortType);
+    return ResponseEntity.ok(posts);
   }
 
   @DeleteMapping("{postId}")

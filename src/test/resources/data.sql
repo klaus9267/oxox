@@ -1,3 +1,6 @@
+INSERT INTO reaction_emojis (emoji, name)
+VALUES ('😆', 'smile'), ('🥰', 'love'), ('🫨', 'shock'), ('🥴', 'odd'), ('😡', 'angry'), ('😭', 'cry'), ('💩', 'poop'), ('😨', 'scared');
+
 INSERT INTO users (email, password) VALUES
 ('test1@email.com', '$2a$10$g3Baj0zdh/y09G.rwdYIV.TKVncMiwf3Uw152Ji4MlSqsgz13ooLG'),
 ('test2@email.com', '$2a$10$g3Baj0zdh/y09G.rwdYIV.TKVncMiwf3Uw152Ji4MlSqsgz13ooLG');
