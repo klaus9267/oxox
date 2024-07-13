@@ -35,6 +35,10 @@ public class BulkService {
     userRepository.saveAll(users);
   }
 
+  public void deleteAllUsers() {
+    userRepository.deleteAll();
+  }
+
   public void bulkPosts() {
     Random random = new Random();
     List<User> users = userRepository.findAll();
@@ -48,6 +52,10 @@ public class BulkService {
     }
 
     postRepository.saveAll(posts);
+  }
+
+  public void deleteAllPosts() {
+    postRepository.deleteAll();
   }
 
   public void bulkComments() {
@@ -65,6 +73,10 @@ public class BulkService {
     }
 
     commentRepository.saveAll(comments);
+  }
+
+  public void deleteAllComments() {
+    commentRepository.deleteAll();
   }
 
   public void bulkVotes() {
@@ -95,6 +107,10 @@ public class BulkService {
     // 4466
   }
 
+  public void deleteAllVotes() {
+    voteRepository.deleteAll();
+  }
+
   public void bulkReactions() {
     Random random = new Random();
     List<User> users = userRepository.findAll();
@@ -120,5 +136,9 @@ public class BulkService {
     }
 
     reactionRepository.saveAll(reactions);
+  }
+
+  public void deleteAllReactions() {
+    reactionRepository.deleteAll();
   }
 }
