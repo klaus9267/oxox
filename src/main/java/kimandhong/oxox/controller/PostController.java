@@ -49,9 +49,9 @@ public class PostController {
   }
 
   @GetMapping
-  @SwaggerOK(summary = "게시글 페이지네이션", description = "join, writier은 로그인 필요 / HOY, CLOSE 사용 불가")
-  public ResponseEntity<List<Post>> paginationPosts(@Valid final SortType sortType) {
-    final List<Post> posts = postService.readAllPosts(sortType);
+  @SwaggerOK(summary = "게시글 목록 조회", description = "join, writier은 로그인 필요 / HOY, CLOSE 사용 불가")
+  public ResponseEntity<List<PostDto>> paginationPosts(@Valid final SortType sortType) {
+    final List<PostDto> posts = postService.readAllPosts(sortType);
     return ResponseEntity.ok(posts);
   }
 

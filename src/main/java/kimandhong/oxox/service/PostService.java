@@ -54,7 +54,7 @@ public class PostService {
     return PostDto.from(posts);
   }
 
-  public List<Post> readAllPosts(final SortType sortType) {
+  public List<PostDto> readAllPosts(final SortType sortType) {
     List<Post> posts = null;
     if (SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)) {
       securityUtil.loginCheck();
@@ -63,7 +63,7 @@ public class PostService {
       posts = postRepository.findAllWithPagination(sortType);
     }
 
-    return posts;
+    return PostDto.from(posts);
   }
 
   @Transactional
