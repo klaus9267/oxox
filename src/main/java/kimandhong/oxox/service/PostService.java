@@ -1,18 +1,15 @@
 package kimandhong.oxox.service;
 
 import kimandhong.oxox.auth.SecurityUtil;
-import kimandhong.oxox.controller.param.PaginationSortType;
-import kimandhong.oxox.controller.param.PostPaginationParam;
+import kimandhong.oxox.controller.param.SortType;
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.post.CreatePostDto;
 import kimandhong.oxox.dto.post.PostDto;
-import kimandhong.oxox.dto.post.PostPagination;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,16 +54,16 @@ public class PostService {
     return PostDto.from(posts);
   }
 
-  public PostPagination readAllWithPagination(final PostPaginationParam paginationParam) {
-    PageImpl<Post> postPage = null;
-    if (PaginationSortType.WRITER.equals(paginationParam.sortType()) || PaginationSortType.JOIN.equals(paginationParam.sortType())) {
+  public List<PostDto> readAllPosts(final SortType sortType) {
+    List<Post> posts = null;
+    if (SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)) {
       securityUtil.loginCheck();
-      postPage = postRepository.findAllWithPaginationAndUserId(paginationParam, securityUtil.getCustomUserId());
+      posts = postRepository.findAllWithPaginationAndUserId(sortType, securityUtil.getCustomUserId());
     } else {
-      postPage = postRepository.findAllWithPagination(paginationParam);
+      posts = postRepository.findAllWithPagination(sortType);
     }
 
-    return PostPagination.from(postPage);
+    return PostDto.from(posts);
   }
 
   @Transactional
@@ -81,7 +78,7 @@ public class PostService {
 //  @Scheduled(fixedDelay = 1000 * 60 * 30)
   public void checkPostIsDOne() {
     postRepository.findAll().forEach(post -> {
-      if (!post.isDone() && post.getCreateAt().plusHours(24).isBefore(LocalDateTime.now())) {
+      if (!post.isDone() && post.getCreateAt().plusHours(1).isBefore(LocalDateTime.now())) {
         post.done();
       }
     });

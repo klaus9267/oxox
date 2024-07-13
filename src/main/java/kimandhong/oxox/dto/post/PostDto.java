@@ -19,6 +19,7 @@ public record PostDto(
     LocalDateTime createAt,
     boolean isDone,
     UserDto user,
+    int commentCount,
     Long agreeCount,
     Long disAgreeCount
 ) {
@@ -38,6 +39,7 @@ public record PostDto(
         .createAt(post.getCreateAt())
         .isDone(post.isDone())
         .user(userDto)
+        .commentCount(post.getComments().size())
         .agreeCount(agreeCount)
         .disAgreeCount(disagreeCount)
         .build();

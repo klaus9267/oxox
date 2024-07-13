@@ -1,5 +1,6 @@
 package kimandhong.oxox.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import kimandhong.oxox.domain.enums.ReactionEmoji;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,7 @@ public class Comment extends TimeEntity {
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
+  @JsonIgnore
   private Post post;
 
   @OneToMany(mappedBy = "comment", orphanRemoval = true)

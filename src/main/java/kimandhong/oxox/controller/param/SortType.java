@@ -3,7 +3,7 @@ package kimandhong.oxox.controller.param;
 import lombok.Getter;
 
 @Getter
-public enum PaginationSortType {
+public enum SortType {
   // 최고의 반응글
   BEST_REACTION, HOT, CLOSE,
 
