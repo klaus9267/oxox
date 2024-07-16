@@ -58,9 +58,9 @@ public class PostService {
     List<Post> posts = null;
     if (SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)) {
       securityUtil.loginCheck();
-      posts = postRepository.findAllWithPaginationAndUserId(sortType, securityUtil.getCustomUserId());
+      posts = postRepository.findAllWithSorAndUserId(sortType, securityUtil.getCustomUserId());
     } else {
-      posts = postRepository.findAllWithPagination(sortType);
+      posts = postRepository.findAllWithSort(sortType);
     }
 
     return PostDto.from(posts);
@@ -78,7 +78,7 @@ public class PostService {
 //  @Scheduled(fixedDelay = 1000 * 60 * 30)
   public void checkPostIsDOne() {
     postRepository.findAll().forEach(post -> {
-      if (!post.isDone() && post.getCreateAt().plusHours(1).isBefore(LocalDateTime.now())) {
+      if (!post.isDone() && post.getCreatedAt().plusHours(1).isBefore(LocalDateTime.now())) {
         post.done();
       }
     });

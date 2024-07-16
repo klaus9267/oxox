@@ -27,13 +27,13 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
   }
 
   @Override
-  public List<Post> findAllWithPagination(SortType sortType) {
+  public List<Post> findAllWithSort(SortType sortType) {
     if (SortType.JOIN.equals(sortType) || SortType.WRITER.equals(sortType)) {
       throw new BadRequestException(ErrorCode.WRONG_PARAMETER);
     }
 
     final LocalDateTime time = LocalDateTime.now().minusDays(1);
-    final DateTimePath<LocalDateTime> datePath = post.createAt;
+    final DateTimePath<LocalDateTime> datePath = post.createdAt;
     final JPAQuery<Post> query = jpaQueryFactory.selectFrom(post);
     final BooleanBuilder builder = new BooleanBuilder()
         .and(datePath.after(time))
@@ -61,10 +61,10 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
   }
 
   @Override
-  public List<Post> findAllWithPaginationAndUserId(SortType sortType, Long userId) {
+  public List<Post> findAllWithSorAndUserId(SortType sortType, Long userId) {
     final LocalDateTime time = LocalDateTime.now().minusDays(1);
     final JPAQuery<Post> query = jpaQueryFactory.selectFrom(post)
-        .where(post.createAt.goe(time));
+        .where(post.createdAt.goe(time));
 
     if (SortType.WRITER.equals(sortType)) {
       query.where(post.user.id.eq(userId), post.isDone.isFalse());

@@ -36,7 +36,7 @@ public record PostDto(
         .title(post.getTitle())
         .content(post.getContent())
         .thumbnailUrl(post.getThumbnail())
-        .createAt(post.getCreateAt())
+        .createAt(post.getCreatedAt())
         .isDone(post.isDone())
         .user(userDto)
         .commentCount(post.getComments().size())

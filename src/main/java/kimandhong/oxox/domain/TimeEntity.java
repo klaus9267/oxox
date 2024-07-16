@@ -17,8 +17,8 @@ import java.time.LocalDateTime;
 @Getter
 public class TimeEntity {
     @CreatedDate
-    @Column(updatable = false,name = "create_at")
-    private LocalDateTime createAt;
+    @Column(updatable = false,name = "created_at")
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name = "updated_at")

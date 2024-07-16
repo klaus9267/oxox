@@ -29,6 +29,7 @@ public class Post extends TimeEntity {
   private String thumbnail;
 
   @Builder.Default
+  @Column(name = "is_done")
   private boolean isDone = false;
 
   @ManyToOne(fetch = FetchType.LAZY)
