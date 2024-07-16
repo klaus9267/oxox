@@ -10,6 +10,7 @@ import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -75,10 +76,10 @@ public class PostService {
 
   @Transactional
   //todo will change to message queue
-//  @Scheduled(fixedDelay = 1000 * 60 * 30)
+  @Scheduled(fixedDelay = 1000 * 60 * 30)
   public void checkPostIsDOne() {
     postRepository.findAll().forEach(post -> {
-      if (!post.isDone() && post.getCreatedAt().plusHours(1).isBefore(LocalDateTime.now())) {
+      if (!post.isDone() && post.getCreatedAt().plusHours(24).isBefore(LocalDateTime.now())) {
         post.done();
       }
     });

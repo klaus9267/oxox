@@ -2,7 +2,6 @@ package kimandhong.oxox.dto.post;
 
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.domain.Vote;
-import kimandhong.oxox.dto.user.UserDto;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -14,17 +13,14 @@ import java.util.stream.Collectors;
 public record PostDto(
     Long id,
     String title,
-    String content,
     String thumbnailUrl,
     LocalDateTime createAt,
     boolean isDone,
-    UserDto user,
     int commentCount,
     Long agreeCount,
     Long disAgreeCount
 ) {
   public static PostDto from(final Post post) {
-    final UserDto userDto = UserDto.from(post.getUser());
     Map<Boolean, Long> voteCounts = post.getVotes().stream()
         .collect(Collectors.partitioningBy(Vote::isYes, Collectors.counting()));
 
@@ -34,11 +30,9 @@ public record PostDto(
     return PostDto.builder()
         .id(post.getId())
         .title(post.getTitle())
-        .content(post.getContent())
         .thumbnailUrl(post.getThumbnail())
         .createAt(post.getCreatedAt())
         .isDone(post.isDone())
-        .user(userDto)
         .commentCount(post.getComments().size())
         .agreeCount(agreeCount)
         .disAgreeCount(disagreeCount)
