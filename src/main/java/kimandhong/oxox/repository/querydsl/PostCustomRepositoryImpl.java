@@ -54,7 +54,14 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
             .orderBy(reaction.count().desc(), post.id.desc());
       }
       case CLOSE -> {
-
+        query.leftJoin(post.votes, vote)
+            .groupBy(post.id)
+            .having(
+                vote.isYes.when(true).then(1).otherwise(0).sum()
+                    .multiply(100.0).divide(vote.count())
+                    .subtract(50).abs().loe(5)
+            )
+            .orderBy(vote.count().desc(), post.id.desc());
       }
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
