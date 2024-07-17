@@ -74,7 +74,7 @@ public class PostService {
   }
 
   @Transactional
-  //todo will change to message queue
+  //todo: will change to message queue
   @Scheduled(fixedDelay = 1000 * 60 * 30)
   public void checkPostIsDOne() {
     postRepository.findAll().forEach(post -> {
