@@ -27,7 +27,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
   }
 
   @Override
-  public List<Post> findAllWithSort(SortType sortType) {
+  public List<Post> findAllSorted(SortType sortType) {
     if (SortType.JOIN.equals(sortType) || SortType.WRITER.equals(sortType)) {
       throw new BadRequestException(ErrorCode.WRONG_PARAMETER);
     }
@@ -56,12 +56,10 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
       case CLOSE -> {
         query.leftJoin(post.votes, vote)
             .groupBy(post.id)
-            .having(
-                vote.isYes.when(true).then(1).otherwise(0).sum()
-                    .multiply(100.0).divide(vote.count())
-                    .subtract(50).abs().loe(5)
-            )
-            .orderBy(vote.count().desc(), post.id.desc());
+            .having(vote.isYes.when(true).then(1).otherwise(0).sum()
+                .multiply(100.0).divide(vote.count())
+                .subtract(50).abs().loe(5)
+            ).orderBy(vote.count().desc(), post.id.desc());
       }
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
@@ -72,7 +70,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
   }
 
   @Override
-  public List<Post> findAllWithSorAndUserId(SortType sortType, Long userId) {
+  public List<Post> findAllSortedWithUserId(SortType sortType, Long userId) {
     final LocalDateTime time = LocalDateTime.now().minusDays(1);
     final JPAQuery<Post> query = jpaQueryFactory.selectFrom(post)
         .where(post.createdAt.goe(time));

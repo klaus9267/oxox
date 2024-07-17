@@ -42,7 +42,7 @@ class PostCustomRepositoryImplTest {
   @Test
   public void 게시글_목록_조회_BEST_REACTIONS() {
     dataInitializer.init();
-    List<Post> posts = postRepository.findAllWithSort(SortType.BEST_REACTION);
+    List<Post> posts = postRepository.findAllSorted(SortType.BEST_REACTION);
 
     List<Integer> reactionCounts = posts.stream()
         .map(post -> post.getComments().stream().map(
@@ -58,7 +58,7 @@ class PostCustomRepositoryImplTest {
 
   @Test
   public void 게시글_목록_조회_POPULARITY() {
-    List<Post> posts = postRepository.findAllWithSort(SortType.POPULARITY);
+    List<Post> posts = postRepository.findAllSorted(SortType.POPULARITY);
 
     List<Integer> voteCounts = posts.stream()
         .map(post -> post.getVotes().size()

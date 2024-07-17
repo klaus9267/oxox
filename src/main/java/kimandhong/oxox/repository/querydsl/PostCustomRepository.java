@@ -6,7 +6,7 @@ import kimandhong.oxox.domain.Post;
 import java.util.List;
 
 public interface PostCustomRepository {
-  List<Post> findAllWithSort(final SortType sortType);
+  List<Post> findAllSorted(final SortType sortType);
 
-  List<Post> findAllWithSorAndUserId(final SortType sortType, final Long userId);
+  List<Post> findAllSortedWithUserId(final SortType sortType, final Long userId);
 }

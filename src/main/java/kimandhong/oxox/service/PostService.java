@@ -5,6 +5,7 @@ import kimandhong.oxox.controller.param.SortType;
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.post.CreatePostDto;
+import kimandhong.oxox.dto.post.PostDetailDto;
 import kimandhong.oxox.dto.post.PostDto;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
@@ -41,28 +42,19 @@ public class PostService {
     }
   }
 
-  public PostDto readPost(final Long id) {
-    final Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
-    return PostDto.from(post);
+  public PostDetailDto readPost(final Long id) {
+    final Post post = this.findById(id);
+    return PostDetailDto.from(post);
   }
 
   public Post findById(final Long id) {
     return postRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
   }
 
-  public List<PostDto> readAll() {
-    final List<Post> posts = postRepository.findAll();
-    return PostDto.from(posts);
-  }
-
   public List<PostDto> readAllPosts(final SortType sortType) {
-    List<Post> posts = null;
-    if (SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)) {
-      securityUtil.loginCheck();
-      posts = postRepository.findAllWithSorAndUserId(sortType, securityUtil.getCustomUserId());
-    } else {
-      posts = postRepository.findAllWithSort(sortType);
-    }
+    List<Post> posts = SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)
+        ? postRepository.findAllSortedWithUserId(sortType, securityUtil.getCustomUserId())
+        : postRepository.findAllSorted(sortType);
 
     return PostDto.from(posts);
   }
