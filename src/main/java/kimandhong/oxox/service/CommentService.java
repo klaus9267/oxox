@@ -27,11 +27,6 @@ public class CommentService {
     commentRepository.save(comment);
   }
 
-  public List<CommentDto> readAllComments(final Long postId) {
-    final List<Comment> comments = commentRepository.findAllByPostId(postId);
-    return CommentDto.from(comments);
-  }
-
   public Comment findById(final Long commentId) {
     return commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
   }
