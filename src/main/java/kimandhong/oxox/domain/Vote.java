@@ -5,13 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @Entity(name = "votes")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-public class Vote extends TimeEntity{
+public class Vote extends TimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

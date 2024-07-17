@@ -6,7 +6,6 @@ import kimandhong.oxox.config.TestQueryDslConfig;
 import kimandhong.oxox.controller.param.SortType;
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.repository.PostRepository;
-import kimandhong.oxox.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +21,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @Import({TestQueryDslConfig.class, DataInitializer.class})
 @ActiveProfiles("test")
-class PostCustomRepositoryImplTest {
+class PostCustomRepositoryTest {
   @Autowired
   PostRepository postRepository;
   @Autowired
-  UserRepository userRepository;
+  PostCustomRepository postCustomRepository;
   @Autowired
   TestEntityManager testEntityManager;
   @Autowired
@@ -42,7 +41,7 @@ class PostCustomRepositoryImplTest {
   @Test
   public void 게시글_목록_조회_BEST_REACTIONS() {
     dataInitializer.init();
-    List<Post> posts = postRepository.findAllSorted(SortType.BEST_REACTION);
+    List<Post> posts = postCustomRepository.findAllSorted(SortType.BEST_REACTION);
 
     List<Integer> reactionCounts = posts.stream()
         .map(post -> post.getComments().stream().map(
@@ -58,7 +57,7 @@ class PostCustomRepositoryImplTest {
 
   @Test
   public void 게시글_목록_조회_POPULARITY() {
-    List<Post> posts = postRepository.findAllSorted(SortType.POPULARITY);
+    List<Post> posts = postCustomRepository.findAllSorted(SortType.POPULARITY);
 
     List<Integer> voteCounts = posts.stream()
         .map(post -> post.getVotes().size()

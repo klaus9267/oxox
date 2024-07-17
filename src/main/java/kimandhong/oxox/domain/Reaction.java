@@ -6,12 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @Entity(name = "reactions")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
+@BatchSize(size = 1000)
 public class Reaction {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

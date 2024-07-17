@@ -32,15 +32,15 @@ public class User extends TimeEntity {
   @JsonIgnore
   private Profile profile;
 
-  @OneToMany(mappedBy = "user", orphanRemoval = true)
+  @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
   @JsonIgnore
   private final List<Post> posts = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", orphanRemoval = true)
+  @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
   @JsonIgnore
   private final List<Comment> comments = new ArrayList<>();
 
-  @OneToMany(mappedBy = "user", orphanRemoval = true)
+  @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
   @JsonIgnore
   private final List<Vote> votes = new ArrayList<>();
 

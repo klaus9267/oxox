@@ -42,6 +42,7 @@ public class Comment extends TimeEntity {
   @CollectionTable(name = "reaction_counts", joinColumns = @JoinColumn(name = "comment_id"))
   @MapKeyEnumerated(EnumType.STRING)
   @MapKeyColumn(name = "emoji")
+  @BatchSize(size = 1000)
   private final Map<ReactionEmoji, Integer> emojiCounts = new EnumMap<>(ReactionEmoji.class);
 
   public static Comment from(final String content, final User user, final Post post) {
