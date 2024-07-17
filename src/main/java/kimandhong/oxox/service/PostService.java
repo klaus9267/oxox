@@ -5,11 +5,13 @@ import kimandhong.oxox.controller.param.SortType;
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.post.CreatePostDto;
+import kimandhong.oxox.dto.post.PostDetailDto;
 import kimandhong.oxox.dto.post.PostDto;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,28 +42,19 @@ public class PostService {
     }
   }
 
-  public PostDto readPost(final Long id) {
-    final Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
-    return PostDto.from(post);
+  public PostDetailDto readPost(final Long id) {
+    final Post post = this.findById(id);
+    return PostDetailDto.from(post);
   }
 
   public Post findById(final Long id) {
     return postRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
   }
 
-  public List<PostDto> readAll() {
-    final List<Post> posts = postRepository.findAll();
-    return PostDto.from(posts);
-  }
-
   public List<PostDto> readAllPosts(final SortType sortType) {
-    List<Post> posts = null;
-    if (SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)) {
-      securityUtil.loginCheck();
-      posts = postRepository.findAllWithPaginationAndUserId(sortType, securityUtil.getCustomUserId());
-    } else {
-      posts = postRepository.findAllWithPagination(sortType);
-    }
+    List<Post> posts = SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)
+        ? postRepository.findAllSortedWithUserId(sortType, securityUtil.getCustomUserId())
+        : postRepository.findAllSorted(sortType);
 
     return PostDto.from(posts);
   }
@@ -75,10 +68,10 @@ public class PostService {
 
   @Transactional
   //todo will change to message queue
-//  @Scheduled(fixedDelay = 1000 * 60 * 30)
+  @Scheduled(fixedDelay = 1000 * 60 * 30)
   public void checkPostIsDOne() {
     postRepository.findAll().forEach(post -> {
-      if (!post.isDone() && post.getCreateAt().plusHours(1).isBefore(LocalDateTime.now())) {
+      if (!post.isDone() && post.getCreatedAt().plusHours(24).isBefore(LocalDateTime.now())) {
         post.done();
       }
     });

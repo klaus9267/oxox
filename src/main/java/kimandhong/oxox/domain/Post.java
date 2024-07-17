@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +30,18 @@ public class Post extends TimeEntity {
   private String thumbnail;
 
   @Builder.Default
+  @Column(name = "is_done")
   private boolean isDone = false;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
-  @OneToMany(mappedBy = "post", orphanRemoval = true)
+  @OneToMany(mappedBy = "post", orphanRemoval = true, fetch = FetchType.LAZY)
+  @BatchSize(size = 1000)
   private final List<Comment> comments = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @BatchSize(size = 1000)
   private final List<Vote> votes = new ArrayList<>();
 
   public static Post from(final CreatePostDto postDto, final User user, final String thumbnailUrl) {

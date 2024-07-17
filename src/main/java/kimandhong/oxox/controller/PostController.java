@@ -6,8 +6,8 @@ import kimandhong.oxox.common.swagger.SwaggerCreated;
 import kimandhong.oxox.common.swagger.SwaggerNoContent;
 import kimandhong.oxox.common.swagger.SwaggerOK;
 import kimandhong.oxox.controller.param.SortType;
-import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.dto.post.CreatePostDto;
+import kimandhong.oxox.dto.post.PostDetailDto;
 import kimandhong.oxox.dto.post.PostDto;
 import kimandhong.oxox.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -35,21 +35,14 @@ public class PostController {
   }
 
   @GetMapping("{postId}")
-  @SwaggerOK(summary = "게시글 상세조회", description = "양측 투표 수 추가 예정")
-  public ResponseEntity<PostDto> readPost(@PathVariable("postId") final Long postId) {
-    final PostDto postDto = postService.readPost(postId);
+  @SwaggerOK(summary = "게시글 상세조회")
+  public ResponseEntity<PostDetailDto> readPost(@PathVariable("postId") final Long postId) {
+    final PostDetailDto postDto = postService.readPost(postId);
     return ResponseEntity.ok(postDto);
   }
 
-  @GetMapping("develop")
-  @SwaggerOK(summary = "게시글 전체 조회(개발용)")
-  public ResponseEntity<List<PostDto>> readAll() {
-    final List<PostDto> postDtos = postService.readAll();
-    return ResponseEntity.ok(postDtos);
-  }
-
   @GetMapping
-  @SwaggerOK(summary = "게시글 목록 조회", description = "join, writier은 로그인 필요 / HOY, CLOSE 사용 불가")
+  @SwaggerOK(summary = "게시글 목록 조회", description = "join, writier은 로그인 필요")
   public ResponseEntity<List<PostDto>> paginationPosts(@Valid final SortType sortType) {
     final List<PostDto> posts = postService.readAllPosts(sortType);
     return ResponseEntity.ok(posts);

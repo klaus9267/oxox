@@ -8,12 +8,4 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long>, PostCustomRepository {
   Optional<Post> findByIdAndUserId(final Long postId, final Long userId);
-//  @Query("""
-//      SELECT p
-//      FROM posts p
-//           LEFT JOIN FETCH reactions r
-//           LEFT JOIN FETCH votes v
-//      WHERE u.id = :userId
-//      """)
-//  Page<Post> findAllByPagination(final Pageable pageable);
 }

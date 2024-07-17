@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -33,7 +34,8 @@ public class Comment extends TimeEntity {
   @JsonIgnore
   private Post post;
 
-  @OneToMany(mappedBy = "comment", orphanRemoval = true)
+  @OneToMany(mappedBy = "comment", orphanRemoval = true, fetch = FetchType.LAZY)
+  @BatchSize(size = 1000)
   private final List<Reaction> reactions = new ArrayList<>();
 
   @ElementCollection(fetch = FetchType.LAZY)

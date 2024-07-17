@@ -1,6 +1,5 @@
 package kimandhong.oxox.repository.querydsl;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -10,6 +9,7 @@ import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.BadRequestException;
 import org.springframework.stereotype.Repository;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,44 +27,53 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
   }
 
   @Override
-  public List<Post> findAllWithPagination(SortType sortType) {
+  public List<Post> findAllSorted(SortType sortType) {
     if (SortType.JOIN.equals(sortType) || SortType.WRITER.equals(sortType)) {
       throw new BadRequestException(ErrorCode.WRONG_PARAMETER);
     }
 
-    final LocalDateTime time = LocalDateTime.now().minusDays(1);
-    final DateTimePath<LocalDateTime> datePath = post.createAt;
-    final JPAQuery<Post> query = jpaQueryFactory.selectFrom(post);
-    final BooleanBuilder builder = new BooleanBuilder()
-        .and(datePath.after(time))
-        .and(post.isDone.isFalse());
+    final Duration duration = SortType.HOT.equals(sortType) ? Duration.ofHours(1) : Duration.ofDays(1);
+    final LocalDateTime time = LocalDateTime.now().minus(duration);
 
+    final DateTimePath<LocalDateTime> datePath = post.createdAt;
+    final JPAQuery<Post> query = jpaQueryFactory
+        .selectFrom(post)
+        .where(post.isDone.isFalse()
+            .and(datePath.after(time)));
 
-    if (SortType.POPULARITY.equals(sortType)) {
-      query.leftJoin(post.votes, vote)
-          .groupBy(post.id)
-          .orderBy(vote.count().desc(), post.id.desc());
-    } else if (SortType.HOT.equals(sortType)) {
-      query.leftJoin(post.votes, vote)
-          .groupBy(post.id)
-          .orderBy(vote.count().desc(), post.id.desc());
-    } else if (SortType.BEST_REACTION.equals(sortType)) {
-      query.leftJoin(post.comments, comment)
-          .leftJoin(comment.reactions, reaction)
-          .orderBy(reaction.count().desc(), post.id.desc());
+    switch (sortType) {
+      case POPULARITY, HOT -> {
+        query.leftJoin(post.votes, vote)
+            .groupBy(post.id)
+            .orderBy(vote.count().desc(), post.id.desc());
+      }
+      case BEST_REACTION -> {
+        query.leftJoin(post.comments, comment)
+            .leftJoin(comment.reactions, reaction)
+            .groupBy(post.id)
+            .orderBy(reaction.count().desc(), post.id.desc());
+      }
+      case CLOSE -> {
+        query.leftJoin(post.votes, vote)
+            .groupBy(post.id)
+            .having(vote.isYes.when(true).then(1).otherwise(0).sum()
+                .multiply(100.0).divide(vote.count())
+                .subtract(50).abs().loe(5)
+            ).orderBy(vote.count().desc(), post.id.desc());
+      }
+      default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
 
     return query
-        .where(builder)
-        .groupBy(post.id)
+        .distinct()
         .fetch();
   }
 
   @Override
-  public List<Post> findAllWithPaginationAndUserId(SortType sortType, Long userId) {
+  public List<Post> findAllSortedWithUserId(SortType sortType, Long userId) {
     final LocalDateTime time = LocalDateTime.now().minusDays(1);
     final JPAQuery<Post> query = jpaQueryFactory.selectFrom(post)
-        .where(post.createAt.goe(time));
+        .where(post.createdAt.goe(time));
 
     if (SortType.WRITER.equals(sortType)) {
       query.where(post.user.id.eq(userId), post.isDone.isFalse());
@@ -74,6 +83,5 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     }
 
     return query.fetch();
-
   }
 }

@@ -23,7 +23,7 @@ public record CommentDto(
             .id(comment.getId())
             .content(comment.getContent())
             .user(UserDto.from(comment.getUser()))
-            .createAt(comment.getCreateAt())
+            .createAt(comment.getCreatedAt())
             .reactions(comment.getEmojiCounts())
             .build())
         .toList();
