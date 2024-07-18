@@ -1,6 +1,5 @@
 package kimandhong.oxox.service;
 
-import kimandhong.oxox.auth.SecurityUtil;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
@@ -9,6 +8,7 @@ import kimandhong.oxox.handler.error.exception.ConflictException;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.ProfileRepository;
 import kimandhong.oxox.repository.UserRepository;
+import kimandhong.oxox.repository.custom.ProfileCustomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
   private final UserRepository userRepository;
   private final ProfileRepository profileRepository;
+  private final ProfileCustomRepository profileCustomRepository;
   private final PasswordEncoder passwordEncoder;
 
   @Transactional
@@ -30,8 +31,7 @@ public class UserService {
     });
 
     final String password = passwordEncoder.encode(joinDto.password());
-    final Long sequence = profileRepository.findFirstByNicknameOrderBySequenceDesc(joinDto.nickname())
-        .map(profile -> profile.getSequence() + 1).orElse(1L);
+    final Long sequence = profileCustomRepository.findMaxSequenceByNickname(joinDto.nickname()) + 1;
 
     final User user = User.from(joinDto, password, sequence);
 

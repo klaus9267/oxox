@@ -4,9 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kimandhong.oxox.domain.User;
-import kimandhong.oxox.handler.error.ErrorCode;
-import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -37,14 +33,12 @@ public class JwtFilter extends OncePerRequestFilter {
       if (jwtUtil.validateToken(token)) {
         final Long userId = jwtUtil.getUserId(token);
         log.info("--------------------------------------- login(userId = " + userId + ") ---------------------------------------");
-        final Optional<User> userOptional = userRepository.findById(userId);
+        userRepository.findById(userId).ifPresent(user -> {
+          UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+              new UsernamePasswordAuthenticationToken(user, null, List.of(new SimpleGrantedAuthority("USER")));
+          SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        });
         log.info("-------------------------------------------------------------------------------------------------");
-        if (userOptional.isEmpty()) {
-          throw new NotFoundException(ErrorCode.NOT_FOUND_USER);
-        }
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-            new UsernamePasswordAuthenticationToken(userOptional.get(), null, List.of(new SimpleGrantedAuthority("USER")));
-        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
       }
     }
 

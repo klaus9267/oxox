@@ -12,7 +12,7 @@ import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.CommentRepository;
 import kimandhong.oxox.repository.PostRepository;
-import kimandhong.oxox.repository.querydsl.PostCustomRepository;
+import kimandhong.oxox.repository.custom.PostCustomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

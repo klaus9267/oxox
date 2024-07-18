@@ -1,4 +1,4 @@
-package kimandhong.oxox.repository.querydsl;
+package kimandhong.oxox.repository.custom;
 
 import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -13,13 +13,10 @@ import org.springframework.stereotype.Repository;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static kimandhong.oxox.domain.QComment.comment;
 import static kimandhong.oxox.domain.QPost.post;
-import static kimandhong.oxox.domain.QProfile.profile;
 import static kimandhong.oxox.domain.QReaction.reaction;
-import static kimandhong.oxox.domain.QUser.user;
 import static kimandhong.oxox.domain.QVote.vote;
 
 @Repository

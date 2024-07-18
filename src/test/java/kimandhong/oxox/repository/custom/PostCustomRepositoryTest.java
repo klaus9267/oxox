@@ -1,4 +1,4 @@
-package kimandhong.oxox.repository.querydsl;
+package kimandhong.oxox.repository.custom;
 
 import jakarta.persistence.EntityManager;
 import kimandhong.oxox.common.DataInitializer;
