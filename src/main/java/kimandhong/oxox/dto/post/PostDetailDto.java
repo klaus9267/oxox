@@ -21,9 +21,9 @@ public record PostDetailDto(
     UserDto user,
     LocalDateTime createAt,
     boolean isDone,
-    int commentCount,
     Long agreeCount,
     Long disAgreeCount,
+    int commentCount,
     List<CommentDto> comments
 ) {
   public static PostDetailDto from(final Post post, final List<Comment> comments) {
@@ -43,9 +43,9 @@ public record PostDetailDto(
         .thumbnailUrl(post.getThumbnail())
         .createAt(post.getCreatedAt())
         .isDone(post.isDone())
-        .commentCount(comments.size())
         .agreeCount(agreeCount)
         .disAgreeCount(disagreeCount)
+        .commentCount(comments.size())
         .comments(commentDtos)
         .build();
   }
