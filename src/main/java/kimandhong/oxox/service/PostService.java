@@ -59,11 +59,12 @@ public class PostService {
   }
 
   public List<PostDto> readAllPosts(final SortType sortType) {
-    List<Post> posts = SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)
+    return SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)
+//    List<Post> posts = SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)
         ? postCustomRepository.findAllSortedWithUserId(sortType, securityUtil.getCustomUserId())
         : postCustomRepository.findAllSorted(sortType);
 
-    return PostDto.from(posts);
+//    return PostDto.from(posts);
   }
 
   @Transactional

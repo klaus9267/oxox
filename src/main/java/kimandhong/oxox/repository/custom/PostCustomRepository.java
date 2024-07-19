@@ -1,10 +1,12 @@
 package kimandhong.oxox.repository.custom;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kimandhong.oxox.controller.param.SortType;
-import kimandhong.oxox.domain.Post;
+import kimandhong.oxox.dto.post.PostDto;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.List;
 import static kimandhong.oxox.domain.QComment.comment;
 import static kimandhong.oxox.domain.QPost.post;
 import static kimandhong.oxox.domain.QReaction.reaction;
+import static kimandhong.oxox.domain.QUser.user;
 import static kimandhong.oxox.domain.QVote.vote;
 
 @Repository
@@ -24,7 +27,7 @@ import static kimandhong.oxox.domain.QVote.vote;
 public class PostCustomRepository {
   private final JPAQueryFactory jpaQueryFactory;
 
-  public List<Post> findAllSorted(SortType sortType) {
+  public List<PostDto> findAllSorted(SortType sortType) {
     if (SortType.JOIN.equals(sortType) || SortType.WRITER.equals(sortType)) {
       throw new BadRequestException(ErrorCode.WRONG_PARAMETER);
     }
@@ -33,10 +36,8 @@ public class PostCustomRepository {
     final LocalDateTime time = LocalDateTime.now().minus(duration);
 
     final DateTimePath<LocalDateTime> datePath = post.createdAt;
-    final JPAQuery<Post> query = jpaQueryFactory
-        .selectFrom(post)
-        .where(post.isDone.isFalse()
-            .and(datePath.after(time)));
+    final JPAQuery<PostDto> query = this.createGetPostDtosQuery()
+        .where(post.isDone.isFalse(), datePath.after(time));
 
     switch (sortType) {
       case POPULARITY, HOT -> {
@@ -61,23 +62,44 @@ public class PostCustomRepository {
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
 
-    return query
-        .distinct()
-        .fetch();
+    return query.fetch();
   }
 
-  public List<Post> findAllSortedWithUserId(SortType sortType, Long userId) {
-    final LocalDateTime time = LocalDateTime.now().minusDays(1);
-    final JPAQuery<Post> query = jpaQueryFactory.selectFrom(post)
-        .where(post.createdAt.goe(time));
+  public List<PostDto> findAllSortedWithUserId(SortType sortType, Long userId) {
+    final JPAQuery<PostDto> query = this.createGetPostDtosQuery();
 
-    if (SortType.WRITER.equals(sortType)) {
-      query.where(post.user.id.eq(userId), post.isDone.isFalse());
-    } else if (SortType.JOIN.equals(sortType)) {
-      query.leftJoin(post.votes, vote)
-          .where(vote.user.id.eq(userId), post.isDone.isFalse());
+    switch (sortType) {
+      case WRITER -> {
+        query.leftJoin(post.user, user).fetchJoin()
+            .where(user.id.eq(userId))
+            .distinct();
+      }
+      case JOIN -> {
+        query.leftJoin(post.votes, vote)
+            .where(vote.user.id.eq(userId));
+      }
+      default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
 
     return query.fetch();
+  }
+
+  private JPAQuery<PostDto> createGetPostDtosQuery() {
+    return jpaQueryFactory
+        .select(Projections.constructor(PostDto.class,
+            post.id,
+            post.title,
+            post.thumbnail,
+            post.createdAt,
+            post.isDone,
+            post.comments.size(),
+            JPAExpressions.select(vote.count())
+                .from(vote)
+                .where(vote.post.eq(post).and(vote.isYes.isTrue())),
+            JPAExpressions.select(vote.count())
+                .from(vote)
+                .where(vote.post.eq(post).and(vote.isYes.isFalse()))
+        ))
+        .from(post);
   }
 }
