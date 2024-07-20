@@ -41,7 +41,6 @@ public class Profile {
         .build();
   }
 
-
   public void updateProfile(final UpdateProfileDto updateProfileDto, final Long sequence) {
     this.emoji = updateProfileDto.emoji();
     this.nickname = updateProfileDto.nickname();
