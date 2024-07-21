@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.S3Exception;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +27,9 @@ public class S3Service {
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
 
-  public String uploadThumbnail(final MultipartFile thumbnail) {
+  public String uploadFile(final MultipartFile thumbnail, final S3path path) {
     try {
-      final String fileName = "thumbnail/" + thumbnail.getOriginalFilename();
+      final String fileName = path.getValue() + thumbnail.getOriginalFilename();
 
       ObjectMetadata metadata = new ObjectMetadata();
       metadata.setContentType(thumbnail.getContentType());
@@ -45,7 +46,7 @@ public class S3Service {
   }
 
 
-  public void deleteThumbnail(String imageAddress) {
+  public void deleteFile(String imageAddress) {
     String key = getKeyFromImageAddress(imageAddress);
     try {
       amazonS3.deleteObject(new DeleteObjectRequest(bucket, key));

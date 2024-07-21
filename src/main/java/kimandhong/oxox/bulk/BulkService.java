@@ -1,7 +1,6 @@
 package kimandhong.oxox.bulk;
 
 import kimandhong.oxox.domain.*;
-import kimandhong.oxox.domain.enums.ReactionEmoji;
 import kimandhong.oxox.dto.post.CreatePostDto;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.repository.*;
@@ -28,8 +27,8 @@ public class BulkService {
     List<User> users = new ArrayList<>();
     String password = passwordEncoder.encode("tess password");
     for (int i = 0; i < 1000; i++) {
-      JoinDto joinDto = new JoinDto("test" + i + "@email.com", null, "bulk nickname" + i, "emoji");
-      User user = User.from(joinDto, password, 1L);
+      JoinDto joinDto = new JoinDto("test" + i + "@email.com", null, "bulk nickname" + i);
+      User user = User.from(joinDto, password, 1L, null);
       users.add(user);
     }
     userRepository.saveAll(users);

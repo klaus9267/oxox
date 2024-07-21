@@ -13,7 +13,7 @@ public record ProfileDto(
   public static ProfileDto from(final Profile profile) {
     return ProfileDto.builder()
         .id(profile.getId())
-        .emoji(profile.getEmoji())
+        .emoji(profile.getImage())
         .nickname(profile.getNickname())
         .sequence(profile.getSequence())
         .build();

@@ -11,6 +11,7 @@ import kimandhong.oxox.dto.post.PostDetailDto;
 import kimandhong.oxox.dto.post.PostDto;
 import kimandhong.oxox.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +27,9 @@ import java.util.List;
 public class PostController {
   private final PostService postService;
 
-  @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @SwaggerCreated(summary = "게시글 생성")
-  public ResponseEntity<PostDto> createPost(@RequestPart @Valid final CreatePostDto createPostDto,
+  public ResponseEntity<PostDto> createPost(@ParameterObject @Valid final CreatePostDto createPostDto,
                                             @RequestPart(required = false) final MultipartFile thumbnail) {
     final PostDto postDto = postService.createPost(createPostDto, thumbnail);
     return ResponseEntity.status(HttpStatus.CREATED).body(postDto);

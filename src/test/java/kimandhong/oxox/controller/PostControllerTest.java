@@ -1,6 +1,7 @@
 package kimandhong.oxox.controller;
 
 import kimandhong.oxox.common.AbstractTest;
+import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.dto.post.CreatePostDto;
 import kimandhong.oxox.repository.PostRepository;
@@ -37,7 +38,7 @@ class PostControllerTest extends AbstractTest {
     MockMultipartFile createPostDtoPart = new MockMultipartFile("createPostDto", null, MediaType.APPLICATION_JSON_VALUE, createPostDtoJson.getBytes());
     MockMultipartFile thumbnail = new MockMultipartFile("thumbnail", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "test image required".getBytes());
 
-    when(s3Service.uploadThumbnail(any(MultipartFile.class))).thenReturn("thumbnail url");
+    when(s3Service.uploadFile(any(MultipartFile.class), any(S3path.class))).thenReturn("thumbnail url");
 
     mockMvc.perform(multipart(END_POINT)
             .file(thumbnail)

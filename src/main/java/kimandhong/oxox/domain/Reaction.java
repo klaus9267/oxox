@@ -1,7 +1,6 @@
 package kimandhong.oxox.domain;
 
 import jakarta.persistence.*;
-import kimandhong.oxox.domain.enums.ReactionEmoji;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

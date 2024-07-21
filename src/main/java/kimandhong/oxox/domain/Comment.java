@@ -2,12 +2,10 @@ package kimandhong.oxox.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import kimandhong.oxox.domain.enums.ReactionEmoji;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
