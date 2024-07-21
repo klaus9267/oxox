@@ -2,30 +2,31 @@ package kimandhong.oxox.dto.post;
 
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.domain.Vote;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Getter
 @Builder
-public record PostDto(
-    Long id,
-    String title,
-    String thumbnailUrl,
-    LocalDateTime createAt,
-    boolean isDone,
-    int commentCount,
-    Long agreeCount,
-    Long disAgreeCount
-) {
-  public static PostDto from(final Post post) {
-    Map<Boolean, Long> voteCounts = post.getVotes().stream()
-        .collect(Collectors.partitioningBy(Vote::isYes, Collectors.counting()));
+@AllArgsConstructor
+public class PostDto {
+  private Long id;
+  private String title;
+  private String thumbnailUrl;
+  private LocalDateTime createAt;
+  private boolean isDone;
+  private int commentCount;
+  private Long agreeCount;
+  private Long disAgreeCount;
 
-    final Long agreeCount = voteCounts.get(true);
-    final Long disagreeCount = voteCounts.get(false);
+  public static PostDto from(final Post post) {
+    final Map<Boolean, Long> voteCounts = post.getVotes().stream()
+        .collect(Collectors.partitioningBy(Vote::isYes, Collectors.counting()));
 
     return PostDto.builder()
         .id(post.getId())
@@ -34,8 +35,8 @@ public record PostDto(
         .createAt(post.getCreatedAt())
         .isDone(post.isDone())
         .commentCount(post.getComments().size())
-        .agreeCount(agreeCount)
-        .disAgreeCount(disagreeCount)
+        .agreeCount(voteCounts.get(true))
+        .disAgreeCount(voteCounts.get(false))
         .build();
   }
 

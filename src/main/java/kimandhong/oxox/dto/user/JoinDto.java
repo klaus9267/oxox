@@ -18,7 +18,6 @@ public record JoinDto(
     @NotBlank(message = "nickname is required")
     @Schema(example = "test nickname")
     String nickname,
-    @NotBlank(message = "emoji is required")
     @Schema(example = "🔔")
     String profileEmoji
 ) {

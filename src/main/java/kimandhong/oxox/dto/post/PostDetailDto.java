@@ -1,5 +1,6 @@
 package kimandhong.oxox.dto.post;
 
+import kimandhong.oxox.domain.Comment;
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.domain.Vote;
 import kimandhong.oxox.dto.comment.CommentDto;
@@ -20,14 +21,14 @@ public record PostDetailDto(
     UserDto user,
     LocalDateTime createAt,
     boolean isDone,
-    int commentCount,
     Long agreeCount,
     Long disAgreeCount,
+    int commentCount,
     List<CommentDto> comments
 ) {
-  public static PostDetailDto from(final Post post) {
+  public static PostDetailDto from(final Post post, final List<Comment> comments) {
     final UserDto userDto = UserDto.from(post.getUser());
-    final List<CommentDto> commentDtos = CommentDto.from(post.getComments());
+    final List<CommentDto> commentDtos = CommentDto.from(comments);
     Map<Boolean, Long> voteCounts = post.getVotes().stream()
         .collect(Collectors.partitioningBy(Vote::isYes, Collectors.counting()));
 
@@ -42,9 +43,9 @@ public record PostDetailDto(
         .thumbnailUrl(post.getThumbnail())
         .createAt(post.getCreatedAt())
         .isDone(post.isDone())
-        .commentCount(post.getComments().size())
         .agreeCount(agreeCount)
         .disAgreeCount(disagreeCount)
+        .commentCount(comments.size())
         .comments(commentDtos)
         .build();
   }

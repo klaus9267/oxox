@@ -46,5 +46,11 @@ public class Profile {
     this.nickname = updateProfileDto.nickname();
     this.sequence = sequence;
   }
+
+  public void updateSequence(final Long standardSequence) {
+    if (this.sequence > standardSequence) {
+      this.sequence--;
+    }
+  }
 }
 

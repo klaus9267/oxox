@@ -2,6 +2,7 @@ package kimandhong.oxox.service;
 
 import kimandhong.oxox.auth.SecurityUtil;
 import kimandhong.oxox.controller.param.SortType;
+import kimandhong.oxox.domain.Comment;
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.post.CreatePostDto;
@@ -9,7 +10,9 @@ import kimandhong.oxox.dto.post.PostDetailDto;
 import kimandhong.oxox.dto.post.PostDto;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
+import kimandhong.oxox.repository.CommentRepository;
 import kimandhong.oxox.repository.PostRepository;
+import kimandhong.oxox.repository.custom.PostCustomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -23,6 +26,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostService {
   private final PostRepository postRepository;
+  private final PostCustomRepository postCustomRepository;
+  private final CommentRepository commentRepository;
+
   private final SecurityUtil securityUtil;
   private final S3Service s3Service;
 
@@ -43,8 +49,9 @@ public class PostService {
   }
 
   public PostDetailDto readPost(final Long id) {
-    final Post post = this.findById(id);
-    return PostDetailDto.from(post);
+    final Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
+    final List<Comment> comments = commentRepository.findAllByPostId(id);
+    return PostDetailDto.from(post, comments);
   }
 
   public Post findById(final Long id) {
@@ -52,11 +59,12 @@ public class PostService {
   }
 
   public List<PostDto> readAllPosts(final SortType sortType) {
-    List<Post> posts = SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)
-        ? postRepository.findAllSortedWithUserId(sortType, securityUtil.getCustomUserId())
-        : postRepository.findAllSorted(sortType);
+    return SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)
+//    List<Post> posts = SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)
+        ? postCustomRepository.findAllSortedWithUserId(sortType, securityUtil.getCustomUserId())
+        : postCustomRepository.findAllSorted(sortType);
 
-    return PostDto.from(posts);
+//    return PostDto.from(posts);
   }
 
   @Transactional
@@ -67,7 +75,7 @@ public class PostService {
   }
 
   @Transactional
-  //todo will change to message queue
+  //todo: will change to message queue
   @Scheduled(fixedDelay = 1000 * 60 * 30)
   public void checkPostIsDOne() {
     postRepository.findAll().forEach(post -> {

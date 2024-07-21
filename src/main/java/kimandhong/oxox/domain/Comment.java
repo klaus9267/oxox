@@ -35,7 +35,6 @@ public class Comment extends TimeEntity {
   private Post post;
 
   @OneToMany(mappedBy = "comment", orphanRemoval = true, fetch = FetchType.LAZY)
-  @BatchSize(size = 1000)
   private final List<Reaction> reactions = new ArrayList<>();
 
   @ElementCollection(fetch = FetchType.LAZY)
