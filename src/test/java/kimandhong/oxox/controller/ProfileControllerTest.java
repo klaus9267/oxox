@@ -15,12 +15,11 @@ class ProfileControllerTest extends AbstractTest {
   @Test
   public void updateProfile() throws Exception {
     ProfileDto profileDto = new ProfileDto(1L, "test emoji", "test nickname", 1L);
-    UpdateProfileDto updateProfileDto = new UpdateProfileDto(profileDto.nickname(), profileDto.emoji());
 
     mockMvc.perform(patch(END_POINT)
             .contentType(APPLICATION_JSON)
             .header("Authorization", token)
-            .content(objectMapper.writeValueAsString(updateProfileDto)))
+            )
         .andExpect(status().isOk())
         .andExpect(content().json(objectMapper.writeValueAsString(profileDto)));
   }

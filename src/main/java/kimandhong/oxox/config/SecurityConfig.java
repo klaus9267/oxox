@@ -44,7 +44,7 @@ public class SecurityConfig {
 
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(AUTH_WHITELIST).permitAll()
-            .requestMatchers(HttpMethod.GET, "api/posts","api/posts/**").permitAll()
+            .requestMatchers(HttpMethod.GET, "api/posts", "api/posts/**").permitAll()
             .anyRequest().authenticated()
         )
 

@@ -23,7 +23,7 @@ class UserControllerTest extends AbstractTest {
   @Test
   public void join() throws Exception {
     Integer id = userRepository.findAll().size() + 1;
-    JoinDto joinDto = new JoinDto("test@email.com", "test password", "test nickname", "test emoji");
+    JoinDto joinDto = new JoinDto("test@email.com", "test password", "test nickname");
 
     mockMvc.perform(post(END_POINT + "join")
             .contentType(APPLICATION_JSON)
@@ -31,8 +31,7 @@ class UserControllerTest extends AbstractTest {
         .andExpect(status().isCreated())
         .andExpect(jsonPath(("$.id")).value((long) id))
         .andExpect(jsonPath(("$.email")).value(joinDto.email()))
-        .andExpect(jsonPath(("$.nickname")).value(joinDto.nickname()))
-        .andExpect(jsonPath(("$.profileEmoji")).value(joinDto.profileEmoji()));
+        .andExpect(jsonPath(("$.nickname")).value(joinDto.nickname()));
   }
 
   @Test
