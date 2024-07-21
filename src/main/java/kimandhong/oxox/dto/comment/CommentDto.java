@@ -1,7 +1,7 @@
 package kimandhong.oxox.dto.comment;
 
 import kimandhong.oxox.domain.Comment;
-import kimandhong.oxox.domain.enums.ReactionEmoji;
+import kimandhong.oxox.domain.ReactionEmoji;
 import kimandhong.oxox.dto.user.UserDto;
 import lombok.Builder;
 

@@ -1,6 +1,7 @@
 package kimandhong.oxox.service;
 
 import kimandhong.oxox.auth.SecurityUtil;
+import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.controller.param.SortType;
 import kimandhong.oxox.domain.Comment;
 import kimandhong.oxox.domain.Post;
@@ -35,7 +36,7 @@ public class PostService {
   @Transactional
   public PostDto createPost(final CreatePostDto createPostDto, final MultipartFile thumbnail) {
     final User user = securityUtil.getCurrentUser();
-    final String thumbnailUrl = thumbnail != null ? s3Service.uploadThumbnail(thumbnail) : null;
+    final String thumbnailUrl = thumbnail != null ? s3Service.uploadFile(thumbnail, S3path.THUMBNAIL) : null;
 
     try {
       final Post post = Post.from(createPostDto, user, thumbnailUrl);

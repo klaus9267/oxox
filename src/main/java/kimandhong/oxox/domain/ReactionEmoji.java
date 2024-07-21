@@ -1,4 +1,4 @@
-package kimandhong.oxox.domain.enums;
+package kimandhong.oxox.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

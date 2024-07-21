@@ -2,7 +2,7 @@ package kimandhong.oxox.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kimandhong.oxox.common.swagger.SwaggerCreated;
-import kimandhong.oxox.domain.enums.ReactionEmoji;
+import kimandhong.oxox.domain.ReactionEmoji;
 import kimandhong.oxox.service.ReactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

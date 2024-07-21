@@ -1,7 +1,7 @@
 package kimandhong.oxox.bulk;
 
 import kimandhong.oxox.domain.*;
-import kimandhong.oxox.domain.enums.ReactionEmoji;
+import kimandhong.oxox.domain.ReactionEmoji;
 import kimandhong.oxox.dto.post.CreatePostDto;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.repository.*;
