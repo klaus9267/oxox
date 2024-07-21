@@ -46,7 +46,7 @@ public class S3Service {
   }
 
 
-  public void deleteThumbnail(String imageAddress) {
+  public void deleteFile(String imageAddress) {
     String key = getKeyFromImageAddress(imageAddress);
     try {
       amazonS3.deleteObject(new DeleteObjectRequest(bucket, key));

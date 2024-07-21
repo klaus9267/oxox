@@ -44,7 +44,7 @@ public class PostService {
 
       return PostDto.from(savedPost);
     } catch (Exception e) {
-      s3Service.deleteThumbnail(thumbnailUrl);
+      s3Service.deleteFile(thumbnailUrl);
       throw new RuntimeException(e.getMessage());
     }
   }
@@ -72,7 +72,7 @@ public class PostService {
   public void deletePost(final Long id) {
     final Post post = postRepository.findByIdAndUserId(id, securityUtil.getCustomUserId()).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
     postRepository.deleteById(post.getId());
-    s3Service.deleteThumbnail(post.getThumbnail());
+    s3Service.deleteFile(post.getThumbnail());
   }
 
   @Transactional

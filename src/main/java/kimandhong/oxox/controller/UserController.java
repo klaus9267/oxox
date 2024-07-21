@@ -5,16 +5,17 @@ import jakarta.validation.Valid;
 import kimandhong.oxox.auth.JwtUtil;
 import kimandhong.oxox.auth.SecurityUtil;
 import kimandhong.oxox.common.swagger.SwaggerCreated;
-import kimandhong.oxox.common.swagger.SwaggerOK;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
 import kimandhong.oxox.dto.user.UserDto;
 import kimandhong.oxox.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/users")
@@ -27,8 +28,9 @@ public class UserController {
 
   @PostMapping("join")
   @SwaggerCreated(summary = "회원가입")
-  public ResponseEntity<UserDto> join(@RequestBody @Valid final JoinDto joinDto) {
-    final User user = userService.join(joinDto);
+  public ResponseEntity<UserDto> join(@ParameterObject @Valid final JoinDto joinDto,
+                                      @RequestPart(required = false) final MultipartFile profileImage) {
+    final User user = userService.join(joinDto, profileImage);
     final String token = jwtUtil.createAccessToken(user);
 
     return ResponseEntity.status(HttpStatus.CREATED).header("Authorization", token).body(UserDto.from(user));

@@ -2,7 +2,6 @@ package kimandhong.oxox.controller;
 
 import kimandhong.oxox.common.AbstractTest;
 import kimandhong.oxox.dto.profile.ProfileDto;
-import kimandhong.oxox.dto.profile.UpdateProfileDto;
 import org.junit.jupiter.api.Test;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;

@@ -2,7 +2,6 @@ package kimandhong.oxox.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import kimandhong.oxox.dto.profile.UpdateProfileDto;
 import kimandhong.oxox.dto.user.JoinDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +19,7 @@ public class Profile {
   private Long id;
 
   @Column
-  private String emoji;
+  private String image;
 
   @Column(nullable = false)
   private String nickname;
@@ -32,18 +31,18 @@ public class Profile {
   @JsonIgnore
   private User user;
 
-  public static Profile from(final JoinDto joinDto, final User user, final Long sequence) {
+  public static Profile from(final JoinDto joinDto, final User user, final Long sequence, final String profileImageUrl) {
     return Profile.builder()
         .nickname(joinDto.nickname())
         .user(user)
-        .emoji(joinDto.profileEmoji())
+        .image(profileImageUrl)
         .sequence(sequence)
         .build();
   }
 
-  public void updateProfile(final UpdateProfileDto updateProfileDto, final Long sequence) {
-    this.emoji = updateProfileDto.emoji();
-    this.nickname = updateProfileDto.nickname();
+  public void updateProfile(final String nickname, final Long sequence, final String image) {
+    this.image = image;
+    this.nickname = nickname;
     this.sequence = sequence;
   }
 

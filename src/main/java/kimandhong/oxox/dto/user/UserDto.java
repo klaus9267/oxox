@@ -17,7 +17,7 @@ public record UserDto(
     return UserDto.builder()
         .id(user.getId())
         .email(user.getEmail())
-        .profileEmoji(profile.getEmoji())
+        .profileEmoji(profile.getImage())
         .nickname(profile.getNickname())
         .sequence(profile.getSequence())
         .build();
@@ -28,7 +28,7 @@ public record UserDto(
     return UserDto.builder()
         .id(user.getId())
         .email(user.getEmail())
-        .profileEmoji(profile.getEmoji())
+        .profileEmoji(profile.getImage())
         .nickname(profile.getNickname())
         .sequence(profile.getSequence())
         .build();

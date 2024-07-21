@@ -47,6 +47,6 @@ class UserControllerTest extends AbstractTest {
         .andExpect(jsonPath(("$.id")).value(user.getId()))
         .andExpect(jsonPath(("$.email")).value(user.getEmail()))
         .andExpect(jsonPath(("$.nickname")).value(user.getProfile().getNickname()))
-        .andExpect(jsonPath(("$.profileEmoji")).value(user.getProfile().getEmoji()));
+        .andExpect(jsonPath(("$.profileEmoji")).value(user.getProfile().getImage()));
   }
 }

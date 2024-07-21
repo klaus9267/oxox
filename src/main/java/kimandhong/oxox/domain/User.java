@@ -44,13 +44,13 @@ public class User extends TimeEntity {
   @JsonIgnore
   private final List<Vote> votes = new ArrayList<>();
 
-  private User(final JoinDto joinDto, final String password, final Long sequence) {
+  private User(final JoinDto joinDto, final String password, final Long sequence, final String profileImage) {
     this.email = joinDto.email();
     this.password = password;
-    this.profile = Profile.from(joinDto, this, sequence);
+    this.profile = Profile.from(joinDto, this, sequence, profileImage);
   }
 
-  public static User from(final JoinDto joinDto, final String password, final Long sequence) {
-    return new User(joinDto, password, sequence);
+  public static User from(final JoinDto joinDto, final String password, final Long sequence, final String profileImage) {
+    return new User(joinDto, password, sequence, profileImage);
   }
 }
