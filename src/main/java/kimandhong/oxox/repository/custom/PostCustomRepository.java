@@ -2,12 +2,10 @@ package kimandhong.oxox.repository.custom;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.DateTimePath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kimandhong.oxox.controller.param.PostCondition;
-import kimandhong.oxox.controller.param.PostPaginationParam;
 import kimandhong.oxox.dto.post.PostDto;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.BadRequestException;
@@ -32,19 +30,11 @@ import static kimandhong.oxox.domain.QVote.vote;
 public class PostCustomRepository {
   private final JPAQueryFactory jpaQueryFactory;
 
-  public Page<PostDto> findAllSorted(final PostPaginationParam paginationParam, final Pageable pageable) {
-    final PostCondition postCondition = paginationParam.condition();
-    if (PostCondition.JOIN.equals(postCondition) || PostCondition.WRITER.equals(postCondition)) {
-      throw new BadRequestException(ErrorCode.WRONG_PARAMETER);
-    }
-
+  public Page<PostDto> findAllSorted(final PostCondition postCondition, final Pageable pageable) {
     final Duration duration = PostCondition.HOT.equals(postCondition) ? Duration.ofHours(1) : Duration.ofDays(1);
     final LocalDateTime time = LocalDateTime.now().minus(duration);
 
-    final DateTimePath<LocalDateTime> datePath = post.createdAt;
-    final JPAQuery<PostDto> query = this.createGetPostDtosQuery()
-        .where(datePath.after(time));
-
+    JPAQuery<PostDto> query = this.createBaseQuery(pageable);
     switch (postCondition == null ? PostCondition.DEFAULT : postCondition) {
       case POPULARITY, HOT -> {
         query.leftJoin(post.votes, vote)
@@ -71,50 +61,32 @@ public class PostCustomRepository {
       case DEFAULT -> query.orderBy(post.id.desc());
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
-    final List<PostDto> postDtos = query
-        .offset(pageable.getOffset())
-        .limit(pageable.getPageSize())
+
+    final List<PostDto> contents = query
+        .where(post.createdAt.after(time))
         .fetch();
 
-    final JPAQuery<Long> count = jpaQueryFactory.select(post.count())
-        .from(post)
-        .where(post.isDone.isFalse(), datePath.after(time));
+    final JPAQuery<Long> count = this.createCountQuery().where(post.createdAt.after(time));
 
-    return PageableExecutionUtils.getPage(postDtos, pageable, count::fetchOne);
+    return PageableExecutionUtils.getPage(contents, pageable, count::fetchOne);
   }
 
-  public Page<PostDto> findAllSortedWithUserId(final PostPaginationParam paginationParam, final Pageable pageable, Long userId) {
-    final JPAQuery<PostDto> query = this.createGetPostDtosQuery();
-    final PostCondition postCondition = paginationParam.condition();
+  public Page<PostDto> findAllSortedWithUserId(final PostCondition postCondition, final Pageable pageable, Long userId) {
+    JPAQuery<PostDto> query = this.createBaseQuery(pageable);
     final BooleanBuilder builder = new BooleanBuilder();
 
     switch (postCondition) {
-      case WRITER -> {
-        builder.and(user.id.eq(userId));
-        query.leftJoin(post.user, user).fetchJoin()
-            .distinct();
-      }
-      case JOIN -> {
-        builder.and(vote.user.id.eq(userId));
-        query.leftJoin(post.votes, vote);
-      }
+      case WRITER -> builder.and(user.id.eq(userId));
+      case JOIN -> builder.and(vote.user.id.eq(userId));
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
 
-    final List<PostDto> postDtos = query
-        .where(builder)
-        .offset(pageable.getOffset())
-        .limit(pageable.getPageSize())
-        .fetch();
+    final JPAQuery<Long> count = this.createCountQuery().where(builder);
 
-    final JPAQuery<Long> count = jpaQueryFactory.select(post.count())
-        .from(post)
-        .where(builder);
-
-    return PageableExecutionUtils.getPage(postDtos, pageable, count::fetchOne);
+    return PageableExecutionUtils.getPage(query.fetch(), pageable, count::fetchOne);
   }
 
-  private JPAQuery<PostDto> createGetPostDtosQuery() {
+  private JPAQuery<PostDto> createBaseQuery(final Pageable pageable) {
     return jpaQueryFactory
         .select(Projections.constructor(PostDto.class,
             post.id,
@@ -130,6 +102,13 @@ public class PostCustomRepository {
                 .from(vote)
                 .where(vote.post.eq(post).and(vote.isYes.isFalse()))
         ))
+        .from(post)
+        .offset(pageable.getOffset())
+        .limit(pageable.getPageSize());
+  }
+
+  private JPAQuery<Long> createCountQuery() {
+    return jpaQueryFactory.select(post.count())
         .from(post);
   }
 }
