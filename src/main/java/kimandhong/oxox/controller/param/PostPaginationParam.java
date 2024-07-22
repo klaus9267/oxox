@@ -9,7 +9,7 @@ public record PostPaginationParam(
     Integer page,
     @Parameter(example = "10")
     Integer size,
-    @Parameter
+    @Parameter(required = false)
     PostCondition condition
 ) {
   public PostPaginationParam(final Integer page, final Integer size, final PostCondition condition) {

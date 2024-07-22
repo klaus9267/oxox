@@ -43,28 +43,32 @@ public class PostCustomRepository {
 
     final DateTimePath<LocalDateTime> datePath = post.createdAt;
     final JPAQuery<PostDto> query = this.createGetPostDtosQuery()
-        .where(post.isDone.isFalse(), datePath.after(time));
+        .where(datePath.after(time));
 
-    switch (postCondition) {
+    switch (postCondition == null ? PostCondition.DEFAULT : postCondition) {
       case POPULARITY, HOT -> {
         query.leftJoin(post.votes, vote)
+            .where(post.isDone.isFalse())
             .groupBy(post.id)
             .orderBy(vote.count().desc(), post.id.desc());
       }
       case BEST_REACTION -> {
         query.leftJoin(post.comments, comment)
             .leftJoin(comment.reactions, reaction)
+            .where(post.isDone.isFalse())
             .groupBy(post.id)
             .orderBy(reaction.count().desc(), post.id.desc());
       }
       case CLOSE -> {
         query.leftJoin(post.votes, vote)
+            .where(post.isDone.isFalse())
             .groupBy(post.id)
             .having(vote.isYes.when(true).then(1).otherwise(0).sum()
                 .multiply(100.0).divide(vote.count())
                 .subtract(50).abs().loe(5)
             ).orderBy(vote.count().desc(), post.id.desc());
       }
+      case DEFAULT -> query.orderBy(post.id.desc());
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
     final List<PostDto> postDtos = query
