@@ -63,7 +63,7 @@ public class PostService {
   }
 
   public PostPaginationDto readAllPosts(final PostPaginationParam paginationParam) {
-    final PostCondition postCondition = paginationParam.postCondition();
+    final PostCondition postCondition = paginationParam.condition();
 
     Page<PostDto> posts = PostCondition.WRITER.equals(postCondition) || PostCondition.JOIN.equals(postCondition)
         ? postCustomRepository.findAllSortedWithUserId(paginationParam, paginationParam.toPageable(), securityUtil.getCustomUserId())

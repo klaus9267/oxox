@@ -10,12 +10,12 @@ public record PostPaginationParam(
     @Parameter(example = "10")
     Integer size,
     @Parameter
-    PostCondition postCondition
+    PostCondition condition
 ) {
-  public PostPaginationParam(final Integer page, final Integer size, final PostCondition postCondition) {
+  public PostPaginationParam(final Integer page, final Integer size, final PostCondition condition) {
     this.page = Math.max(0, page);
     this.size = Math.max(10, size);
-    this.postCondition = postCondition;
+    this.condition = condition;
   }
 
   public Pageable toPageable() {

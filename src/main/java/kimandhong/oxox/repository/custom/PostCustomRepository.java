@@ -33,7 +33,7 @@ public class PostCustomRepository {
   private final JPAQueryFactory jpaQueryFactory;
 
   public Page<PostDto> findAllSorted(final PostPaginationParam paginationParam, final Pageable pageable) {
-    final PostCondition postCondition = paginationParam.postCondition();
+    final PostCondition postCondition = paginationParam.condition();
     if (PostCondition.JOIN.equals(postCondition) || PostCondition.WRITER.equals(postCondition)) {
       throw new BadRequestException(ErrorCode.WRONG_PARAMETER);
     }
@@ -81,7 +81,7 @@ public class PostCustomRepository {
 
   public Page<PostDto> findAllSortedWithUserId(final PostPaginationParam paginationParam, final Pageable pageable, Long userId) {
     final JPAQuery<PostDto> query = this.createGetPostDtosQuery();
-    final PostCondition postCondition = paginationParam.postCondition();
+    final PostCondition postCondition = paginationParam.condition();
     final BooleanBuilder builder = new BooleanBuilder();
 
     switch (postCondition) {
