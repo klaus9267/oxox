@@ -53,11 +53,13 @@ jobs:
           touch ./application-server.yml
           touch ./application-swagger.yml
           touch ./application-aws.yml
+          touch ./application-monitor.yml
           echo "${{ secrets.DB }}" >> ./application-db.yml
           echo "${{ secrets.AUTH }}" >> ./application-auth.yml
           echo "${{ secrets.SERVER }}" >> ./application-server.yml
           echo "${{ secrets.SWAGGER }}" >> ./application-swagger.yml
           echo "${{ secrets.AWS }}" >> ./application-aws.yml
+          echo "${{ secrets.MONITOR }}" >> ./application-monitor.yml
         shell: bash
 
       - name: Build with Gradle
