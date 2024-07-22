@@ -45,7 +45,7 @@ public class PostCustomRepository {
     final JPAQuery<PostDto> query = this.createGetPostDtosQuery()
         .where(post.isDone.isFalse(), datePath.after(time));
 
-    switch (postCondition) {
+    switch (postCondition == null ? PostCondition.DEFAULT : postCondition) {
       case POPULARITY, HOT -> {
         query.leftJoin(post.votes, vote)
             .groupBy(post.id)
@@ -65,6 +65,7 @@ public class PostCustomRepository {
                 .subtract(50).abs().loe(5)
             ).orderBy(vote.count().desc(), post.id.desc());
       }
+      case DEFAULT -> query.orderBy(post.id.desc());
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
     final List<PostDto> postDtos = query

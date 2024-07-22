@@ -8,7 +8,7 @@ public enum PostCondition {
   BEST_REACTION, HOT, CLOSE,
 
   // 목록 조회
-  POPULARITY,
+  POPULARITY, DEFAULT,
 
   // 마이 페이지
   WRITER,
