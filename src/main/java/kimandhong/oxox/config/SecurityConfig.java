@@ -26,11 +26,12 @@ public class SecurityConfig {
   private final UserRepository userRepository;
 
   private static final String[] AUTH_WHITELIST = {
-      "api/users/**",
-      "api/bulks/**",
-      "swagger/**",
-      "swagger-ui/**",
-      "v3/**",
+      "/api/users/**",
+      "/api/bulks/**",
+      "/swagger/**",
+      "/swagger-ui/**",
+      "/v3/**",
+      "/actuator/**",
   };
 
   @Bean
