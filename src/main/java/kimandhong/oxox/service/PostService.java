@@ -65,9 +65,10 @@ public class PostService {
   public PostPaginationDto readAllPosts(final PostPaginationParam paginationParam) {
     final PostCondition postCondition = paginationParam.condition();
 
-    Page<PostDto> posts = PostCondition.WRITER.equals(postCondition) || PostCondition.JOIN.equals(postCondition)
-        ? postCustomRepository.findAllSortedWithUserId(paginationParam.condition(), paginationParam.toPageable(), securityUtil.getCustomUserId())
-        : postCustomRepository.findAllSorted(paginationParam.condition(), paginationParam.toPageable());
+    Page<PostDto> posts = switch (postCondition) {
+      case WRITER, JOIN -> postCustomRepository.findAllSortedWithUserId(postCondition, paginationParam.toPageable(), securityUtil.getCustomUserId());
+      default -> postCustomRepository.findAllSorted(postCondition, paginationParam.toPageable());
+    };
 
     return PostPaginationDto.from(posts);
   }
