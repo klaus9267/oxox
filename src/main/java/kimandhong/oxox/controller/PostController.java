@@ -5,10 +5,11 @@ import jakarta.validation.Valid;
 import kimandhong.oxox.common.swagger.SwaggerCreated;
 import kimandhong.oxox.common.swagger.SwaggerNoContent;
 import kimandhong.oxox.common.swagger.SwaggerOK;
-import kimandhong.oxox.controller.param.SortType;
+import kimandhong.oxox.controller.param.PostPaginationParam;
 import kimandhong.oxox.dto.post.CreatePostDto;
 import kimandhong.oxox.dto.post.PostDetailDto;
 import kimandhong.oxox.dto.post.PostDto;
+import kimandhong.oxox.dto.post.PostPaginationDto;
 import kimandhong.oxox.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -17,8 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
@@ -44,8 +43,8 @@ public class PostController {
 
   @GetMapping
   @SwaggerOK(summary = "게시글 목록 조회", description = "join, writier은 로그인 필요")
-  public ResponseEntity<List<PostDto>> paginationPosts(@RequestParam @Valid final SortType sortType) {
-    final List<PostDto> posts = postService.readAllPosts(sortType);
+  public ResponseEntity<PostPaginationDto> paginationPosts(@ParameterObject @Valid final PostPaginationParam paginationParam) {
+    final PostPaginationDto posts = postService.readAllPosts(paginationParam);
     return ResponseEntity.ok(posts);
   }
 

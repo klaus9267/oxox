@@ -2,19 +2,22 @@ package kimandhong.oxox.service;
 
 import kimandhong.oxox.auth.SecurityUtil;
 import kimandhong.oxox.common.enums.S3path;
-import kimandhong.oxox.controller.param.SortType;
+import kimandhong.oxox.controller.param.PostCondition;
+import kimandhong.oxox.controller.param.PostPaginationParam;
 import kimandhong.oxox.domain.Comment;
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.post.CreatePostDto;
 import kimandhong.oxox.dto.post.PostDetailDto;
 import kimandhong.oxox.dto.post.PostDto;
+import kimandhong.oxox.dto.post.PostPaginationDto;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.CommentRepository;
 import kimandhong.oxox.repository.PostRepository;
 import kimandhong.oxox.repository.custom.PostCustomRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,13 +62,14 @@ public class PostService {
     return postRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
   }
 
-  public List<PostDto> readAllPosts(final SortType sortType) {
-    return SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)
-//    List<Post> posts = SortType.WRITER.equals(sortType) || SortType.JOIN.equals(sortType)
-        ? postCustomRepository.findAllSortedWithUserId(sortType, securityUtil.getCustomUserId())
-        : postCustomRepository.findAllSorted(sortType);
+  public PostPaginationDto readAllPosts(final PostPaginationParam paginationParam) {
+    final PostCondition postCondition = paginationParam.postCondition();
 
-//    return PostDto.from(posts);
+    Page<PostDto> posts = PostCondition.WRITER.equals(postCondition) || PostCondition.JOIN.equals(postCondition)
+        ? postCustomRepository.findAllSortedWithUserId(paginationParam, paginationParam.toPageable(), securityUtil.getCustomUserId())
+        : postCustomRepository.findAllSorted(paginationParam, paginationParam.toPageable());
+
+    return PostPaginationDto.from(posts);
   }
 
   @Transactional
