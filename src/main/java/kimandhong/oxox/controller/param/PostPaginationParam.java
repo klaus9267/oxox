@@ -15,7 +15,7 @@ public record PostPaginationParam(
   public PostPaginationParam(final Integer page, final Integer size, final PostCondition condition) {
     this.page = Math.max(0, page);
     this.size = Math.max(10, size);
-    this.condition = condition;
+    this.condition = condition == null ? PostCondition.DEFAULT : condition;
   }
 
   public Pageable toPageable() {
