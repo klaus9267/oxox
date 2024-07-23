@@ -24,7 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name = "USER API")
 public class UserController {
   private final UserService userService;
-  private final SecurityUtil securityUtil;
   private final JwtUtil jwtUtil;
 
   @PostMapping(value = "join", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
@@ -32,9 +31,8 @@ public class UserController {
   public ResponseEntity<UserDto> join(@ParameterObject @Valid final JoinDto joinDto,
                                       @RequestPart(required = false) final MultipartFile profileImage) {
     final User user = userService.join(joinDto, profileImage);
-    final String token = jwtUtil.createAccessToken(user);
 
-    return ResponseEntity.status(HttpStatus.CREATED).header("Authorization", token).body(UserDto.from(user));
+    return ResponseEntity.status(HttpStatus.CREATED).body(UserDto.from(user));
   }
 
   @PostMapping("login")
@@ -43,6 +41,6 @@ public class UserController {
     final User user = userService.login(loginDto);
     final String token = jwtUtil.createAccessToken(user);
 
-    return ResponseEntity.status(HttpStatus.OK).header("Authorization", token).body(UserDto.from(user));
+    return ResponseEntity.status(HttpStatus.OK).header("access-token", token).body(UserDto.from(user));
   }
 }
