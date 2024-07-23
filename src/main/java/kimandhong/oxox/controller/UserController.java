@@ -13,6 +13,7 @@ import kimandhong.oxox.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,7 +27,7 @@ public class UserController {
   private final SecurityUtil securityUtil;
   private final JwtUtil jwtUtil;
 
-  @PostMapping("join")
+  @PostMapping(value = "join", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @SwaggerCreated(summary = "회원가입")
   public ResponseEntity<UserDto> join(@ParameterObject @Valid final JoinDto joinDto,
                                       @RequestPart(required = false) final MultipartFile profileImage) {
