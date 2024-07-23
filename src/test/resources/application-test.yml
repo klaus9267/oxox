@@ -8,23 +8,24 @@ spring:
   config:
     activate:
       on-profile: test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/oxox
+    username: root
+    password: 1111
   jpa:
-    defer-datasource-initialization: true
-    database: h2
     hibernate:
-      ddl-auto: none
-      show-sql: ture
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      ddl-auto: validate
     properties:
       hibernate:
-        format_sql: true
-        use_sql_comments: true
-        dialect: org.hibernate.dialect.H2Dialect
-  datasource:
-    url: jdbc:h2:mem:test;DATABASE_TO_UPPER=FALSE
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-#    initialization-mode: always
+        default_batch_fetch_size: 1000
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        #        format_sql: true
+        show_sql: true
+  flyway:
+    enabled: false
 
 jwt:
   expiration_time: 86400000 #1일
@@ -39,3 +40,15 @@ cloud:
     credentials:
       accessKey: ${S3_ACCESS_KEY}
       secretKey: ${S3_SECRET_KEY}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        #        include: \"*\"
+        # github secrets
+  metrics:
+    export:
+      prometheus:
+        enabled: true

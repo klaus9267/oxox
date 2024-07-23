@@ -33,15 +33,16 @@ public class DataInitializer {
   public void init() {
     this.initUsers();
     this.initPosts();
+    this.initVotes();
   }
 
   private void initUsers() {
     List<User> users = new ArrayList<>();
     Random random = new Random();
     for (int i = 0; i < 100; i++) {
-      JoinDto joinDto = new JoinDto("email" + random.nextInt(9999), null, "nickname" + random.nextInt(9999), "emoji" + random.nextInt(9999));
+      JoinDto joinDto = new JoinDto("email" + random.nextInt(9999), null, "nickname" + random.nextInt(9999));
 //      String password = passwordEncoder.encode("test password");
-      User user = User.from(joinDto, "password", 1L);
+      User user = User.from(joinDto, "password", 1L, null);
       users.add(user);
     }
     savedUsers = userRepository.saveAll(users);
