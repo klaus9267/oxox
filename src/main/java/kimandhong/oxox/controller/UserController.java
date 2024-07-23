@@ -41,6 +41,9 @@ public class UserController {
     final User user = userService.login(loginDto);
     final String token = jwtUtil.createAccessToken(user);
 
-    return ResponseEntity.status(HttpStatus.OK).header("access-token", token).body(UserDto.from(user));
+    return ResponseEntity.status(HttpStatus.OK)
+        .header("X-Access-Token", token)
+        .header("Access-Control-Expose-Headers", "X-Access-Token")
+        .body(UserDto.from(user));
   }
 }
