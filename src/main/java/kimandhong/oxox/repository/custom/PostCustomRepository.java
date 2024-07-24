@@ -22,7 +22,6 @@ import java.util.List;
 import static kimandhong.oxox.domain.QComment.comment;
 import static kimandhong.oxox.domain.QPost.post;
 import static kimandhong.oxox.domain.QReaction.reaction;
-import static kimandhong.oxox.domain.QUser.user;
 import static kimandhong.oxox.domain.QVote.vote;
 
 @Repository
@@ -76,14 +75,20 @@ public class PostCustomRepository {
     final BooleanBuilder builder = new BooleanBuilder();
 
     switch (postCondition) {
-      case WRITER -> builder.and(user.id.eq(userId));
-      case JOIN -> builder.and(vote.user.id.eq(userId));
+      case WRITER -> {
+        builder.and(post.user.id.eq(userId));
+      }
+      case JOIN -> {
+        query.leftJoin(post.votes, vote);
+        builder.and(vote.user.id.eq(userId));
+      }
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
 
     final JPAQuery<Long> count = this.createCountQuery().where(builder);
+    final List<PostDto> postDtos = query.where(builder).fetch();
 
-    return PageableExecutionUtils.getPage(query.fetch(), pageable, count::fetchOne);
+    return PageableExecutionUtils.getPage(postDtos, pageable, count::fetchOne);
   }
 
   private JPAQuery<PostDto> createBaseQuery(final Pageable pageable) {
