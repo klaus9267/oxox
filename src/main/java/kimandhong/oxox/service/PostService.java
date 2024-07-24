@@ -7,10 +7,7 @@ import kimandhong.oxox.controller.param.PostPaginationParam;
 import kimandhong.oxox.domain.Comment;
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.domain.User;
-import kimandhong.oxox.dto.post.CreatePostDto;
-import kimandhong.oxox.dto.post.PostDetailDto;
-import kimandhong.oxox.dto.post.PostDto;
-import kimandhong.oxox.dto.post.PostPaginationDto;
+import kimandhong.oxox.dto.post.*;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.CommentRepository;
@@ -37,15 +34,13 @@ public class PostService {
   private final S3Service s3Service;
 
   @Transactional
-  public PostDto createPost(final CreatePostDto createPostDto, final MultipartFile thumbnail) {
+  public void createPost(final CreatePostDto createPostDto, final MultipartFile thumbnail) {
     final User user = securityUtil.getCurrentUser();
     final String thumbnailUrl = thumbnail != null ? s3Service.uploadFile(thumbnail, S3path.THUMBNAIL) : null;
 
     try {
       final Post post = Post.from(createPostDto, user, thumbnailUrl);
-      final Post savedPost = postRepository.save(post);
-
-      return PostDto.from(savedPost);
+      postRepository.save(post);
     } catch (Exception e) {
       s3Service.deleteFile(thumbnailUrl);
       throw new RuntimeException(e.getMessage());
@@ -71,6 +66,13 @@ public class PostService {
     };
 
     return PostPaginationDto.from(posts);
+  }
+
+  @Transactional
+  public void updatePost(final Long postId, final UpdatePostDto postDto, final MultipartFile file) {
+    Post post = this.findById(postId);
+    String thumbnail = file != null ? s3Service.changeFile(post.getThumbnail(), file, S3path.THUMBNAIL) : post.getThumbnail();
+    post.updatePost(postDto, thumbnail);
   }
 
   @Transactional

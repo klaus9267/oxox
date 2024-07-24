@@ -45,6 +45,26 @@ public class S3Service {
     }
   }
 
+  public String changeFile(final String imageAddress, final MultipartFile file, S3path path) {
+    try {
+      if (imageAddress != null) {
+        this.deleteFile(imageAddress);
+      }
+      final String fileName = path.getValue() + file.getOriginalFilename();
+
+      ObjectMetadata metadata = new ObjectMetadata();
+      metadata.setContentType(file.getContentType());
+      metadata.setContentLength(file.getSize());
+
+      PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName, file.getInputStream(), metadata)
+          .withCannedAcl(CannedAccessControlList.PublicRead);
+      amazonS3.putObject(putObjectRequest);
+
+      return amazonS3.getUrl(bucket, fileName).toString();
+    } catch (IOException e) {
+      throw new S3Exception(ErrorCode.S3_UPLOAD_FAIL);
+    }
+  }
 
   public void deleteFile(String imageAddress) {
     String key = getKeyFromImageAddress(imageAddress);
