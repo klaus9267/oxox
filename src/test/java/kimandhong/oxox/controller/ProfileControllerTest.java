@@ -14,7 +14,7 @@ class ProfileControllerTest extends AbstractTest {
 
   @Test
   public void updateProfile() throws Exception {
-    ProfileDto profileDto = new ProfileDto(1L, "test emoji", "test nickname", 1L);
+    ProfileDto profileDto = new ProfileDto(1L, "test image", "test nickname", 1L);
 
     mockMvc.perform(patch(END_POINT)
             .contentType(APPLICATION_JSON)

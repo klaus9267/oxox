@@ -41,7 +41,6 @@ public class DataInitializer {
     Random random = new Random();
     for (int i = 0; i < 100; i++) {
       JoinDto joinDto = new JoinDto("email" + random.nextInt(9999), null, "nickname" + random.nextInt(9999));
-//      String password = passwordEncoder.encode("test password");
       User user = User.from(joinDto, "password", 1L, null);
       users.add(user);
     }

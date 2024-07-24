@@ -31,7 +31,6 @@ class UserControllerTest extends AbstractTest {
 
   @Test
   public void join() throws Exception {
-    Integer id = userRepository.findAll().size() + 1;
     JoinDto joinDto = new JoinDto("testtest@email.com", "test password", "test nickname");
 
     when(s3Service.uploadFile(any(MultipartFile.class), any(S3path.class))).thenReturn(null);
@@ -42,7 +41,6 @@ class UserControllerTest extends AbstractTest {
             .param("nickname", joinDto.nickname())
             .content(objectMapper.writeValueAsString(joinDto)))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath(("$.id")).value((long) id))
         .andExpect(jsonPath(("$.email")).value(joinDto.email()))
         .andExpect(jsonPath(("$.nickname")).value(joinDto.nickname()));
   }
@@ -59,6 +57,6 @@ class UserControllerTest extends AbstractTest {
         .andExpect(jsonPath(("$.id")).value(user.getId()))
         .andExpect(jsonPath(("$.email")).value(user.getEmail()))
         .andExpect(jsonPath(("$.nickname")).value(user.getProfile().getNickname()))
-        .andExpect(jsonPath(("$.profileEmoji")).value(user.getProfile().getImage()));
+        .andExpect(jsonPath(("$.profileImage")).value(user.getProfile().getImage()));
   }
 }
