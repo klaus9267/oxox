@@ -8,7 +8,7 @@ import lombok.Builder;
 public record UserDto(
     Long id,
     String email,
-    String profileEmoji,
+    String profileImage,
     String nickname,
     Long sequence
 ) {
@@ -17,7 +17,7 @@ public record UserDto(
     return UserDto.builder()
         .id(user.getId())
         .email(user.getEmail())
-        .profileEmoji(profile.getImage())
+        .profileImage(profile.getImage())
         .nickname(profile.getNickname())
         .sequence(profile.getSequence())
         .build();
@@ -28,7 +28,7 @@ public record UserDto(
     return UserDto.builder()
         .id(user.getId())
         .email(user.getEmail())
-        .profileEmoji(profile.getImage())
+        .profileImage(profile.getImage())
         .nickname(profile.getNickname())
         .sequence(profile.getSequence())
         .build();
