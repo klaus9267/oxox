@@ -2,6 +2,7 @@ package kimandhong.oxox.domain;
 
 import jakarta.persistence.*;
 import kimandhong.oxox.dto.post.CreatePostDto;
+import kimandhong.oxox.dto.post.UpdatePostDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.util.List;
 @Entity(name = "posts")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(toBuilder = true)
 @Getter
 public class Post extends TimeEntity {
   @Id
@@ -52,5 +53,11 @@ public class Post extends TimeEntity {
 
   public void done() {
     this.isDone = true;
+  }
+
+  public void updatePost(final UpdatePostDto postDto, final String thumbnail) {
+    this.title = postDto.title();
+    this.content = postDto.content();
+    this.thumbnail = thumbnail;
   }
 }

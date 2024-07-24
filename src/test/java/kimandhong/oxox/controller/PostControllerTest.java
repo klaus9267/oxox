@@ -13,8 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.NoSuchElementException;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,28 +30,22 @@ class PostControllerTest extends AbstractTest {
 
   @Test
   public void createPost() throws Exception {
-    int id = postRepository.findAll().size() + 1;
     CreatePostDto createPostDto = new CreatePostDto("Test Title", "Test Content");
-    String createPostDtoJson = objectMapper.writeValueAsString(createPostDto);
-    MockMultipartFile createPostDtoPart = new MockMultipartFile("createPostDto", null, MediaType.APPLICATION_JSON_VALUE, createPostDtoJson.getBytes());
     MockMultipartFile thumbnail = new MockMultipartFile("thumbnail", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "test image required".getBytes());
 
     when(s3Service.uploadFile(any(MultipartFile.class), any(S3path.class))).thenReturn("thumbnail url");
 
     mockMvc.perform(multipart(END_POINT)
             .file(thumbnail)
-            .file(createPostDtoPart)
+            .param("title", createPostDto.title())
+            .param("content", createPostDto.content())
             .header("Authorization", token))
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id").value((long) id))
-        .andExpect(jsonPath("$.title").value(createPostDto.title()))
-        .andExpect(jsonPath("$.content").value(createPostDto.content()))
-        .andExpect(jsonPath("$.thumbnailUrl").value("thumbnail url"));
+        .andExpect(status().isCreated());
   }
 
   @Test
   public void readPost() throws Exception {
-    Post post = postRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+    Post post = postRepository.findAll().get(0);
 
     mockMvc.perform(get(END_POINT + "/" + post.getId())
             .header("Authorization", token))

@@ -6,14 +6,14 @@ import lombok.Builder;
 @Builder
 public record ProfileDto(
     Long id,
-    String emoji,
+    String image,
     String nickname,
     Long sequence
 ) {
   public static ProfileDto from(final Profile profile) {
     return ProfileDto.builder()
         .id(profile.getId())
-        .emoji(profile.getImage())
+        .image(profile.getImage())
         .nickname(profile.getNickname())
         .sequence(profile.getSequence())
         .build();

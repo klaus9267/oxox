@@ -8,12 +8,11 @@ import kimandhong.oxox.common.swagger.SwaggerOK;
 import kimandhong.oxox.controller.param.PostPaginationParam;
 import kimandhong.oxox.dto.post.CreatePostDto;
 import kimandhong.oxox.dto.post.PostDetailDto;
-import kimandhong.oxox.dto.post.PostDto;
 import kimandhong.oxox.dto.post.PostPaginationDto;
+import kimandhong.oxox.dto.post.UpdatePostDto;
 import kimandhong.oxox.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,10 +27,9 @@ public class PostController {
 
   @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @SwaggerCreated(summary = "게시글 생성")
-  public ResponseEntity<PostDto> createPost(@ParameterObject @Valid final CreatePostDto createPostDto,
-                                            @RequestPart(required = false) final MultipartFile thumbnail) {
-    final PostDto postDto = postService.createPost(createPostDto, thumbnail);
-    return ResponseEntity.status(HttpStatus.CREATED).body(postDto);
+  public void createPost(@ParameterObject @Valid final CreatePostDto createPostDto,
+                         @RequestPart(required = false) final MultipartFile thumbnail) {
+    postService.createPost(createPostDto, thumbnail);
   }
 
   @GetMapping("{postId}")
@@ -42,10 +40,18 @@ public class PostController {
   }
 
   @GetMapping
-  @SwaggerOK(summary = "게시글 목록 조회", description = "join, writier은 로그인 필요")
+  @SwaggerOK(summary = "게시글 목록 조회", description = "join, writer 로그인 필요")
   public ResponseEntity<PostPaginationDto> paginationPosts(@ParameterObject @Valid final PostPaginationParam paginationParam) {
     final PostPaginationDto posts = postService.readAllPosts(paginationParam);
     return ResponseEntity.ok(posts);
+  }
+
+  @PatchMapping(value = "{postId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+  @SwaggerNoContent(summary = "게시글 수정")
+  public void updatePost(@PathVariable("postId") final Long postId,
+                         @ParameterObject @Valid final UpdatePostDto updatePostDto,
+                         @RequestPart(required = false) final MultipartFile thumbnail) {
+    postService.updatePost(postId, updatePostDto, thumbnail);
   }
 
   @DeleteMapping("{postId}")
