@@ -79,8 +79,7 @@ public class PostCustomRepository {
         builder.and(post.user.id.eq(userId));
       }
       case JOIN -> {
-        query.leftJoin(post.votes, vote);
-        builder.and(vote.user.id.eq(userId));
+        builder.and(post.votes.any().user.id.eq(userId));
       }
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
