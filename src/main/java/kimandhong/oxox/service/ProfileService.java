@@ -27,8 +27,9 @@ public class ProfileService {
   @Transactional
   public ProfileDto updateProfile(final String nickname, final MultipartFile image) {
     final Profile profile = profileRepository.findById(securityUtil.getCustomUserId()).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER));
-    s3Service.deleteFile(profile.getImage());
-    final String newImage = s3Service.uploadFile(image, S3path.PROFILE);
+    final String profileImage = image != null
+        ? s3Service.changeFile(profile.getImage(), image, S3path.PROFILE)
+        : profile.getImage();
 
     try {
       final Long sequence = profile.getNickname().equals(nickname)
@@ -37,16 +38,15 @@ public class ProfileService {
 
       final List<Profile> existingProfiles = profileRepository.findAllByNickname(profile.getNickname());
       for (final Profile existingProfile : existingProfiles) {
-        if (existingProfile.getId().equals(profile.getId())) {
-          continue;
+        if (!existingProfile.getId().equals(profile.getId())) {
+          existingProfile.updateSequence(profile.getSequence());
         }
-        existingProfile.updateSequence(profile.getSequence());
       }
 
-      profile.updateProfile(nickname, sequence, newImage);
+      profile.updateProfile(nickname, sequence, profileImage);
       return ProfileDto.from(profile);
     } catch (Exception e) {
-      s3Service.deleteFile(newImage);
+      s3Service.deleteFile(profileImage);
       throw new RuntimeException(e.getMessage());
     }
   }
