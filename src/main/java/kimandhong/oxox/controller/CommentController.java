@@ -37,7 +37,7 @@ public class CommentController {
 
   @PatchMapping
   @SwaggerNoContent(summary = "댓글 수정")
-  public void UpdateComment(@RequestParam("commentId") final Long commentId,
+  public void updateComment(@RequestParam("commentId") final Long commentId,
                             @RequestParam("content") final String content) {
     commentService.updateComment(commentId, content);
   }

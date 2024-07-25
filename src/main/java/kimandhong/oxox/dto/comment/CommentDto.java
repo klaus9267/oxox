@@ -1,6 +1,5 @@
 package kimandhong.oxox.dto.comment;
 
-import com.querydsl.core.annotations.QueryProjection;
 import kimandhong.oxox.domain.Comment;
 import kimandhong.oxox.domain.ReactionEmoji;
 import kimandhong.oxox.dto.user.UserDto;

@@ -1,6 +1,5 @@
 package kimandhong.oxox.dto.user;
 
-import com.querydsl.core.annotations.QueryProjection;
 import kimandhong.oxox.domain.Profile;
 import kimandhong.oxox.domain.User;
 import lombok.Builder;
