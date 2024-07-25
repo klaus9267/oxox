@@ -1,16 +1,17 @@
 package kimandhong.oxox.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kimandhong.oxox.common.swagger.SwaggerCreated;
 import kimandhong.oxox.common.swagger.SwaggerNoContent;
 import kimandhong.oxox.common.swagger.SwaggerOK;
-import kimandhong.oxox.dto.comment.CommentDto;
+import kimandhong.oxox.controller.param.CommentPaginationParam;
+import kimandhong.oxox.dto.comment.CommentPaginationDto;
 import kimandhong.oxox.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -24,6 +25,14 @@ public class CommentController {
   public void createComment(@RequestParam("postId") final Long postId,
                             @RequestParam("content") final String content) {
     commentService.createComment(postId, content);
+  }
+
+  @GetMapping("{postId}")
+  @SwaggerOK(summary = "댓글 목록 조회")
+  public ResponseEntity<CommentPaginationDto> paginationComments(@PathVariable("postId") final Long postId,
+                                                                 @ParameterObject @Valid final CommentPaginationParam paginationParam) {
+    final CommentPaginationDto posts = commentService.readAllCommentsByPostId(paginationParam, postId);
+    return ResponseEntity.ok(posts);
   }
 
   @PatchMapping

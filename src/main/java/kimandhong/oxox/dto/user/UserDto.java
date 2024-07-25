@@ -1,5 +1,6 @@
 package kimandhong.oxox.dto.user;
 
+import com.querydsl.core.annotations.QueryProjection;
 import kimandhong.oxox.domain.Profile;
 import kimandhong.oxox.domain.User;
 import lombok.Builder;
@@ -12,6 +13,7 @@ public record UserDto(
     String nickname,
     Long sequence
 ) {
+
   public static UserDto from(final Profile profile) {
     final User user = profile.getUser();
     return UserDto.builder()
