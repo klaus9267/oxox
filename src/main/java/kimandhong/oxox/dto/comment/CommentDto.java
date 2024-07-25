@@ -17,6 +17,7 @@ public record CommentDto(
     LocalDateTime createAt,
     Map<ReactionEmoji, Integer> reactions
 ) {
+
   public static List<CommentDto> from(final List<Comment> comments) {
     return comments.stream()
         .map(comment -> CommentDto.builder()
@@ -24,7 +25,7 @@ public record CommentDto(
             .content(comment.getContent())
             .user(UserDto.from(comment.getUser()))
             .createAt(comment.getCreatedAt())
-            .reactions(comment.getEmojiCounts())
+//            .reactions(comment.getEmojiCounts())
             .build())
         .toList();
   }

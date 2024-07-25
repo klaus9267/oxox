@@ -12,6 +12,7 @@ public record UserDto(
     String nickname,
     Long sequence
 ) {
+
   public static UserDto from(final Profile profile) {
     final User user = profile.getUser();
     return UserDto.builder()

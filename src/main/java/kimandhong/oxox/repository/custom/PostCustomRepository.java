@@ -29,7 +29,7 @@ import static kimandhong.oxox.domain.QVote.vote;
 public class PostCustomRepository {
   private final JPAQueryFactory jpaQueryFactory;
 
-  public Page<PostDto> findAllSorted(final PostCondition postCondition, final Pageable pageable) {
+  public Page<PostDto> findAll(final PostCondition postCondition, final Pageable pageable) {
     final Duration duration = PostCondition.HOT.equals(postCondition) ? Duration.ofHours(1) : Duration.ofDays(1);
     final LocalDateTime time = LocalDateTime.now().minus(duration);
 
@@ -70,7 +70,7 @@ public class PostCustomRepository {
     return PageableExecutionUtils.getPage(contents, pageable, count::fetchOne);
   }
 
-  public Page<PostDto> findAllSortedWithUserId(final PostCondition postCondition, final Pageable pageable, Long userId) {
+  public Page<PostDto> findAllWithUserId(final PostCondition postCondition, final Pageable pageable, Long userId) {
     JPAQuery<PostDto> query = this.createBaseQuery(pageable);
     final BooleanBuilder builder = new BooleanBuilder();
 
@@ -91,22 +91,22 @@ public class PostCustomRepository {
   }
 
   private JPAQuery<PostDto> createBaseQuery(final Pageable pageable) {
-    return jpaQueryFactory
-        .select(Projections.constructor(PostDto.class,
-            post.id,
-            post.title,
-            post.thumbnail,
-            post.createdAt,
-            post.isDone,
-            post.comments.size(),
-            JPAExpressions.select(vote.count())
-                .from(vote)
-                .where(vote.post.eq(post).and(vote.isYes.isTrue())),
-            JPAExpressions.select(vote.count())
-                .from(vote)
-                .where(vote.post.eq(post).and(vote.isYes.isFalse()))
-        ))
-        .from(post)
+    return jpaQueryFactory.select(
+            Projections.constructor(PostDto.class,
+                post.id,
+                post.title,
+                post.thumbnail,
+                post.createdAt,
+                post.isDone,
+                post.comments.size(),
+                JPAExpressions.select(vote.count())
+                    .from(vote)
+                    .where(vote.post.eq(post).and(vote.isYes.isTrue())),
+                JPAExpressions.select(vote.count())
+                    .from(vote)
+                    .where(vote.post.eq(post).and(vote.isYes.isFalse()))
+            )
+        ).from(post)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize());
   }
