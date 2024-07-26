@@ -29,7 +29,7 @@ public record PostDetailDto(
 ) {
   public static PostDetailDto from(final Post post, final List<Comment> comments, final Long currentUserId) {
     final UserDto userDto = UserDto.from(post.getUser());
-    final List<CommentDto> commentDtos = CommentDto.from(comments);
+    final List<CommentDto> commentDtos = CommentDto.from(comments, currentUserId);
     Map<Boolean, Long> voteCounts = post.getVotes().stream()
         .collect(Collectors.partitioningBy(Vote::isYes, Collectors.counting()));
 
