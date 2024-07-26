@@ -39,7 +39,7 @@ public class Comment extends TimeEntity {
   @CollectionTable(name = "reaction_counts", joinColumns = @JoinColumn(name = "comment_id"))
   @MapKeyEnumerated(EnumType.STRING)
   @MapKeyColumn(name = "emoji")
-  private final Map<ReactionEmoji, Integer> emojiCounts = new EnumMap<>(ReactionEmoji.class);
+  private final Map<Emoji, Integer> emojiCounts = new EnumMap<>(Emoji.class);
 
   public static Comment from(final String content, final User user, final Post post) {
     return Comment.builder()
@@ -53,11 +53,11 @@ public class Comment extends TimeEntity {
     this.content = content;
   }
 
-  public void incrementCount(final ReactionEmoji emoji) {
+  public void incrementCount(final Emoji emoji) {
     emojiCounts.put(emoji, emojiCounts.getOrDefault(emoji, 0) + 1);
   }
 
-  public void decrementCount(final ReactionEmoji emoji) {
+  public void decrementCount(final Emoji emoji) {
     int count = emojiCounts.get(emoji);
     if (count < 2) {
       emojiCounts.remove(emoji);

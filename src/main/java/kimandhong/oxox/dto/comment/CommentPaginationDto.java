@@ -12,8 +12,8 @@ public record CommentPaginationDto(
     int totalPage,
     long totalElement
 ) {
-  public static CommentPaginationDto from(final Page<Comment> commentPage) {
-    final List<CommentDto> commentDtos = CommentDto.from(commentPage.getContent());
+  public static CommentPaginationDto from(final Page<Comment> commentPage, final Long userId) {
+    final List<CommentDto> commentDtos = CommentDto.from(commentPage.getContent(), userId);
     return CommentPaginationDto.builder()
         .comments(commentDtos)
         .totalPage(commentPage.getTotalPages())

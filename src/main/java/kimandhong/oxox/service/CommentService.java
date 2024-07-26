@@ -33,7 +33,7 @@ public class CommentService {
 
   public CommentPaginationDto readAllCommentsByPostId(final CommentPaginationParam paginationParam, final Long postId) {
     final Page<Comment> commentPage = commentRepository.findAllByPostId(postId, paginationParam.toPageable());
-    return CommentPaginationDto.from(commentPage);
+    return CommentPaginationDto.from(commentPage, securityUtil.getCustomUserId());
   }
 
   @Transactional

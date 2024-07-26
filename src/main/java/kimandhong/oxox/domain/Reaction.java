@@ -19,7 +19,7 @@ public class Reaction {
   private Long id;
 
   @Enumerated(EnumType.STRING)
-  private ReactionEmoji reactionEmoji;
+  private Emoji emoji;
 
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
@@ -27,15 +27,15 @@ public class Reaction {
   @ManyToOne(fetch = FetchType.LAZY)
   private Comment comment;
 
-  public static Reaction from(final ReactionEmoji emoji, final User user, final Comment comment) {
+  public static Reaction from(final Emoji emoji, final User user, final Comment comment) {
     return Reaction.builder()
-        .reactionEmoji(emoji)
+        .emoji(emoji)
         .user(user)
         .comment(comment)
         .build();
   }
 
-  public void updateEmoji(final ReactionEmoji emoji) {
-    this.reactionEmoji = emoji;
+  public void updateEmoji(final Emoji emoji) {
+    this.emoji = emoji;
   }
 }
