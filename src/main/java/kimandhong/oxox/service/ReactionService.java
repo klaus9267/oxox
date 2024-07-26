@@ -3,7 +3,7 @@ package kimandhong.oxox.service;
 import kimandhong.oxox.auth.SecurityUtil;
 import kimandhong.oxox.domain.Comment;
 import kimandhong.oxox.domain.Reaction;
-import kimandhong.oxox.domain.ReactionEmoji;
+import kimandhong.oxox.domain.Emoji;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
 import kimandhong.oxox.repository.ReactionRepository;
@@ -19,17 +19,17 @@ public class ReactionService {
   private final SecurityUtil securityUtil;
 
   @Transactional
-  public void react(final Long commentId, final ReactionEmoji emoji) {
+  public void react(final Long commentId, final Emoji emoji) {
     final Comment comment = commentService.findById(commentId);
 
     reactionRepository.findByCommentIdAndUserId(commentId, securityUtil.getCustomUserId())
         .ifPresentOrElse(reaction -> {
           if (emoji != null) {
-            comment.decrementCount(reaction.getReactionEmoji());
+            comment.decrementCount(reaction.getEmoji());
             reaction.updateEmoji(emoji);
             comment.incrementCount(emoji);
           } else {
-            comment.decrementCount(reaction.getReactionEmoji());
+            comment.decrementCount(reaction.getEmoji());
             reactionRepository.delete(reaction);
           }
         }, () -> {

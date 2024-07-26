@@ -120,7 +120,7 @@ public class BulkService {
     for (int i = 0; i < 10000; i++) {
       int randomUserId = random.nextInt(users.size() - 1);
       int randomCommentId = random.nextInt(comments.size() - 1);
-      int randomEmoji = random.nextInt(ReactionEmoji.values().length - 1);
+      int randomEmoji = random.nextInt(Emoji.values().length - 1);
       Comment randomComment = comments.get(randomCommentId);
 
       for (Reaction reaction : randomComment.getReactions()) {
@@ -129,9 +129,9 @@ public class BulkService {
         }
       }
 
-      Reaction reaction = Reaction.from(ReactionEmoji.values()[randomEmoji], users.get(randomUserId), randomComment);
+      Reaction reaction = Reaction.from(Emoji.values()[randomEmoji], users.get(randomUserId), randomComment);
       reactions.add(reaction);
-      randomComment.incrementCount(ReactionEmoji.values()[randomEmoji]);
+      randomComment.incrementCount(Emoji.values()[randomEmoji]);
     }
 
     reactionRepository.saveAll(reactions);
