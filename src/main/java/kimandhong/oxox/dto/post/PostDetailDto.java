@@ -58,4 +58,28 @@ public record PostDetailDto(
         .vote(isVoted)
         .build();
   }
+
+  public static PostDetailDto from(final Post post, final List<Comment> comments) {
+    final UserDto userDto = UserDto.from(post.getUser());
+    final List<CommentDto> commentDtos = CommentDto.from(comments);
+    Map<Boolean, Long> voteCounts = post.getVotes().stream()
+        .collect(Collectors.partitioningBy(Vote::isYes, Collectors.counting()));
+
+    final Long agreeCount = voteCounts.get(true);
+    final Long disagreeCount = voteCounts.get(false);
+
+    return PostDetailDto.builder()
+        .id(post.getId())
+        .title(post.getTitle())
+        .content(post.getContent())
+        .user(userDto)
+        .thumbnailUrl(post.getThumbnail())
+        .createAt(post.getCreatedAt())
+        .isDone(post.isDone())
+        .agreeCount(agreeCount)
+        .disAgreeCount(disagreeCount)
+        .commentCount(comments.size())
+        .comments(commentDtos)
+        .build();
+  }
 }

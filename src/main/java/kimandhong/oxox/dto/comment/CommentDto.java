@@ -26,6 +26,12 @@ public record CommentDto(
         .toList();
   }
 
+  public static List<CommentDto> from(final List<Comment> comments) {
+    return comments.stream()
+        .map(CommentDto::from)
+        .toList();
+  }
+
   public static CommentDto from(final Comment comment, final Long userId) {
     final Emoji emoji = comment.getReactions().stream()
         .filter(reaction -> reaction.getUser().getId().equals(userId))
@@ -40,6 +46,16 @@ public record CommentDto(
         .createAt(comment.getCreatedAt())
         .reactions(comment.getEmojiCounts())
         .myReaction(emoji)
+        .build();
+  }
+
+  public static CommentDto from(final Comment comment) {
+    return CommentDto.builder()
+        .id(comment.getId())
+        .content(comment.getContent())
+        .user(UserDto.from(comment.getUser()))
+        .createAt(comment.getCreatedAt())
+        .reactions(comment.getEmojiCounts())
         .build();
   }
 }
