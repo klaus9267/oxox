@@ -3,10 +3,13 @@ package kimandhong.oxox.bulk;
 import kimandhong.oxox.domain.*;
 import kimandhong.oxox.dto.post.CreatePostDto;
 import kimandhong.oxox.dto.user.JoinDto;
-import kimandhong.oxox.repository.*;
+import kimandhong.oxox.repository.CommentRepository;
+import kimandhong.oxox.repository.PostRepository;
+import kimandhong.oxox.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,14 +17,14 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BulkService {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
   private final CommentRepository commentRepository;
-  private final VoteRepository voteRepository;
-  private final ReactionRepository reactionRepository;
 
   private final PasswordEncoder passwordEncoder;
+  private final BulkRepository bulkRepository;
 
   public void bulkUsers() {
     List<User> users = new ArrayList<>();
@@ -30,12 +33,13 @@ public class BulkService {
       JoinDto joinDto = new JoinDto("test" + i + "@email.com", null, "bulk nickname" + i);
       User user = User.from(joinDto, password, 1L, null);
       users.add(user);
+
+      bulkRepository.saveUsers(users);
     }
-    userRepository.saveAll(users);
   }
 
   public void deleteAllUsers() {
-    userRepository.deleteAll();
+    bulkRepository.deleteUsers();
   }
 
   public void bulkPosts() {
@@ -49,12 +53,11 @@ public class BulkService {
       Post post = Post.from(createPostDto, users.get(randomUserId), null);
       posts.add(post);
     }
-
-    postRepository.saveAll(posts);
+    bulkRepository.savePosts(posts);
   }
 
   public void deleteAllPosts() {
-    postRepository.deleteAll();
+    bulkRepository.deletePosts();
   }
 
   public void bulkComments() {
@@ -70,16 +73,14 @@ public class BulkService {
       Comment comment = Comment.from("content" + random.nextInt(0, 99999), users.get(randomUserId), posts.get(randomPostId));
       comments.add(comment);
     }
-
-    commentRepository.saveAll(comments);
+    bulkRepository.saveComments(comments);
   }
 
   public void deleteAllComments() {
-    commentRepository.deleteAll();
+    bulkRepository.deleteComments();
   }
 
   public void bulkVotes() {
-    long startTime = System.currentTimeMillis();
     Random random = new Random();
     List<User> users = userRepository.findAll();
     List<Post> posts = postRepository.findAll();
@@ -99,15 +100,11 @@ public class BulkService {
       Vote vote = Vote.from(random.nextBoolean(), users.get(randomUserId), posts.get(randomPostId));
       votes.add(vote);
     }
-
-    voteRepository.saveAll(votes);
-    long stopTime = System.currentTimeMillis();
-    System.out.println(stopTime - startTime);
-    // 4466
+    bulkRepository.saveVotes(votes);
   }
 
   public void deleteAllVotes() {
-    voteRepository.deleteAll();
+    bulkRepository.deleteVotes();
   }
 
   public void bulkReactions() {
@@ -133,11 +130,10 @@ public class BulkService {
       reactions.add(reaction);
       randomComment.incrementCount(Emoji.values()[randomEmoji]);
     }
-
-    reactionRepository.saveAll(reactions);
+    bulkRepository.saveReactions(reactions);
   }
 
   public void deleteAllReactions() {
-    reactionRepository.deleteAll();
+    bulkRepository.deleteReactions();
   }
 }

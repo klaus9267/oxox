@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 
 @Entity(name = "votes")
 @NoArgsConstructor
@@ -17,7 +16,7 @@ public class Vote extends TimeEntity {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, name = "is_yes")
   private boolean isYes;
 
   @ManyToOne(fetch = FetchType.LAZY)
