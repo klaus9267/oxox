@@ -29,7 +29,7 @@ public class AbstractTest {
 
   @PostConstruct
   private void setUp() {
-    User user = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+    User user = userRepository.findTopByOrderByIdAsc().orElseThrow(RuntimeException::new);
     token = "Bearer " + jwtUtil.createAccessToken(user);
   }
 }

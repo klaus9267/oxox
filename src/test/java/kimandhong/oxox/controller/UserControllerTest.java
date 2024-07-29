@@ -47,7 +47,7 @@ class UserControllerTest extends AbstractTest {
 
   @Test
   public void login() throws Exception {
-    User user = userRepository.findById(1L).orElseThrow(NoSuchElementException::new);
+    User user = userRepository.findTopByOrderByIdAsc().orElseThrow(NoSuchElementException::new);
 
     LoginDto loginDto = new LoginDto(user.getEmail(), "test password");
     mockMvc.perform(post(END_POINT + "login")
