@@ -115,8 +115,8 @@ public class BulkService {
 
     A:
     for (int i = 0; i < 10000; i++) {
-      int randomUserId = random.nextInt(users.size() - 1);
-      int randomCommentId = random.nextInt(comments.size() - 1);
+      int randomUserId = random.nextInt(users.size());
+      int randomCommentId = random.nextInt(comments.size());
       int randomEmoji = random.nextInt(Emoji.values().length - 1);
       Comment randomComment = comments.get(randomCommentId);
 
