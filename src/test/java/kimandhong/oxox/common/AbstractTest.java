@@ -26,10 +26,11 @@ public class AbstractTest {
   @Autowired
   protected ObjectMapper objectMapper;
   protected String token;
+  protected User user;
 
   @PostConstruct
   private void setUp() {
-    User user = userRepository.findTopByOrderByIdAsc().orElseThrow(RuntimeException::new);
+    user = userRepository.findTopByOrderByIdAsc().orElseThrow(RuntimeException::new);
     token = "Bearer " + jwtUtil.createAccessToken(user);
   }
 }
