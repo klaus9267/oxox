@@ -15,8 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,7 +44,7 @@ class PostControllerTest extends AbstractTest {
 
   @Test
   public void readPost() throws Exception {
-    Post post = postRepository.findAll().get(0);
+    Post post = initPost();
 
     mockMvc.perform(get(END_POINT + "/" + post.getId())
             .header("Authorization", token))
@@ -54,5 +53,20 @@ class PostControllerTest extends AbstractTest {
         .andExpect(jsonPath("$.title").value(post.getTitle()))
         .andExpect(jsonPath("$.content").value(post.getContent()))
         .andExpect(jsonPath("$.thumbnailUrl").value(post.getThumbnail()));
+  }
+
+  @Test
+  public void deletePost() throws Exception {
+    Post post = initPost();
+
+    mockMvc.perform(delete(END_POINT + "/" + post.getId())
+            .header("Authorization", token))
+        .andExpect(status().isNoContent());
+  }
+
+  private Post initPost() {
+    CreatePostDto createPostDto = new CreatePostDto("test title", "test content");
+    Post post = Post.from(createPostDto, user, null);
+    return postRepository.save(post);
   }
 }
