@@ -143,8 +143,10 @@ public class BulkRepository {
 
   public void deleteComments() {
     String[] sqls = {
+        "SET FOREIGN_KEY_CHECKS = 0",
         "DELETE FROM reactions",
-        "DELETE FROM comments"
+        "DELETE FROM comments",
+        "SET FOREIGN_KEY_CHECKS = 1"
     };
 
     jdbcTemplate.batchUpdate(sqls);
@@ -152,10 +154,12 @@ public class BulkRepository {
 
   public void deletePosts() {
     String[] sqls = {
+        "SET FOREIGN_KEY_CHECKS = 0",
         "DELETE FROM votes",
         "DELETE FROM reactions",
         "DELETE FROM comments",
-        "DELETE FROM posts"
+        "DELETE FROM posts",
+        "SET FOREIGN_KEY_CHECKS = 1"
     };
 
     jdbcTemplate.batchUpdate(sqls);
