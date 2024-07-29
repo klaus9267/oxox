@@ -3,7 +3,6 @@ package kimandhong.oxox.auth;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.ForbiddenException;
-import kimandhong.oxox.handler.error.exception.NotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -26,10 +25,8 @@ public class SecurityUtil {
     return (User) authentication.getPrincipal();
   }
 
-  public void loginCheck() {
+  public boolean isLogin() {
     final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication.getPrincipal().equals("anonymousUser")) {
-      throw new NotFoundException(ErrorCode.LOGIN_REQUIRED);
-    }
+    return authentication.getPrincipal().equals("anonymousUser");
   }
 }

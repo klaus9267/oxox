@@ -50,7 +50,9 @@ public class PostService {
   public PostDetailDto readPost(final Long id) {
     final Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
     final List<Comment> comments = commentRepository.findAllByPostId(id);
-    return PostDetailDto.from(post, comments, securityUtil.getCustomUserId());
+    return securityUtil.isLogin()
+        ? PostDetailDto.from(post, comments)
+        : PostDetailDto.from(post, comments, securityUtil.getCustomUserId());
   }
 
   public Post findById(final Long id) {
