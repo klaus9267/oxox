@@ -5,6 +5,7 @@ import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.ErrorResponse;
 import kimandhong.oxox.handler.error.exception.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -26,7 +27,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler({NotFoundException.class, BadRequestException.class, ConflictException.class, ForbiddenException.class, S3Exception.class})
-  public ResponseEntity<ErrorResponse> handleNotFound(final BaseException exception, final HttpServletRequest request) {
+  public ResponseEntity<ErrorResponse> handleCustomException(final BaseException exception, final HttpServletRequest request) {
     log.error("[" + exception.getClass().getSimpleName() + "] : " + exception.getMessage());
     final ErrorResponse errorResponse = new ErrorResponse(exception.getErrorCode(), exception.getMessage());
 
@@ -46,5 +47,14 @@ public class GlobalExceptionHandler {
     final ErrorResponse errorResponse = new ErrorResponse(ErrorCode.BAD_REQUEST, errorMessages);
 
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+  }
+
+  // bulk exception
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(final DataIntegrityViolationException exception, final HttpServletRequest request) {
+    log.error("[DataIntegrityViolationException] : ", exception);
+    final ErrorResponse errorResponse = new ErrorResponse(ErrorCode.CONFLICT, "Data integrity violation");
+
+    return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
   }
 }
