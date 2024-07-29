@@ -27,15 +27,15 @@ public class S3Service {
   @Value("${cloud.aws.s3.bucket}")
   private String bucket;
 
-  public String uploadFile(final MultipartFile thumbnail, final S3path path) {
+  public String uploadFile(final MultipartFile file, final S3path path) {
     try {
-      final String fileName = path.getValue() + thumbnail.getOriginalFilename();
+      final String fileName = path.getValue() + file.getOriginalFilename();
 
       ObjectMetadata metadata = new ObjectMetadata();
-      metadata.setContentType(thumbnail.getContentType());
-      metadata.setContentLength(thumbnail.getSize());
+      metadata.setContentType(file.getContentType());
+      metadata.setContentLength(file.getSize());
 
-      PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName, thumbnail.getInputStream(), metadata)
+      PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName, file.getInputStream(), metadata)
           .withCannedAcl(CannedAccessControlList.PublicRead);
       amazonS3.putObject(putObjectRequest);
 

@@ -5,6 +5,7 @@ import jakarta.annotation.PostConstruct;
 import kimandhong.oxox.auth.JwtUtil;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,10 +27,11 @@ public class AbstractTest {
   @Autowired
   protected ObjectMapper objectMapper;
   protected String token;
+  protected User user;
 
-  @PostConstruct
-  private void setUp() {
-    User user = userRepository.findById(1L).orElseThrow(RuntimeException::new);
+  @BeforeEach
+  public void setUp() {
+    user = userRepository.findTopByOrderByIdAsc().orElseThrow(RuntimeException::new);
     token = "Bearer " + jwtUtil.createAccessToken(user);
   }
 }
