@@ -14,9 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
@@ -163,11 +161,14 @@ public class BulkRepository {
 
   public void deleteUsers() {
     String[] sqls = {
+        "SET FOREIGN_KEY_CHECKS = 0",
         "DELETE FROM votes",
         "DELETE FROM reactions",
         "DELETE FROM comments",
         "DELETE FROM posts",
-        "DELETE FROM users"
+        "DELETE FROM profiles",
+        "DELETE FROM users",
+        "SET FOREIGN_KEY_CHECKS = 1"
     };
 
     jdbcTemplate.batchUpdate(sqls);

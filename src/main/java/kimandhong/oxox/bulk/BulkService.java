@@ -28,14 +28,14 @@ public class BulkService {
 
   public void bulkUsers() {
     List<User> users = new ArrayList<>();
-    String password = passwordEncoder.encode("tess password");
+    String password = passwordEncoder.encode("test password");
     for (int i = 0; i < 1000; i++) {
       JoinDto joinDto = new JoinDto("test" + i + "@email.com", null, "bulk nickname" + i);
       User user = User.from(joinDto, password, 1L, null);
       users.add(user);
 
-      bulkRepository.saveUsers(users);
     }
+    bulkRepository.saveUsers(users);
   }
 
   public void deleteAllUsers() {
