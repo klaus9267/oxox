@@ -26,7 +26,7 @@ public class ProfileService {
 
   @Transactional
   public ProfileDto updateProfile(final String nickname, final MultipartFile image) {
-    final Profile profile = profileRepository.findById(securityUtil.getCustomUserId()).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER));
+    final Profile profile = profileRepository.findByUserId(securityUtil.getCustomUserId()).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER));
     final String profileImage = image != null
         ? s3Service.changeFile(profile.getImage(), image, S3path.PROFILE)
         : profile.getImage();
