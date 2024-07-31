@@ -6,12 +6,15 @@ import kimandhong.oxox.common.swagger.SwaggerCreated;
 import kimandhong.oxox.common.swagger.SwaggerNoContent;
 import kimandhong.oxox.common.swagger.SwaggerOK;
 import kimandhong.oxox.controller.param.CommentPaginationParam;
+import kimandhong.oxox.dto.comment.CommentDto;
 import kimandhong.oxox.dto.comment.CommentPaginationDto;
 import kimandhong.oxox.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/comments")
@@ -28,11 +31,18 @@ public class CommentController {
   }
 
   @GetMapping("{postId}")
-  @SwaggerOK(summary = "댓글 목록 조회")
+  @SwaggerOK(summary = "댓글 페이징 목록 조회")
   public ResponseEntity<CommentPaginationDto> paginationComments(@PathVariable("postId") final Long postId,
                                                                  @ParameterObject @Valid final CommentPaginationParam paginationParam) {
-    final CommentPaginationDto posts = commentService.readAllCommentsByPostId(paginationParam, postId);
-    return ResponseEntity.ok(posts);
+    final CommentPaginationDto pagination = commentService.readAllCommentsByPostId(paginationParam, postId);
+    return ResponseEntity.ok(pagination);
+  }
+
+  @GetMapping("{postId}/all")
+  @SwaggerOK(summary = "댓글 전체 목록 조회")
+  public ResponseEntity<List<CommentDto>> readComments(@PathVariable("postId") final Long postId) {
+    final List<CommentDto> commentDtos = commentService.readCommentsByPostId(postId);
+    return ResponseEntity.ok(commentDtos);
   }
 
   @PatchMapping
