@@ -85,7 +85,9 @@ public class PostCustomRepository {
     }
 
     final JPAQuery<Long> count = this.createCountQuery().where(builder);
-    final List<PostDto> postDtos = query.where(builder).fetch();
+    final List<PostDto> postDtos = query.where(builder)
+        .orderBy(post.id.desc())
+        .fetch();
 
     return PageableExecutionUtils.getPage(postDtos, pageable, count::fetchOne);
   }
