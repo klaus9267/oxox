@@ -41,7 +41,7 @@ public class CommentService {
 
   public List<CommentDto> readCommentsByPostId(final Long postId) {
     final List<Comment> comments = commentRepository.findAllByPostId(postId);
-    return CommentDto.from(comments);
+    return CommentDto.from(comments, securityUtil.getCustomUserId());
   }
 
   @Transactional
