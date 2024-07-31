@@ -15,6 +15,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 @Repository
 @RequiredArgsConstructor
@@ -48,6 +49,7 @@ public class BulkRepository {
 
   public void savePosts(final List<Post> posts) {
     String sql = "INSERT INTO posts (title, content, user_id, is_done,created_at) values (?, ?, ?, ?, ?)";
+    Random random = new Random();
 
     jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
       @Override
@@ -57,7 +59,7 @@ public class BulkRepository {
         ps.setString(2, post.getContent());
         ps.setLong(3, post.getUser().getId());
         ps.setBoolean(4, false);
-        ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+        ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now().minusHours(random.nextInt(48))));
       }
 
       @Override
