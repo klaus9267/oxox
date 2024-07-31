@@ -3,6 +3,8 @@ package kimandhong.oxox.controller;
 import kimandhong.oxox.common.AbstractTest;
 import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.service.S3Service;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
@@ -22,20 +24,41 @@ class ProfileControllerTest extends AbstractTest {
   @MockBean
   S3Service s3Service;
 
-  @Test
-  public void updateProfile() throws Exception {
-    String newNickname = "new test nickname";
-    MockMultipartFile image = new MockMultipartFile("image", "test image.jpg", MediaType.IMAGE_JPEG_VALUE, "test image required".getBytes());
+  @Nested
+  @DisplayName("프로필_수정")
+  class updateProfile {
+    @Test
+    @DisplayName("사진있음")
+    public void image_exist() throws Exception {
+      String newNickname = "new test nickname";
+      MockMultipartFile image = new MockMultipartFile("image", "test image.jpg", MediaType.IMAGE_JPEG_VALUE, "test image required".getBytes());
 
-    when(s3Service.uploadFile(any(MultipartFile.class), any(S3path.class))).thenReturn("test s3 image");
-    when(s3Service.changeFile(anyString(), any(MultipartFile.class), any(S3path.class))).thenReturn("test s3 image");
+      when(s3Service.uploadFile(any(MultipartFile.class), any(S3path.class))).thenReturn("test s3 image");
+      when(s3Service.changeFile(anyString(), any(MultipartFile.class), any(S3path.class))).thenReturn("test s3 image");
 
-    mockMvc.perform(multipart(HttpMethod.PATCH, END_POINT)
-            .file(image)
-            .param("nickname", newNickname)
-            .header("Authorization", token)
-        )
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.nickname").value(newNickname));
+      mockMvc.perform(multipart(HttpMethod.PATCH, END_POINT)
+              .file(image)
+              .param("nickname", newNickname)
+              .header("Authorization", token)
+          )
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.nickname").value(newNickname));
+    }
+
+    @Test
+    @DisplayName("사진없음")
+    public void image_null() throws Exception {
+      String newNickname = "new test nickname";
+
+      when(s3Service.uploadFile(any(MultipartFile.class), any(S3path.class))).thenReturn("test s3 image");
+      when(s3Service.changeFile(anyString(), any(MultipartFile.class), any(S3path.class))).thenReturn("test s3 image");
+
+      mockMvc.perform(multipart(HttpMethod.PATCH, END_POINT)
+              .param("nickname", newNickname)
+              .header("Authorization", token)
+          )
+          .andExpect(status().isOk())
+          .andExpect(jsonPath("$.nickname").value(newNickname));
+    }
   }
 }
