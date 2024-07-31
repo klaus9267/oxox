@@ -1,7 +1,7 @@
 package kimandhong.oxox.bulk;
 
 import kimandhong.oxox.domain.*;
-import kimandhong.oxox.dto.post.CreatePostDto;
+import kimandhong.oxox.dto.post.RequestPostDto;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.repository.CommentRepository;
 import kimandhong.oxox.repository.PostRepository;
@@ -49,8 +49,9 @@ public class BulkService {
 
     for (int i = 0; i < 1000; i++) {
       int randomUserId = random.nextInt(users.size());
-      CreatePostDto createPostDto = new CreatePostDto("title" + random.nextInt(99999), "content" + random.nextInt(99999));
-      Post post = Post.from(createPostDto, users.get(randomUserId), null);
+      RequestPostDto requestPostDto = new RequestPostDto("title" + random.nextInt(99999), "content" + random.nextInt(99999));
+      Post post = Post.from(requestPostDto, users.get(randomUserId), null);
+
       posts.add(post);
     }
     bulkRepository.savePosts(posts);

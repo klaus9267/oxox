@@ -1,8 +1,7 @@
 package kimandhong.oxox.domain;
 
 import jakarta.persistence.*;
-import kimandhong.oxox.dto.post.CreatePostDto;
-import kimandhong.oxox.dto.post.UpdatePostDto;
+import kimandhong.oxox.dto.post.RequestPostDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,7 +41,7 @@ public class Post extends TimeEntity {
   @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   private final List<Vote> votes = new ArrayList<>();
 
-  public static Post from(final CreatePostDto postDto, final User user, final String thumbnailUrl) {
+  public static Post from(final RequestPostDto postDto, final User user, final String thumbnailUrl) {
     return Post.builder()
         .title(postDto.title())
         .content(postDto.content())
@@ -55,7 +54,7 @@ public class Post extends TimeEntity {
     this.isDone = true;
   }
 
-  public void updatePost(final UpdatePostDto postDto, final String thumbnail) {
+  public void updatePost(final RequestPostDto postDto, final String thumbnail) {
     this.title = postDto.title();
     this.content = postDto.content();
     this.thumbnail = thumbnail;

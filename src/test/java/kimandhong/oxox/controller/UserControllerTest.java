@@ -5,10 +5,8 @@ import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
-import kimandhong.oxox.repository.UserRepository;
 import kimandhong.oxox.service.S3Service;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,8 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class UserControllerTest extends AbstractTest {
   private final String END_POINT = "/api/users/";
-  @Autowired
-  UserRepository userRepository;
   @MockBean
   S3Service s3Service;
 

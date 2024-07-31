@@ -6,10 +6,9 @@ import kimandhong.oxox.common.swagger.SwaggerCreated;
 import kimandhong.oxox.common.swagger.SwaggerNoContent;
 import kimandhong.oxox.common.swagger.SwaggerOK;
 import kimandhong.oxox.controller.param.PostPaginationParam;
-import kimandhong.oxox.dto.post.CreatePostDto;
 import kimandhong.oxox.dto.post.PostDetailDto;
 import kimandhong.oxox.dto.post.PostPaginationDto;
-import kimandhong.oxox.dto.post.UpdatePostDto;
+import kimandhong.oxox.dto.post.RequestPostDto;
 import kimandhong.oxox.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -27,9 +26,9 @@ public class PostController {
 
   @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @SwaggerCreated(summary = "게시글 생성")
-  public void createPost(@ParameterObject @Valid final CreatePostDto createPostDto,
+  public void createPost(@ParameterObject @Valid final RequestPostDto requestPostDto,
                          @RequestPart(required = false) final MultipartFile thumbnail) {
-    postService.createPost(createPostDto, thumbnail);
+    postService.createPost(requestPostDto, thumbnail);
   }
 
   @GetMapping("{postId}")
@@ -49,9 +48,9 @@ public class PostController {
   @PatchMapping(value = "{postId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @SwaggerNoContent(summary = "게시글 수정")
   public void updatePost(@PathVariable("postId") final Long postId,
-                         @ParameterObject @Valid final UpdatePostDto updatePostDto,
+                         @ParameterObject @Valid final RequestPostDto requestPostDto,
                          @RequestPart(required = false) final MultipartFile thumbnail) {
-    postService.updatePost(postId, updatePostDto, thumbnail);
+    postService.updatePost(postId, requestPostDto, thumbnail);
   }
 
   @DeleteMapping("{postId}")
