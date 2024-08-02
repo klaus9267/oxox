@@ -32,7 +32,7 @@ public class Comment extends TimeEntity {
   @JsonIgnore
   private Post post;
 
-  @OneToMany(mappedBy = "comment", orphanRemoval = true, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "comment", orphanRemoval = true, cascade = CascadeType.ALL)
   private final List<Reaction> reactions = new ArrayList<>();
 
   @ElementCollection(fetch = FetchType.LAZY)

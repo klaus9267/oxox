@@ -35,10 +35,10 @@ public class Post extends TimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
-  @OneToMany(mappedBy = "post", orphanRemoval = true, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
   private final List<Comment> comments = new ArrayList<>();
 
-  @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
   private final List<Vote> votes = new ArrayList<>();
 
   public static Post from(final RequestPostDto postDto, final User user, final String thumbnailUrl) {
