@@ -3,11 +3,12 @@ package kimandhong.oxox.controller;
 import kimandhong.oxox.common.AbstractTest;
 import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.controller.param.PostCondition;
-import kimandhong.oxox.domain.Post;
-import kimandhong.oxox.domain.User;
+import kimandhong.oxox.domain.*;
 import kimandhong.oxox.dto.post.RequestPostDto;
+import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.repository.PostRepository;
 import kimandhong.oxox.service.S3Service;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,9 +18,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -79,7 +82,7 @@ class PostControllerTest extends AbstractTest {
     @Test
     @DisplayName("게시글_조회_로그인")
     public void login_true() throws Exception {
-      Post post = postRepository.findTopByOrderByIdAsc().orElseThrow(RuntimeException::new);
+      Post post = initPost();
 
       mockMvc.perform(get(END_POINT + "/" + post.getId())
               .header("Authorization", token))
@@ -93,7 +96,7 @@ class PostControllerTest extends AbstractTest {
     @Test
     @DisplayName("게시글_조회_비로그인")
     public void login_false() throws Exception {
-      Post post = postRepository.findTopByOrderByIdAsc().orElseThrow(RuntimeException::new);
+      Post post = initPost();
 
       mockMvc.perform(get(END_POINT + "/" + post.getId()))
           .andExpect(status().isOk())
@@ -108,6 +111,11 @@ class PostControllerTest extends AbstractTest {
   @Nested
   @DisplayName("게시글_목록조회")
   class readPosts {
+    @BeforeEach
+    public void init() {
+      initPosts();
+    }
+
     @Test
     @DisplayName("기본_조회(최신순)")
     public void none() throws Exception {
@@ -135,11 +143,7 @@ class PostControllerTest extends AbstractTest {
           .filter(post -> post.getCreatedAt().isAfter(LocalDateTime.now().minusDays(1)))
           .sorted((a, b) -> {
             int voteComparison = Integer.compare(b.getVotes().size(), a.getVotes().size());
-            if (voteComparison != 0) {
-              return voteComparison;
-            } else {
-              return Long.compare(b.getId(), a.getId());
-            }
+            return voteComparison != 0 ? voteComparison : Long.compare(b.getId(), a.getId());
           })
           .toList();
 
@@ -190,7 +194,7 @@ class PostControllerTest extends AbstractTest {
           .stream()
           .filter(post -> post.getCreatedAt().isAfter(LocalDateTime.now().minusDays(1)))
           .sorted((a, b) -> {
-            int emojiComparison = Integer.compare(getTotalEmojiCount(b), getTotalEmojiCount(a));
+            int emojiComparison = Integer.compare(getReactionCounts(b), getReactionCounts(a));
             if (emojiComparison != 0) {
               return emojiComparison;
             } else {
@@ -210,11 +214,11 @@ class PostControllerTest extends AbstractTest {
       }
     }
 
-    private int getTotalEmojiCount(Post post) {
+    private int getReactionCounts(Post post) {
       return post.getComments().stream()
-          .flatMap(comment -> comment.getEmojiCounts().values().stream())
-          .mapToInt(Integer::intValue)
+          .mapToInt(comment -> comment.getReactions().size())
           .sum();
+
     }
   }
 
@@ -224,7 +228,7 @@ class PostControllerTest extends AbstractTest {
     @Test
     @DisplayName("썸네일_있음")
     public void thumbnail_exists() throws Exception {
-      Post post = postRepository.findTopByOrderByIdAsc().orElseThrow(RuntimeException::new);
+      Post post = initPost();
 
       RequestPostDto requestPostDto = new RequestPostDto("Test Update Title", "Test Update Content");
       MockMultipartFile thumbnail = new MockMultipartFile("thumbnail", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "test image required".getBytes());
@@ -242,7 +246,7 @@ class PostControllerTest extends AbstractTest {
     @Test
     @DisplayName("썸네일_없음")
     public void thumbnail_null() throws Exception {
-      Post post = postRepository.findTopByOrderByIdAsc().orElseThrow(RuntimeException::new);
+      Post post = initPost();
 
       RequestPostDto requestPostDto = new RequestPostDto("Test Update Title", "Test Update Content");
 
@@ -266,10 +270,68 @@ class PostControllerTest extends AbstractTest {
 
   private Post initPost() {
     Random random = new Random();
-    User user = userRepository.findTopByOrderByIdAsc().orElseThrow(RuntimeException::new);
 
     RequestPostDto requestPostDto = new RequestPostDto("title" + random.nextInt(9999), "content" + random.nextInt(9999));
     Post post = Post.from(requestPostDto, user, null);
     return postRepository.save(post);
+  }
+
+  @Transactional
+  private void initPosts() {
+    Random random = new Random();
+    List<User> users = new ArrayList<>();
+
+    for (int i = 0; i < 100; i++) {
+      JoinDto joinDto = new JoinDto("test email", null, "test nickname");
+      User newUser = User.from(joinDto, "password", 1L, null);
+      users.add(newUser);
+    }
+    users = userRepository.saveAll(users);
+
+    // 게시글 추가
+    int randomPostCount = 10;
+    for (int i = 0; i < randomPostCount; i++) {
+      RequestPostDto requestPostDto = new RequestPostDto("title" + random.nextInt(9999), "content" + random.nextInt(9999));
+      Post post = Post.from(requestPostDto, user, null);
+
+      // 댓글 추가
+      int randomCommentCount = random.nextInt(1, 15);
+      for (int j = 0; j < randomCommentCount; j++) {
+        Comment comment = Comment.from("content" + random.nextInt(9999), user, post);
+        post.getComments().add(comment);
+
+        // 리액션 추가
+        int randomReactionCount = random.nextInt(1, 5);
+        A:
+        for (int k = 0; k < randomReactionCount; k++) {
+          User randomUser = users.get(random.nextInt(users.size()));
+          Emoji randomEmoji = Emoji.values()[random.nextInt(Emoji.values().length - 2)];
+          for (Reaction reaction : comment.getReactions()) {
+            if (reaction.getUser().getId().equals(user.getId())) {
+              continue A;
+            }
+          }
+          Reaction newReaction = Reaction.from(randomEmoji, randomUser, comment);
+          comment.getReactions().add(newReaction);
+          comment.incrementCount(randomEmoji);
+        }
+      }
+
+      // 투표 추가
+      int randomVoteCount = random.nextInt(5, 20);
+      A:
+      for (int q = 0; q < randomVoteCount; q++) {
+        User randomUser = users.get(random.nextInt(users.size()));
+        for (Vote vote : post.getVotes()) {
+          if (vote.getUser().getId().equals(randomUser.getId())) {
+            continue A;
+          }
+        }
+        Vote newVote = Vote.from(random.nextBoolean(), randomUser, post);
+        post.getVotes().add(newVote);
+      }
+
+      postRepository.save(post);
+    }
   }
 }

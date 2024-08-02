@@ -30,7 +30,7 @@ class ProfileControllerTest extends AbstractTest {
     @Test
     @DisplayName("사진있음")
     public void image_exist() throws Exception {
-      String newNickname = "new test nickname";
+      String newNickname = "new test nickname1";
       MockMultipartFile image = new MockMultipartFile("image", "test image.jpg", MediaType.IMAGE_JPEG_VALUE, "test image required".getBytes());
 
       when(s3Service.uploadFile(any(MultipartFile.class), any(S3path.class))).thenReturn("test s3 image");
@@ -48,7 +48,7 @@ class ProfileControllerTest extends AbstractTest {
     @Test
     @DisplayName("사진없음")
     public void image_null() throws Exception {
-      String newNickname = "new test nickname";
+      String newNickname = "new test nickname2";
 
       when(s3Service.uploadFile(any(MultipartFile.class), any(S3path.class))).thenReturn("test s3 image");
       when(s3Service.changeFile(anyString(), any(MultipartFile.class), any(S3path.class))).thenReturn("test s3 image");
