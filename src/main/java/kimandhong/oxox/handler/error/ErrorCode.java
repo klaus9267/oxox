@@ -11,6 +11,7 @@ public enum ErrorCode {
   BAD_REQUEST_LOGIN(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호를 확인해주세요"),
   WRONG_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호를 확인해주세요."),
   WRONG_PARAMETER(HttpStatus.BAD_REQUEST, "정렬 종류를 확인해주세요."),
+  INVALID_UID(HttpStatus.BAD_REQUEST, "잘못된 UID입니다."),
 
   UNAUTHORIZED_REQUEST(HttpStatus.UNAUTHORIZED, "Unauthorized."),
   FORBIDDEN_ACCESS(HttpStatus.FORBIDDEN, "Forbidden."),
@@ -25,6 +26,7 @@ public enum ErrorCode {
 
   METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "Not allowed method."),
 
+  NOT_SOCIAL_USER(HttpStatus.CONFLICT, "Email, Password를 사용해 가입한 사용자입니다."),
   CONFLICT(HttpStatus.CONFLICT, "Conflict"),
   CONFLICT_EMAIL(HttpStatus.CONFLICT, "중복된 이메일입니다."),
   CONFLICT_GOOGLE(HttpStatus.CONFLICT, "Google로 가입된 이메일입니다."),
