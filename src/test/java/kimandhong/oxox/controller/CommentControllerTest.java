@@ -10,6 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,6 +69,16 @@ class CommentControllerTest extends AbstractTest {
         .isInstanceOf(RuntimeException.class);
   }
 
+  @Test
+  @DisplayName("댓글_목록_전체_조회")
+  public void readComments() throws Exception {
+    List<Comment> comments = initComments();
+
+    mockMvc.perform(get(END_POINT + "/" + comments.get(0).getPost().getId() + "/all")
+            .header("Authorization", token))
+        .andExpect(status().isOk());
+  }
+
   private Post initPost() {
     Random random = new Random();
 
@@ -77,8 +89,17 @@ class CommentControllerTest extends AbstractTest {
 
   private Comment initComment() {
     Post post = initPost();
-    Comment comment = Comment.from("test content", user, post);
+    Random random = new Random();
+    Comment comment = Comment.from("test content" + random.nextInt(9999), user, post);
     post.getComments().add(comment);
     return postRepository.save(post).getComments().get(0);
+  }
+
+  private List<Comment> initComments() {
+    List<Comment> comments = new ArrayList<>();
+    for (int i = 0; i < 100; i++) {
+      comments.add(initComment());
+    }
+    return comments;
   }
 }
