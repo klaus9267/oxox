@@ -8,6 +8,7 @@ import kimandhong.oxox.common.swagger.SwaggerCreated;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
+import kimandhong.oxox.dto.user.SocialLoginDto;
 import kimandhong.oxox.dto.user.UserDto;
 import kimandhong.oxox.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,18 @@ public class UserController {
   @SwaggerCreated(summary = "로그인")
   public ResponseEntity<UserDto> login(@RequestBody @Valid final LoginDto loginDto) {
     final User user = userService.login(loginDto);
+    final String token = jwtUtil.createAccessToken(user);
+
+    return ResponseEntity.status(HttpStatus.OK)
+        .header("X-Access-Token", token)
+        .header("Access-Control-Expose-Headers", "X-Access-Token")
+        .body(UserDto.from(user));
+  }
+
+  @PostMapping("login/social")
+  @SwaggerCreated(summary = "소셜로그인")
+  public ResponseEntity<UserDto> socialLogin(@RequestBody @Valid final SocialLoginDto loginDto) {
+    final User user = userService.socialLogin(loginDto);
     final String token = jwtUtil.createAccessToken(user);
 
     return ResponseEntity.status(HttpStatus.OK)

@@ -84,7 +84,9 @@ public class PostService {
   public void deletePost(final Long id) {
     final Post post = postRepository.findByIdAndUserId(id, securityUtil.getCustomUserId()).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
     postRepository.deleteById(post.getId());
-    s3Service.deleteFile(post.getThumbnail());
+    if (post.getThumbnail() != null) {
+      s3Service.deleteFile(post.getThumbnail());
+    }
   }
 
   @Transactional
