@@ -2,15 +2,13 @@ package kimandhong.oxox.controller;
 
 import kimandhong.oxox.common.AbstractTest;
 import kimandhong.oxox.common.enums.S3path;
-import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
+import kimandhong.oxox.dto.user.SocialLoginDto;
 import kimandhong.oxox.service.S3Service;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.NoSuchElementException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -43,8 +41,6 @@ class UserControllerTest extends AbstractTest {
 
   @Test
   public void login() throws Exception {
-    User user = userRepository.findTopByOrderByIdAsc().orElseThrow(NoSuchElementException::new);
-
     LoginDto loginDto = new LoginDto(user.getEmail(), "test password");
     mockMvc.perform(post(END_POINT + "login")
             .contentType(APPLICATION_JSON)
@@ -54,5 +50,18 @@ class UserControllerTest extends AbstractTest {
         .andExpect(jsonPath(("$.email")).value(user.getEmail()))
         .andExpect(jsonPath(("$.nickname")).value(user.getProfile().getNickname()))
         .andExpect(jsonPath(("$.profileImage")).value(user.getProfile().getImage()));
+  }
+
+  @Test
+  public void socialLogin() throws Exception {
+    SocialLoginDto socialLoginDto = new SocialLoginDto("testSocial@email.com", "test name", "test photoUrl", "test uid");
+
+    mockMvc.perform(post(END_POINT + "login/social")
+            .contentType(APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(socialLoginDto)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath(("$.email")).value(socialLoginDto.email()))
+        .andExpect(jsonPath(("$.nickname")).value(socialLoginDto.displayName()))
+        .andExpect(jsonPath(("$.profileImage")).value(socialLoginDto.photoUrl()));
   }
 }
