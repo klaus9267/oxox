@@ -24,7 +24,7 @@ public record PostDetailDto(
     Long agreeCount,
     Long disAgreeCount,
     int commentCount,
-    Boolean vote,
+    Boolean myVote,
     List<CommentDto> comments
 ) {
   public static PostDetailDto from(final Post post, final List<Comment> comments, final Long currentUserId) {
@@ -55,7 +55,7 @@ public record PostDetailDto(
         .disAgreeCount(disagreeCount)
         .commentCount(comments.size())
         .comments(commentDtos)
-        .vote(isVoted)
+        .myVote(isVoted)
         .build();
   }
 
