@@ -25,8 +25,6 @@ public class User extends TimeEntity {
   @Column(nullable = false)
   private String email;
 
-  //todo -> 소셜 로그인 사용자가 일반 로그인 시 예외처리
-  @Column(nullable = false)
   private String password;
   private String uid;
 
