@@ -4,6 +4,7 @@ import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.domain.User;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
+import kimandhong.oxox.dto.user.SocialLoginDto;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.ConflictException;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
@@ -50,5 +51,13 @@ public class UserService {
     return userRepository.findByEmail(loginDto.email())
         .filter(foundUser -> passwordEncoder.matches(loginDto.password(), foundUser.getPassword()))
         .orElseThrow(() -> new NotFoundException(ErrorCode.BAD_REQUEST_LOGIN));
+  }
+
+  public User socialLogin(final SocialLoginDto loginDto) {
+    return userRepository.findByUid(loginDto.uid()).orElseGet(() -> {
+      final Long sequence = profileCustomRepository.findMaxSequenceByNickname(loginDto.displayName()) + 1;
+      final User user = User.from(loginDto, sequence);
+      return userRepository.save(user);
+    });
   }
 }

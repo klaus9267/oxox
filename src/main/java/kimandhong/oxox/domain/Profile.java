@@ -3,6 +3,7 @@ package kimandhong.oxox.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import kimandhong.oxox.dto.user.JoinDto;
+import kimandhong.oxox.dto.user.SocialLoginDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,6 +38,15 @@ public class Profile {
         .user(user)
         .image(profileImageUrl)
         .sequence(sequence)
+        .build();
+  }
+
+  public static Profile from(final SocialLoginDto loginDto, final Long sequence, final User user) {
+    return Profile.builder()
+        .nickname(loginDto.displayName())
+        .sequence(sequence)
+        .image(loginDto.photoUrl())
+        .user(user)
         .build();
   }
 
