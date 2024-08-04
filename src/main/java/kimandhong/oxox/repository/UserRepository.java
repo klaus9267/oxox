@@ -14,4 +14,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   @EntityGraph(attributePaths = "profile")
   List<User> findAll();
+
+  Optional<User> findByUid(final String uid);
 }
