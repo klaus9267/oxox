@@ -6,6 +6,7 @@ import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.repository.CommentRepository;
 import kimandhong.oxox.repository.PostRepository;
 import kimandhong.oxox.repository.UserRepository;
+import kimandhong.oxox.repository.custom.ProfileCustomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class BulkService {
   private final PostRepository postRepository;
   private final UserRepository userRepository;
   private final CommentRepository commentRepository;
+  private final ProfileCustomRepository profileCustomRepository;
 
   private final PasswordEncoder passwordEncoder;
   private final BulkRepository bulkRepository;
@@ -29,11 +31,20 @@ public class BulkService {
   public void bulkUsers() {
     List<User> users = new ArrayList<>();
     String password = passwordEncoder.encode("test password");
+    Random random = new Random();
     for (int i = 0; i < 1000; i++) {
-      JoinDto joinDto = new JoinDto("test" + i + "@email.com", null, "bulk nickname" + i);
-      User user = User.from(joinDto, password, 1L, null);
-      users.add(user);
+      JoinDto joinDto = new JoinDto("test" + random.nextInt(9999) + "@email.com", null, "bulk nickname" + random.nextInt(9999));
 
+      long sequence = users.stream()
+          .filter(user -> user.getProfile().getNickname().equals(joinDto.nickname()))
+          .mapToLong(user -> user.getProfile().getSequence())
+          .max()
+          .orElse(0L);
+
+      long dbSequence = profileCustomRepository.findMaxSequenceByNickname(joinDto.nickname());
+
+      User user = User.from(joinDto, password, Math.max(sequence, dbSequence) + 1, null);
+      users.add(user);
     }
     bulkRepository.saveUsers(users);
   }

@@ -1,6 +1,7 @@
 package kimandhong.oxox.service;
 
 import kimandhong.oxox.auth.SecurityUtil;
+import kimandhong.oxox.bulk.BulkRepository;
 import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.domain.Profile;
 import kimandhong.oxox.dto.profile.ProfileDto;
@@ -21,6 +22,7 @@ public class ProfileService {
   private final ProfileRepository profileRepository;
   private final S3Service s3Service;
   private final ProfileCustomRepository profileCustomRepository;
+  private final BulkRepository bulkRepository;
   private final SecurityUtil securityUtil;
 
 
@@ -32,16 +34,17 @@ public class ProfileService {
         : profile.getImage();
 
     try {
-      final Long sequence = profile.getNickname().equals(nickname)
-          ? profile.getSequence()
-          : profileCustomRepository.findMaxSequenceByNickname(nickname) + 1;
-
       final List<Profile> existingProfiles = profileRepository.findAllByNickname(profile.getNickname());
       for (final Profile existingProfile : existingProfiles) {
         if (!existingProfile.getId().equals(profile.getId())) {
           existingProfile.updateSequence(profile.getSequence());
         }
       }
+      bulkRepository.updateProfileSequences(existingProfiles);
+
+      final Long sequence = profile.getNickname().equals(nickname)
+          ? profile.getSequence()
+          : profileCustomRepository.findMaxSequenceByNickname(nickname) + 1;
 
       profile.updateProfile(nickname, sequence, profileImage);
       return ProfileDto.from(profile);

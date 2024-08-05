@@ -145,6 +145,7 @@ public class BulkRepository {
     String[] sqls = {
         "SET FOREIGN_KEY_CHECKS = 0",
         "DELETE FROM reactions",
+        "DELETE FROM reaction_counts",
         "DELETE FROM comments",
         "SET FOREIGN_KEY_CHECKS = 1"
     };
@@ -157,6 +158,7 @@ public class BulkRepository {
         "SET FOREIGN_KEY_CHECKS = 0",
         "DELETE FROM votes",
         "DELETE FROM reactions",
+        "DELETE FROM reaction_counts",
         "DELETE FROM comments",
         "DELETE FROM posts",
         "SET FOREIGN_KEY_CHECKS = 1"
@@ -170,6 +172,7 @@ public class BulkRepository {
         "SET FOREIGN_KEY_CHECKS = 0",
         "DELETE FROM votes",
         "DELETE FROM reactions",
+        "DELETE FROM reaction_counts",
         "DELETE FROM comments",
         "DELETE FROM posts",
         "DELETE FROM profiles",
@@ -178,5 +181,40 @@ public class BulkRepository {
     };
 
     jdbcTemplate.batchUpdate(sqls);
+  }
+
+  public void updateProfileSequences(final List<Profile> profiles) {
+    String sql = "UPDATE profiles SET sequence = ? where id = ?";
+
+    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+      @Override
+      public void setValues(PreparedStatement ps, int i) throws SQLException {
+        Profile profile = profiles.get(i);
+        ps.setLong(1, profile.getSequence());
+        ps.setLong(2, profile.getId());
+      }
+
+      @Override
+      public int getBatchSize() {
+        return profiles.size();
+      }
+    });
+  }
+
+  public void donePosts(final List<Post> posts) {
+    String sql = "UPDATE posts SET is_done = true where id = ?";
+
+    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+      @Override
+      public void setValues(PreparedStatement ps, int i) throws SQLException {
+        Post post = posts.get(i);
+        ps.setLong(1, post.getId());
+      }
+
+      @Override
+      public int getBatchSize() {
+        return posts.size();
+      }
+    });
   }
 }
