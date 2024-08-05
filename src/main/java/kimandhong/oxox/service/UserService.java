@@ -60,7 +60,7 @@ public class UserService {
   public User socialLogin(final SocialLoginDto loginDto) {
     return userRepository.findByEmail(loginDto.email())
         .map(user -> {
-          if (!user.getPassword().isEmpty()) {
+          if (user.getPassword() != null) {
             throw new BadRequestException(ErrorCode.NOT_SOCIAL_USER);
           }
           if (!user.getUid().equals(loginDto.uid())) {
