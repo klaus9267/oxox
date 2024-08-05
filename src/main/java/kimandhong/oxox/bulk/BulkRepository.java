@@ -200,4 +200,21 @@ public class BulkRepository {
       }
     });
   }
+
+  public void donePosts(final List<Post> posts) {
+    String sql = "UPDATE posts SET is_done = true where id = ?";
+
+    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+      @Override
+      public void setValues(PreparedStatement ps, int i) throws SQLException {
+        Post post = posts.get(i);
+        ps.setLong(1, post.getId());
+      }
+
+      @Override
+      public int getBatchSize() {
+        return posts.size();
+      }
+    });
+  }
 }
