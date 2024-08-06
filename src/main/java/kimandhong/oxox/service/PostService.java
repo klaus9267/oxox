@@ -99,4 +99,15 @@ public class PostService {
       }
     });
   }
+
+  @Transactional
+  @Scheduled(fixedDelay = 1000 * 60 * 5)
+  public void fillPosts() {
+    final List<Post> posts = postRepository.findTop5ByOrderByCreatedAtDesc();
+    for (Post post : posts) {
+      if (post.isDone()) {
+        post.resetCreatedAt();
+      }
+    }
+  }
 }

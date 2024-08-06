@@ -59,4 +59,11 @@ public class Post extends TimeEntity {
     this.content = postDto.content();
     this.thumbnail = thumbnail;
   }
+
+  public void resetCreatedAt() {
+    updateCreatedAt();
+    this.isDone = false;
+  }
 }
+
+
