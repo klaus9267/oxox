@@ -1,6 +1,7 @@
 package kimandhong.oxox.service;
 
 import kimandhong.oxox.auth.SecurityUtil;
+import kimandhong.oxox.bulk.BulkRepository;
 import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.controller.param.PostCondition;
 import kimandhong.oxox.controller.param.PostPaginationParam;
@@ -17,6 +18,7 @@ import kimandhong.oxox.repository.CommentRepository;
 import kimandhong.oxox.repository.PostRepository;
 import kimandhong.oxox.repository.custom.PostCustomRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -28,10 +30,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostService {
   private final PostRepository postRepository;
   private final PostCustomRepository postCustomRepository;
   private final CommentRepository commentRepository;
+  private final BulkRepository bulkRepository;
 
   private final SecurityUtil securityUtil;
   private final S3Service s3Service;
@@ -92,12 +96,11 @@ public class PostService {
   @Transactional
   //todo: will change to message queue
   @Scheduled(fixedDelay = 1000 * 60 * 30)
-  public void checkPostIsDOne() {
-    postRepository.findAll().forEach(post -> {
-      if (!post.isDone() && post.getCreatedAt().plusHours(24).isBefore(LocalDateTime.now())) {
-        post.done();
-      }
-    });
+  public void updateExpiredPosts() {
+    final LocalDateTime time = LocalDateTime.now().minusDays(1);
+    final List<Post> posts = postRepository.findByIsDoneFalseAndCreatedAtBefore(time);
+    bulkRepository.donePosts(posts);
+    log.info("done check");
   }
 
   @Transactional
