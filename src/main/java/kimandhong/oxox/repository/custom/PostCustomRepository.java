@@ -36,20 +36,20 @@ public class PostCustomRepository {
     JPAQuery<PostDto> query = this.createBaseQuery(pageable);
     switch (postCondition == null ? PostCondition.DEFAULT : postCondition) {
       case POPULARITY, HOT -> {
-        query.leftJoin(post.votes, vote)
+        query.leftJoin(post.oneToMany.votes, vote)
             .where(post.isDone.isFalse())
             .groupBy(post.id)
             .orderBy(vote.count().desc(), post.id.desc());
       }
       case BEST_REACTION -> {
-        query.leftJoin(post.comments, comment)
-            .leftJoin(comment.reactions, reaction)
+        query.leftJoin(post.oneToMany.comments, comment)
+            .leftJoin(comment.oneToMany.reactions, reaction)
             .where(post.isDone.isFalse())
             .groupBy(post.id)
             .orderBy(reaction.count().desc(), post.id.desc());
       }
       case CLOSE -> {
-        query.leftJoin(post.votes, vote)
+        query.leftJoin(post.oneToMany.votes, vote)
             .where(post.isDone.isFalse())
             .groupBy(post.id)
             .having(vote.isYes.when(true).then(1).otherwise(0).sum()
@@ -79,7 +79,7 @@ public class PostCustomRepository {
         builder.and(post.user.id.eq(userId));
       }
       case JOIN -> {
-        builder.and(post.votes.any().user.id.eq(userId));
+        builder.and(post.oneToMany.votes.any().user.id.eq(userId));
       }
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
@@ -100,7 +100,7 @@ public class PostCustomRepository {
                 post.thumbnail,
                 post.createdAt,
                 post.isDone,
-                post.comments.size(),
+                post.oneToMany.comments.size(),
                 JPAExpressions.select(vote.count())
                     .from(vote)
                     .where(vote.post.eq(post).and(vote.isYes.isTrue())),

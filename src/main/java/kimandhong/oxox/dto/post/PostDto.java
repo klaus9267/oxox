@@ -25,7 +25,7 @@ public class PostDto {
   private Long disAgreeCount;
 
   public static PostDto from(final Post post) {
-    final Map<Boolean, Long> voteCounts = post.getVotes().stream()
+    final Map<Boolean, Long> voteCounts = post.getOneToMany().getVotes().stream()
         .collect(Collectors.partitioningBy(Vote::isYes, Collectors.counting()));
 
     return PostDto.builder()
@@ -34,7 +34,7 @@ public class PostDto {
         .thumbnailUrl(post.getThumbnail())
         .createAt(post.getCreatedAt())
         .isDone(post.isDone())
-        .commentCount(post.getComments().size())
+        .commentCount(post.getOneToMany().getComments().size())
         .agreeCount(voteCounts.get(true))
         .disAgreeCount(voteCounts.get(false))
         .build();
