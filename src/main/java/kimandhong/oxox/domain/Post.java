@@ -1,14 +1,12 @@
 package kimandhong.oxox.domain;
 
 import jakarta.persistence.*;
+import kimandhong.oxox.domain.relationship.PostOneToMany;
 import kimandhong.oxox.dto.post.RequestPostDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(name = "posts")
 @NoArgsConstructor
@@ -35,11 +33,8 @@ public class Post extends TimeEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private User user;
 
-  @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
-  private final List<Comment> comments = new ArrayList<>();
-
-  @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
-  private final List<Vote> votes = new ArrayList<>();
+  @Embedded
+  private final PostOneToMany oneToMany = new PostOneToMany();
 
   public static Post from(final RequestPostDto postDto, final User user, final String thumbnailUrl) {
     return Post.builder()

@@ -30,11 +30,11 @@ public record PostDetailDto(
   public static PostDetailDto from(final Post post, final List<Comment> comments, final Long currentUserId) {
     final UserDto userDto = UserDto.from(post.getUser());
     final List<CommentDto> commentDtos = CommentDto.from(comments, currentUserId);
-    Map<Boolean, Long> voteCounts = post.getVotes().stream()
+    Map<Boolean, Long> voteCounts = post.getOneToMany().getVotes().stream()
         .collect(Collectors.partitioningBy(Vote::isYes, Collectors.counting()));
 
     Boolean isVoted = null;
-    for (final Vote vote : post.getVotes()) {
+    for (final Vote vote : post.getOneToMany().getVotes()) {
       if (vote.getUser().getId().equals(currentUserId)) {
         isVoted = vote.isYes();
         break;
@@ -62,7 +62,7 @@ public record PostDetailDto(
   public static PostDetailDto from(final Post post, final List<Comment> comments) {
     final UserDto userDto = UserDto.from(post.getUser());
     final List<CommentDto> commentDtos = CommentDto.from(comments);
-    Map<Boolean, Long> voteCounts = post.getVotes().stream()
+    Map<Boolean, Long> voteCounts = post.getOneToMany().getVotes().stream()
         .collect(Collectors.partitioningBy(Vote::isYes, Collectors.counting()));
 
     final Long agreeCount = voteCounts.get(true);

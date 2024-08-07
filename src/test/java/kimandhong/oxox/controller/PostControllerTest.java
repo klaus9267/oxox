@@ -142,7 +142,7 @@ class PostControllerTest extends AbstractTest {
           .stream()
           .filter(post -> post.getCreatedAt().isAfter(LocalDateTime.now().minusDays(1)))
           .sorted((a, b) -> {
-            int voteComparison = Integer.compare(b.getVotes().size(), a.getVotes().size());
+            int voteComparison = Integer.compare(b.getOneToMany().getVotes().size(), a.getOneToMany().getVotes().size());
             return voteComparison != 0 ? voteComparison : Long.compare(b.getId(), a.getId());
           })
           .toList();
@@ -166,7 +166,7 @@ class PostControllerTest extends AbstractTest {
           .stream()
           .filter(post -> post.getCreatedAt().isAfter(LocalDateTime.now().minusHours(1)))
           .sorted((a, b) -> {
-            int voteComparison = Integer.compare(b.getVotes().size(), a.getVotes().size());
+            int voteComparison = Integer.compare(b.getOneToMany().getVotes().size(), a.getOneToMany().getVotes().size());
             if (voteComparison != 0) {
               return voteComparison;
             } else {
@@ -215,8 +215,8 @@ class PostControllerTest extends AbstractTest {
     }
 
     private int getReactionCounts(Post post) {
-      return post.getComments().stream()
-          .mapToInt(comment -> comment.getReactions().size())
+      return post.getOneToMany().getComments().stream()
+          .mapToInt(comment -> comment.getOneToMany().getReactions().size())
           .sum();
 
     }
@@ -298,7 +298,7 @@ class PostControllerTest extends AbstractTest {
       int randomCommentCount = random.nextInt(1, 15);
       for (int j = 0; j < randomCommentCount; j++) {
         Comment comment = Comment.from("content" + random.nextInt(9999), user, post);
-        post.getComments().add(comment);
+        post.getOneToMany().getComments().add(comment);
 
         // 리액션 추가
         int randomReactionCount = random.nextInt(1, 5);
@@ -306,13 +306,13 @@ class PostControllerTest extends AbstractTest {
         for (int k = 0; k < randomReactionCount; k++) {
           User randomUser = users.get(random.nextInt(users.size()));
           Emoji randomEmoji = Emoji.values()[random.nextInt(Emoji.values().length - 2)];
-          for (Reaction reaction : comment.getReactions()) {
+          for (Reaction reaction : comment.getOneToMany().getReactions()) {
             if (reaction.getUser().getId().equals(user.getId())) {
               continue A;
             }
           }
           Reaction newReaction = Reaction.from(randomEmoji, randomUser, comment);
-          comment.getReactions().add(newReaction);
+          comment.getOneToMany().getReactions().add(newReaction);
           comment.incrementCount(randomEmoji);
         }
       }
@@ -322,13 +322,13 @@ class PostControllerTest extends AbstractTest {
       A:
       for (int q = 0; q < randomVoteCount; q++) {
         User randomUser = users.get(random.nextInt(users.size()));
-        for (Vote vote : post.getVotes()) {
+        for (Vote vote : post.getOneToMany().getVotes()) {
           if (vote.getUser().getId().equals(randomUser.getId())) {
             continue A;
           }
         }
         Vote newVote = Vote.from(random.nextBoolean(), randomUser, post);
-        post.getVotes().add(newVote);
+        post.getOneToMany().getVotes().add(newVote);
       }
 
       postRepository.save(post);

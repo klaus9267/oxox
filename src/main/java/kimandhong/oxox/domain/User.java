@@ -2,15 +2,13 @@ package kimandhong.oxox.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import kimandhong.oxox.domain.relationship.UserOneToMany;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.SocialLoginDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(name = "users")
 @NoArgsConstructor
@@ -32,17 +30,8 @@ public class User extends TimeEntity {
   @JsonIgnore
   private Profile profile;
 
-  @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
-  @JsonIgnore
-  private final List<Post> posts = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
-  @JsonIgnore
-  private final List<Comment> comments = new ArrayList<>();
-
-  @OneToMany(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
-  @JsonIgnore
-  private final List<Vote> votes = new ArrayList<>();
+  @Embedded
+  private final UserOneToMany oneToMany = new UserOneToMany();
 
   private User(final JoinDto joinDto, final String password, final Long sequence, final String profileImage) {
     this.email = joinDto.email();

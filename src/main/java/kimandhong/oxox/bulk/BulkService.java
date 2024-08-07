@@ -104,7 +104,7 @@ public class BulkService {
       int randomPostId = random.nextInt(posts.size());
 
       Post randomPost = posts.get(randomPostId);
-      for (Vote vote : randomPost.getVotes()) {
+      for (Vote vote : randomPost.getOneToMany().getVotes()) {
         if (vote.getUser().getId().equals((long) randomUserId)) {
           continue A;
         }
@@ -132,7 +132,7 @@ public class BulkService {
       int randomEmoji = random.nextInt(Emoji.values().length - 1);
       Comment randomComment = comments.get(randomCommentId);
 
-      for (Reaction reaction : randomComment.getReactions()) {
+      for (Reaction reaction : randomComment.getOneToMany().getReactions()) {
         if (reaction.getUser().getId().equals(users.get(randomUserId).getId())) {
           continue A;
         }

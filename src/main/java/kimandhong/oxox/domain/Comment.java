@@ -2,14 +2,13 @@ package kimandhong.oxox.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import kimandhong.oxox.domain.relationship.CommentOneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 
 @Entity(name = "comments")
@@ -32,8 +31,8 @@ public class Comment extends TimeEntity {
   @JsonIgnore
   private Post post;
 
-  @OneToMany(mappedBy = "comment", orphanRemoval = true, cascade = CascadeType.ALL)
-  private final List<Reaction> reactions = new ArrayList<>();
+  @Embedded
+  private final CommentOneToMany oneToMany = new CommentOneToMany();
 
   @ElementCollection(fetch = FetchType.LAZY)
   @CollectionTable(name = "reaction_counts", joinColumns = @JoinColumn(name = "comment_id"))

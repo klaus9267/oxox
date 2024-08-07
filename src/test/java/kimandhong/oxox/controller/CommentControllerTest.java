@@ -37,7 +37,7 @@ class CommentControllerTest extends AbstractTest {
         .andExpect(status().isCreated());
 
     Post foundPost = postRepository.findById(post.getId()).orElseThrow(RuntimeException::new);
-    assertThat(foundPost.getComments().size()).isEqualTo(1);
+    assertThat(foundPost.getOneToMany().getComments().size()).isEqualTo(1);
   }
 
   @Test
@@ -91,8 +91,8 @@ class CommentControllerTest extends AbstractTest {
     Post post = initPost();
     Random random = new Random();
     Comment comment = Comment.from("test content" + random.nextInt(9999), user, post);
-    post.getComments().add(comment);
-    return postRepository.save(post).getComments().get(0);
+    post.getOneToMany().getComments().add(comment);
+    return postRepository.save(post).getOneToMany().getComments().get(0);
   }
 
   private List<Comment> initComments() {
