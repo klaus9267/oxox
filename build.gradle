@@ -8,8 +8,8 @@ plugins {
 
 sonar {
     properties {
-        property "sonar.projectKey", "depromeet_10mm-server"
-        property "sonar.organization", "depromeet-1"
+        property "sonar.projectKey", "klaus9267_oxox"
+        property "sonar.organization", "klaus9267"
         property "sonar.host.url", "https://sonarcloud.io"
         property 'sonar.sources', 'src'
         property 'sonar.language', 'java'
@@ -85,6 +85,9 @@ dependencies {
     // prometheus & grafana
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'io.micrometer:micrometer-registry-prometheus'
+
+    // h2
+    testRuntimeOnly 'com.h2database:h2'
 }
 
 test {
@@ -131,7 +134,7 @@ jacocoTestReport {
         html.required.set(true)
         xml.required.set(true)
         csv.required.set(true)
-        html.destination jacocoDir.get().file("jacoco/index.html").asFile
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html"))
         xml.destination jacocoDir.get().file("jacoco/index.xml").asFile
         csv.destination jacocoDir.get().file("jacoco/index.csv").asFile
     }
