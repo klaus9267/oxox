@@ -27,7 +27,7 @@ public class CommentService {
   public void createComment(final Long postId, final String content) {
     final Post post = postService.findById(postId);
     final Comment comment = Comment.from(content, securityUtil.getCurrentUser(), post);
-    post.getComments().add(comment);
+    post.getOneToMany().getComments().add(comment);
   }
 
   public Comment findById(final Long commentId) {

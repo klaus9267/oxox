@@ -33,7 +33,7 @@ public record CommentDto(
   }
 
   public static CommentDto from(final Comment comment, final Long userId) {
-    final Emoji emoji = comment.getReactions().stream()
+    final Emoji emoji = comment.getOneToMany().getReactions().stream()
         .filter(reaction -> reaction.getUser().getId().equals(userId))
         .findFirst()
         .map(Reaction::getEmoji)
