@@ -1,7 +1,6 @@
 package kimandhong.oxox.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import kimandhong.oxox.common.swagger.SwaggerOK;
 import kimandhong.oxox.dto.profile.ProfileDto;

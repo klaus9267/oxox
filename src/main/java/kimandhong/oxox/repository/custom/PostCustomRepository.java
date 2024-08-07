@@ -35,28 +35,22 @@ public class PostCustomRepository {
 
     JPAQuery<PostDto> query = this.createBaseQuery(pageable);
     switch (postCondition == null ? PostCondition.DEFAULT : postCondition) {
-      case POPULARITY, HOT -> {
-        query.leftJoin(post.oneToMany.votes, vote)
-            .where(post.isDone.isFalse())
-            .groupBy(post.id)
-            .orderBy(vote.count().desc(), post.id.desc());
-      }
-      case BEST_REACTION -> {
-        query.leftJoin(post.oneToMany.comments, comment)
-            .leftJoin(comment.oneToMany.reactions, reaction)
-            .where(post.isDone.isFalse())
-            .groupBy(post.id)
-            .orderBy(reaction.count().desc(), post.id.desc());
-      }
-      case CLOSE -> {
-        query.leftJoin(post.oneToMany.votes, vote)
-            .where(post.isDone.isFalse())
-            .groupBy(post.id)
-            .having(vote.isYes.when(true).then(1).otherwise(0).sum()
-                .multiply(100.0).divide(vote.count())
-                .subtract(50).abs().loe(5)
-            ).orderBy(vote.count().desc(), post.id.desc());
-      }
+      case POPULARITY, HOT -> query.leftJoin(post.oneToMany.votes, vote)
+          .where(post.isDone.isFalse())
+          .groupBy(post.id)
+          .orderBy(vote.count().desc(), post.id.desc());
+      case BEST_REACTION -> query.leftJoin(post.oneToMany.comments, comment)
+          .leftJoin(comment.oneToMany.reactions, reaction)
+          .where(post.isDone.isFalse())
+          .groupBy(post.id)
+          .orderBy(reaction.count().desc(), post.id.desc());
+      case CLOSE -> query.leftJoin(post.oneToMany.votes, vote)
+          .where(post.isDone.isFalse())
+          .groupBy(post.id)
+          .having(vote.isYes.when(true).then(1).otherwise(0).sum()
+              .multiply(100.0).divide(vote.count())
+              .subtract(50).abs().loe(5)
+          ).orderBy(vote.count().desc(), post.id.desc());
       case DEFAULT -> query.orderBy(post.id.desc());
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
@@ -75,12 +69,8 @@ public class PostCustomRepository {
     final BooleanBuilder builder = new BooleanBuilder();
 
     switch (postCondition) {
-      case WRITER -> {
-        builder.and(post.user.id.eq(userId));
-      }
-      case JOIN -> {
-        builder.and(post.oneToMany.votes.any().user.id.eq(userId));
-      }
+      case WRITER -> builder.and(post.user.id.eq(userId));
+      case JOIN -> builder.and(post.oneToMany.votes.any().user.id.eq(userId));
       default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
     }
 

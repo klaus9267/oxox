@@ -14,6 +14,7 @@ import kimandhong.oxox.dto.post.PostPaginationDto;
 import kimandhong.oxox.dto.post.RequestPostDto;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
+import kimandhong.oxox.handler.error.exception.S3Exception;
 import kimandhong.oxox.repository.CommentRepository;
 import kimandhong.oxox.repository.PostRepository;
 import kimandhong.oxox.repository.custom.PostCustomRepository;
@@ -50,7 +51,7 @@ public class PostService {
       postRepository.save(post);
     } catch (Exception e) {
       s3Service.deleteFile(thumbnailUrl);
-      throw new RuntimeException(e.getMessage());
+      throw new S3Exception(ErrorCode.S3_UPLOAD_FAIL);
     }
   }
 

@@ -22,16 +22,14 @@ import java.util.Random;
 @Transactional
 public class BulkRepository {
   private final JdbcTemplate jdbcTemplate;
+  private final Random random = new Random();
 
   public void saveUsers(final List<User> users) {
-    String userSql = "INSERT INTO users (email, password) values (?, ?)";
-    String profileSql = "INSERT INTO profiles (nickname, sequence, user_id) values (?, ?, ?)";
-
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
     for (User user : users) {
       jdbcTemplate.update(connection -> {
-        PreparedStatement ps = connection.prepareStatement(userSql, Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement ps = connection.prepareStatement(Sql.INSERT_USER.getQuery(), Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, user.getEmail());
         ps.setString(2, user.getPassword());
         return ps;
@@ -39,7 +37,7 @@ public class BulkRepository {
 
       Number userId = keyHolder.getKey();
 
-      jdbcTemplate.update(profileSql,
+      jdbcTemplate.update(Sql.INSERT_PROFILE.getQuery(),
           user.getProfile().getNickname(),
           user.getProfile().getSequence(),
           userId
@@ -48,10 +46,7 @@ public class BulkRepository {
   }
 
   public void savePosts(final List<Post> posts) {
-    String sql = "INSERT INTO posts (title, content, user_id, is_done,created_at) values (?, ?, ?, ?, ?)";
-    Random random = new Random();
-
-    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+    jdbcTemplate.batchUpdate(Sql.INSERT_POST.getQuery(), new BatchPreparedStatementSetter() {
       @Override
       public void setValues(PreparedStatement ps, int i) throws SQLException {
         Post post = posts.get(i);
@@ -70,9 +65,7 @@ public class BulkRepository {
   }
 
   public void saveVotes(final List<Vote> votes) {
-    String sql = "INSERT INTO votes (is_yes, user_id, post_id) values (?, ?, ?)";
-
-    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+    jdbcTemplate.batchUpdate(Sql.INSERT_VOTE.getQuery(), new BatchPreparedStatementSetter() {
       @Override
       public void setValues(PreparedStatement ps, int i) throws SQLException {
         Vote vote = votes.get(i);
@@ -89,9 +82,7 @@ public class BulkRepository {
   }
 
   public void saveComments(final List<Comment> comments) {
-    String sql = "INSERT INTO comments (content, user_id, post_id) values (?, ?, ?)";
-
-    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+    jdbcTemplate.batchUpdate(Sql.INSERT_COMMENT.getQuery(), new BatchPreparedStatementSetter() {
       @Override
       public void setValues(PreparedStatement ps, int i) throws SQLException {
         Comment comment = comments.get(i);
@@ -108,9 +99,7 @@ public class BulkRepository {
   }
 
   public void saveReactions(final List<Reaction> reactions) {
-    String sql = "INSERT INTO reactions (emoji, user_id, comment_id) values (?, ?, ?)";
-
-    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+    jdbcTemplate.batchUpdate(Sql.INSERT_REACTION.getQuery(), new BatchPreparedStatementSetter() {
       @Override
       public void setValues(PreparedStatement ps, int i) throws SQLException {
         Reaction reaction = reactions.get(i);
@@ -127,9 +116,7 @@ public class BulkRepository {
   }
 
   public void deleteVotes() {
-    String sql = "DELETE FROM votes";
-
-    jdbcTemplate.batchUpdate(sql);
+    jdbcTemplate.batchUpdate(Sql.DELETE_VOTE.getQuery());
   }
 
   public void deleteReactions() {
@@ -143,11 +130,11 @@ public class BulkRepository {
 
   public void deleteComments() {
     String[] sqls = {
-        "SET FOREIGN_KEY_CHECKS = 0",
-        "DELETE FROM reactions",
-        "DELETE FROM reaction_counts",
-        "DELETE FROM comments",
-        "SET FOREIGN_KEY_CHECKS = 1"
+        Sql.KEY_0.getQuery(),
+        Sql.DELETE_REACTION.getQuery(),
+        Sql.DELETE_REACTION_COUNT.getQuery(),
+        Sql.DELETE_COMMENT.getQuery(),
+        Sql.KEY_1.getQuery(),
     };
 
     jdbcTemplate.batchUpdate(sqls);
@@ -155,13 +142,13 @@ public class BulkRepository {
 
   public void deletePosts() {
     String[] sqls = {
-        "SET FOREIGN_KEY_CHECKS = 0",
-        "DELETE FROM votes",
-        "DELETE FROM reactions",
-        "DELETE FROM reaction_counts",
-        "DELETE FROM comments",
-        "DELETE FROM posts",
-        "SET FOREIGN_KEY_CHECKS = 1"
+        Sql.KEY_0.getQuery(),
+        Sql.DELETE_VOTE.getQuery(),
+        Sql.DELETE_REACTION.getQuery(),
+        Sql.DELETE_REACTION_COUNT.getQuery(),
+        Sql.DELETE_COMMENT.getQuery(),
+        Sql.DELETE_POST.getQuery(),
+        Sql.KEY_1.getQuery()
     };
 
     jdbcTemplate.batchUpdate(sqls);
@@ -169,24 +156,22 @@ public class BulkRepository {
 
   public void deleteUsers() {
     String[] sqls = {
-        "SET FOREIGN_KEY_CHECKS = 0",
-        "DELETE FROM votes",
-        "DELETE FROM reactions",
-        "DELETE FROM reaction_counts",
-        "DELETE FROM comments",
-        "DELETE FROM posts",
-        "DELETE FROM profiles",
-        "DELETE FROM users",
-        "SET FOREIGN_KEY_CHECKS = 1"
+        Sql.KEY_0.getQuery(),
+        Sql.DELETE_VOTE.getQuery(),
+        Sql.DELETE_REACTION.getQuery(),
+        Sql.DELETE_REACTION_COUNT.getQuery(),
+        Sql.DELETE_COMMENT.getQuery(),
+        Sql.DELETE_POST.getQuery(),
+        Sql.DELETE_PROFILE.getQuery(),
+        Sql.DELETE_USER.getQuery(),
+        Sql.KEY_1.getQuery(),
     };
 
     jdbcTemplate.batchUpdate(sqls);
   }
 
   public void updateProfileSequences(final List<Profile> profiles) {
-    String sql = "UPDATE profiles SET sequence = ? where id = ?";
-
-    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+    jdbcTemplate.batchUpdate(Sql.UPDATE_PROFILE.getQuery(), new BatchPreparedStatementSetter() {
       @Override
       public void setValues(PreparedStatement ps, int i) throws SQLException {
         Profile profile = profiles.get(i);
@@ -202,9 +187,7 @@ public class BulkRepository {
   }
 
   public void donePosts(final List<Post> posts) {
-    String sql = "UPDATE posts SET is_done = true where id = ?";
-
-    jdbcTemplate.batchUpdate(sql, new BatchPreparedStatementSetter() {
+    jdbcTemplate.batchUpdate(Sql.UPDATE_POST.getQuery(), new BatchPreparedStatementSetter() {
       @Override
       public void setValues(PreparedStatement ps, int i) throws SQLException {
         Post post = posts.get(i);
