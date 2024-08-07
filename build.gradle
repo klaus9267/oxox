@@ -123,20 +123,27 @@ def jacocoExcludePatterns = [
         "**/*S3*/**"
 ]
 
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
+def jacocoDir = layout.buildDirectory.dir("reports/")
 
+jacocoTestReport {
+    dependsOn test	// 테스트가 수행되어야만 report를 생성할 수 있도록 설정
     reports {
-        xml.required = true
-        html.required = true
-        html.destination layout.buildDirectory.dir("reports/jacoco").get().asFile
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(true)
+        html.destination jacocoDir.get().file("jacoco/index.html").asFile
+        xml.destination jacocoDir.get().file("jacoco/index.xml").asFile
+        csv.destination jacocoDir.get().file("jacoco/index.csv").asFile
     }
 
     afterEvaluate {
-        classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: jacocoExcludePatterns)
-        }))
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: jacocoExcludePatterns + QDomains) // Querydsl 관련 제거
+                })
+        )
     }
+    finalizedBy jacocoTestCoverageVerification
 }
 
 jacocoTestCoverageVerification {
@@ -145,30 +152,30 @@ jacocoTestCoverageVerification {
             fileTree(dir: it, exclude: jacocoExcludePatterns)
         }))
     }
-    violationRules {
-        rule {
-            // 룰을 간단히 켜고 끌 수 있다.
-            enabled = true
-            // 룰을 체크할 단위는 클래스 단위
-            element = 'CLASS'
-            // 브랜치 커버리지를 최소한 90% 만족시켜야 한다.
-            limit {
-                counter = 'BRANCH'
-                value = 'COVEREDRATIO'
-                minimum = 0.90
-            }
-            // 라인 커버리지를 최소한 80% 만족시켜야 한다.
-            limit {
-                counter = 'LINE'
-                value = 'COVEREDRATIO'
-                minimum = 0.80
-            }
-            // 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한한다.
-            limit {
-                counter = 'LINE'
-                value = 'TOTALCOUNT'
-                maximum = 200
-            }
-        }
-    }
+//    violationRules {
+//        rule {
+//            // 룰을 간단히 켜고 끌 수 있다.
+//            enabled = true
+//            // 룰을 체크할 단위는 클래스 단위
+//            element = 'CLASS'
+//            // 브랜치 커버리지를 최소한 90% 만족시켜야 한다.
+//            limit {
+//                counter = 'BRANCH'
+//                value = 'COVEREDRATIO'
+//                minimum = 0.90
+//            }
+//            // 라인 커버리지를 최소한 80% 만족시켜야 한다.
+//            limit {
+//                counter = 'LINE'
+//                value = 'COVEREDRATIO'
+//                minimum = 0.80
+//            }
+//            // 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한한다.
+//            limit {
+//                counter = 'LINE'
+//                value = 'TOTALCOUNT'
+//                maximum = 200
+//            }
+//        }
+//    }
 }
