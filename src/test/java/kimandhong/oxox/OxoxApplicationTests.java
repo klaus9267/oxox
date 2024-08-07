@@ -7,7 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 class OxoxApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+  @Test
+  void contextLoads() {
+  }
 }

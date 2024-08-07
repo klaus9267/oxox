@@ -28,10 +28,12 @@ public class BulkService {
   private final PasswordEncoder passwordEncoder;
   private final BulkRepository bulkRepository;
 
+  private final Random random = new Random();
+  private final String PASSWORD = "test password";
+
   public void bulkUsers() {
     List<User> users = new ArrayList<>();
-    String password = passwordEncoder.encode("test password");
-    Random random = new Random();
+    String encodedPassword = passwordEncoder.encode(PASSWORD);
     for (int i = 0; i < 1000; i++) {
       JoinDto joinDto = new JoinDto("test" + random.nextInt(9999) + "@email.com", null, "bulk nickname" + random.nextInt(9999));
 
@@ -43,7 +45,7 @@ public class BulkService {
 
       long dbSequence = profileCustomRepository.findMaxSequenceByNickname(joinDto.nickname());
 
-      User user = User.from(joinDto, password, Math.max(sequence, dbSequence) + 1, null);
+      User user = User.from(joinDto, encodedPassword, Math.max(sequence, dbSequence) + 1, null);
       users.add(user);
     }
     bulkRepository.saveUsers(users);
@@ -54,7 +56,6 @@ public class BulkService {
   }
 
   public void bulkPosts() {
-    Random random = new Random();
     List<User> users = userRepository.findAll();
     List<Post> posts = new ArrayList<>();
 
@@ -73,7 +74,6 @@ public class BulkService {
   }
 
   public void bulkComments() {
-    Random random = new Random();
     List<User> users = userRepository.findAll();
     List<Post> posts = postRepository.findAll();
     List<Comment> comments = new ArrayList<>();
@@ -93,24 +93,22 @@ public class BulkService {
   }
 
   public void bulkVotes() {
-    Random random = new Random();
     List<User> users = userRepository.findAll();
     List<Post> posts = postRepository.findAll();
     List<Vote> votes = new ArrayList<>();
 
-    A:
     for (int i = 0; i < 10000; i++) {
       int randomUserId = random.nextInt(users.size());
       int randomPostId = random.nextInt(posts.size());
 
       Post randomPost = posts.get(randomPostId);
-      for (Vote vote : randomPost.getOneToMany().getVotes()) {
-        if (vote.getUser().getId().equals((long) randomUserId)) {
-          continue A;
-        }
+      boolean isExist = randomPost.getOneToMany().getVotes().stream()
+          .anyMatch(vote -> vote.getUser().getId().equals((long) randomUserId));
+
+      if (!isExist) {
+        Vote vote = Vote.from(random.nextBoolean(), users.get(randomUserId), posts.get(randomPostId));
+        votes.add(vote);
       }
-      Vote vote = Vote.from(random.nextBoolean(), users.get(randomUserId), posts.get(randomPostId));
-      votes.add(vote);
     }
     bulkRepository.saveVotes(votes);
   }
@@ -120,27 +118,23 @@ public class BulkService {
   }
 
   public void bulkReactions() {
-    Random random = new Random();
     List<User> users = userRepository.findAll();
     List<Comment> comments = commentRepository.findAll();
     List<Reaction> reactions = new ArrayList<>();
 
-    A:
     for (int i = 0; i < 10000; i++) {
       int randomUserId = random.nextInt(users.size());
       int randomCommentId = random.nextInt(comments.size());
       int randomEmoji = random.nextInt(Emoji.values().length - 1);
       Comment randomComment = comments.get(randomCommentId);
 
-      for (Reaction reaction : randomComment.getOneToMany().getReactions()) {
-        if (reaction.getUser().getId().equals(users.get(randomUserId).getId())) {
-          continue A;
-        }
+      boolean isExist = randomComment.getOneToMany().getReactions().stream()
+          .anyMatch(reaction -> reaction.getUser().getId().equals(users.get(randomUserId).getId()));
+      if (!isExist) {
+        Reaction reaction = Reaction.from(Emoji.values()[randomEmoji], users.get(randomUserId), randomComment);
+        reactions.add(reaction);
+        randomComment.incrementCount(Emoji.values()[randomEmoji]);
       }
-
-      Reaction reaction = Reaction.from(Emoji.values()[randomEmoji], users.get(randomUserId), randomComment);
-      reactions.add(reaction);
-      randomComment.incrementCount(Emoji.values()[randomEmoji]);
     }
     bulkRepository.saveReactions(reactions);
   }

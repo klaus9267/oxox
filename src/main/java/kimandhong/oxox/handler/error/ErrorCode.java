@@ -32,6 +32,7 @@ public enum ErrorCode {
   CONFLICT_GOOGLE(HttpStatus.CONFLICT, "Google로 가입된 이메일입니다."),
 
   INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Server error."),
+  S3(HttpStatus.INTERNAL_SERVER_ERROR, "s3 error"),
   S3_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "s3 upload failed"),
   S3_DELETE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "s3 delete failed"),
   POST_CREATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "Post creation failed.");

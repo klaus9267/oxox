@@ -7,6 +7,7 @@ import kimandhong.oxox.domain.Profile;
 import kimandhong.oxox.dto.profile.ProfileDto;
 import kimandhong.oxox.handler.error.ErrorCode;
 import kimandhong.oxox.handler.error.exception.NotFoundException;
+import kimandhong.oxox.handler.error.exception.S3Exception;
 import kimandhong.oxox.repository.ProfileRepository;
 import kimandhong.oxox.repository.custom.ProfileCustomRepository;
 import lombok.RequiredArgsConstructor;
@@ -50,7 +51,7 @@ public class ProfileService {
       return ProfileDto.from(profile);
     } catch (Exception e) {
       s3Service.deleteFile(profileImage);
-      throw new RuntimeException(e.getMessage());
+      throw new S3Exception(ErrorCode.S3);
     }
   }
 }

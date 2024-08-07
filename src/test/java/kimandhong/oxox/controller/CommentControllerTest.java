@@ -82,6 +82,7 @@ class CommentControllerTest extends AbstractTest {
   private Post initPost() {
     Random random = new Random();
 
+
     RequestPostDto requestPostDto = new RequestPostDto("title" + random.nextInt(9999), "content" + random.nextInt(9999));
     Post post = Post.from(requestPostDto, user, null);
     return postRepository.save(post);
