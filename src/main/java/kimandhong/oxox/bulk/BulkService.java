@@ -8,6 +8,7 @@ import kimandhong.oxox.repository.PostRepository;
 import kimandhong.oxox.repository.UserRepository;
 import kimandhong.oxox.repository.custom.ProfileCustomRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +30,9 @@ public class BulkService {
   private final BulkRepository bulkRepository;
 
   private final Random random = new Random();
-  private final String PASSWORD = "test password";
+
+  @Value("${bulk.password}")
+  private String PASSWORD;
 
   public void bulkUsers() {
     List<User> users = new ArrayList<>();
