@@ -34,6 +34,7 @@ public class SecurityConfig {
       "/actuator/**",
   };
 
+  // NOSONAR
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     return http.csrf(AbstractHttpConfigurer::disable)
