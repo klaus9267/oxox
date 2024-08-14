@@ -96,9 +96,6 @@ def jacocoExcludePatterns = [
         "**/*Dto*",
         "**/*Interceptor*",
         "**/*Filter*",
-        "**/*Response*",
-        "**/*Resolver*",
-        "**/*Entity*",
         "**/*test*/**",
         "**/resources/**",
         "**/domain/**",
@@ -124,7 +121,7 @@ sonar {
         property 'sonar.test.exclusions', jacocoExcludePatterns.join(',')
         property 'sonar.test.inclusions', '**/*Test.java'
         property 'sonar.java.coveragePlugin', 'jacoco'
-        property 'sonar.coverage.jacoco.xmlReportPaths', jacocoDir.get().file("jacoco/index.xml").asFile
+        property 'sonar.coverage.jacoco.xmlReportPaths', 'build/reports/jacoco/index.xml'
         property("sonar.gradle.skipCompile", true)
         property("sonar.skipCompile", true)
     }
@@ -141,7 +138,7 @@ jacocoTestReport {
         html.required.set(true)
         xml.required.set(true)
         csv.required.set(true)
-        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html"))
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco"))
         xml.destination jacocoDir.get().file("jacoco/index.xml").asFile
         csv.destination jacocoDir.get().file("jacoco/index.csv").asFile
     }
