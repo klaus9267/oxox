@@ -13,9 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +29,7 @@ public class BulkService {
   private final PasswordEncoder passwordEncoder;
   private final BulkRepository bulkRepository;
 
-  private final Random random = new Random();
+  private final SecureRandom random = new SecureRandom();
 
   @Value("${bulk.password}")
   private String PASSWORD;

@@ -9,20 +9,20 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
 
 @Repository
 @RequiredArgsConstructor
 @Transactional
 public class BulkRepository {
   private final JdbcTemplate jdbcTemplate;
-  private final Random random = new Random();
+  private final SecureRandom random = new SecureRandom();
 
   public void saveUsers(final List<User> users) {
     KeyHolder keyHolder = new GeneratedKeyHolder();
