@@ -8,6 +8,7 @@ import kimandhong.oxox.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +33,9 @@ public class BaseTestConfiguration {
   protected String token;
   protected User user;
 
+  @Value("${bulk.password}")
+  private String password;
+
   @BeforeEach
   public void setUp() {
     user = initUser();
@@ -40,8 +44,8 @@ public class BaseTestConfiguration {
 
   private User initUser() {
     JoinDto joinDto = new JoinDto("new@email.com", null, "test nickname");
-    String password = passwordEncoder.encode("test password");
-    User newUser = User.from(joinDto, password, 1L, null);
+    String encodedPassword = passwordEncoder.encode(password);
+    User newUser = User.from(joinDto, encodedPassword, 1L, null);
     return userRepository.save(newUser);
   }
 }
