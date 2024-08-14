@@ -27,7 +27,7 @@ class VoteIntegrationTest extends BaseTestConfiguration {
 
   @Test
   @DisplayName("투표하기_찬성")
-  public void vote_true() throws Exception {
+  void vote_true() throws Exception {
     Post post = initPost();
 
     mockMvc.perform(post(END_POINT)
@@ -42,7 +42,7 @@ class VoteIntegrationTest extends BaseTestConfiguration {
 
   @Test
   @DisplayName("투표하기_반대")
-  public void vote_false() throws Exception {
+  void vote_false() throws Exception {
     Post post = initPost();
 
     mockMvc.perform(post(END_POINT)
@@ -57,7 +57,7 @@ class VoteIntegrationTest extends BaseTestConfiguration {
 
   @Test
   @DisplayName("투표수정")
-  public void updateVote() throws Exception {
+  void updateVote() throws Exception {
     Vote vote = initVote();
 
     mockMvc.perform(post(END_POINT)
@@ -72,7 +72,7 @@ class VoteIntegrationTest extends BaseTestConfiguration {
 
   @Test
   @DisplayName("투표취소")
-  public void deleteVote() throws Exception {
+  void deleteVote() throws Exception {
     Vote vote = initVote();
 
     mockMvc.perform(post(END_POINT)
