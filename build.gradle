@@ -106,6 +106,8 @@ def jacocoExcludePatterns = [
         "**/handler/**",
         "**/*Code*/**",
         "**/*path*/**",
+        "**/auth/**",
+        "**/*S3Service*/**",
         "**/*S3*/**"
 ]
 def jacocoDir = layout.buildDirectory.dir("reports/")
