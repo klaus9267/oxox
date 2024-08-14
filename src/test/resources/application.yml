@@ -39,3 +39,5 @@ management:
     export:
       prometheus:
         enabled: true
+bulk:
+  password: test password
