@@ -1,7 +1,6 @@
 package kimandhong.oxox.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kimandhong.oxox.common.swagger.SwaggerCreated;
 import kimandhong.oxox.common.swagger.SwaggerOK;
 import kimandhong.oxox.domain.Emoji;
 import kimandhong.oxox.service.ReactionService;

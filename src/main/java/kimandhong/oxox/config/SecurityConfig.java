@@ -35,6 +35,7 @@ public class SecurityConfig {
   };
 
   @Bean
+  @SuppressWarnings("java:S4502")
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     return http.csrf(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)

@@ -1,6 +1,6 @@
 package kimandhong.oxox.controller;
 
-import kimandhong.oxox.common.AbstractTest;
+import kimandhong.oxox.common.BaseTestConfiguration;
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.domain.Vote;
 import kimandhong.oxox.dto.post.RequestPostDto;
@@ -10,13 +10,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class VoteControllerTest extends AbstractTest {
-  private final String END_POINT = "/api/votes";
+class VoteIntegrationTest extends BaseTestConfiguration {
+  private static final String END_POINT = "/api/votes";
 
   @Autowired
   PostRepository postRepository;
@@ -25,7 +27,7 @@ class VoteControllerTest extends AbstractTest {
 
   @Test
   @DisplayName("투표하기_찬성")
-  public void vote_true() throws Exception {
+  void vote_true() throws Exception {
     Post post = initPost();
 
     mockMvc.perform(post(END_POINT)
@@ -40,7 +42,7 @@ class VoteControllerTest extends AbstractTest {
 
   @Test
   @DisplayName("투표하기_반대")
-  public void vote_false() throws Exception {
+  void vote_false() throws Exception {
     Post post = initPost();
 
     mockMvc.perform(post(END_POINT)
@@ -55,8 +57,8 @@ class VoteControllerTest extends AbstractTest {
 
   @Test
   @DisplayName("투표수정")
-  public void updateVote() throws Exception {
-    Vote vote = initVote(true);
+  void updateVote() throws Exception {
+    Vote vote = initVote();
 
     mockMvc.perform(post(END_POINT)
             .param("postId", vote.getPost().getId().toString())
@@ -70,16 +72,16 @@ class VoteControllerTest extends AbstractTest {
 
   @Test
   @DisplayName("투표취소")
-  public void deleteVote() throws Exception {
-    Vote vote = initVote(true);
+  void deleteVote() throws Exception {
+    Vote vote = initVote();
 
     mockMvc.perform(post(END_POINT)
             .param("postId", vote.getPost().getId().toString())
             .header("Authorization", token))
         .andExpect(status().isOk());
 
-    assertThatThrownBy(() -> voteRepository.findById(vote.getId()).orElseThrow(RuntimeException::new))
-        .isInstanceOf(RuntimeException.class);
+    Optional<Vote> optionalVote = voteRepository.findById(vote.getId());
+    assertThatThrownBy(optionalVote::get).isInstanceOf(RuntimeException.class);
   }
 
   private Post initPost() {
@@ -88,7 +90,7 @@ class VoteControllerTest extends AbstractTest {
     return postRepository.save(post);
   }
 
-  private Vote initVote(boolean isYes) {
+  private Vote initVote() {
     Post post = initPost();
     Vote vote = Vote.from(true, user, post);
     return voteRepository.save(vote);

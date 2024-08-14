@@ -1,6 +1,6 @@
 package kimandhong.oxox.controller;
 
-import kimandhong.oxox.common.AbstractTest;
+import kimandhong.oxox.common.BaseTestConfiguration;
 import kimandhong.oxox.domain.Comment;
 import kimandhong.oxox.domain.Post;
 import kimandhong.oxox.dto.post.RequestPostDto;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class CommentControllerTest extends AbstractTest {
-  private final String END_POINT = "/api/comments";
+class CommentIntegrationTest extends BaseTestConfiguration {
+  private static final String END_POINT = "/api/comments";
   @Autowired
   PostRepository postRepository;
   @Autowired
@@ -28,7 +29,7 @@ class CommentControllerTest extends AbstractTest {
 
   @Test
   @DisplayName("댓글_생성")
-  public void createComment() throws Exception {
+  void createComment() throws Exception {
     Post post = initPost();
     mockMvc.perform(post(END_POINT)
             .param("postId", post.getId().toString())
@@ -37,12 +38,12 @@ class CommentControllerTest extends AbstractTest {
         .andExpect(status().isCreated());
 
     Post foundPost = postRepository.findById(post.getId()).orElseThrow(RuntimeException::new);
-    assertThat(foundPost.getOneToMany().getComments().size()).isEqualTo(1);
+    assertThat(foundPost.getOneToMany().getComments()).hasSize(1);
   }
 
   @Test
   @DisplayName("댓글_수정")
-  public void updateComment() throws Exception {
+  void updateComment() throws Exception {
     Comment comment = initComment();
 
     String content = "new content";
@@ -58,20 +59,20 @@ class CommentControllerTest extends AbstractTest {
 
   @Test
   @DisplayName("댓글_삭제")
-  public void deleteComment() throws Exception {
+  void deleteComment() throws Exception {
     Comment comment = initComment();
 
     mockMvc.perform(delete(END_POINT + "/" + comment.getId())
             .header("Authorization", token))
         .andExpect(status().isNoContent());
 
-    assertThatThrownBy(() -> commentRepository.findById(comment.getId()).orElseThrow(RuntimeException::new))
-        .isInstanceOf(RuntimeException.class);
+    Optional<Comment> optionalComment = commentRepository.findById(comment.getId());
+    assertThatThrownBy(optionalComment::get).isInstanceOf(RuntimeException.class);
   }
 
   @Test
   @DisplayName("댓글_목록_전체_조회")
-  public void readComments() throws Exception {
+  void readComments() throws Exception {
     List<Comment> comments = initComments();
 
     mockMvc.perform(get(END_POINT + "/" + comments.get(0).getPost().getId() + "/all")
@@ -81,6 +82,7 @@ class CommentControllerTest extends AbstractTest {
 
   private Post initPost() {
     Random random = new Random();
+
 
     RequestPostDto requestPostDto = new RequestPostDto("title" + random.nextInt(9999), "content" + random.nextInt(9999));
     Post post = Post.from(requestPostDto, user, null);

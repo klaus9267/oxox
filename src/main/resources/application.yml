@@ -7,3 +7,5 @@ spring:
   jackson:
     serialization:
       indent-output: true
+bulk:
+  password: test password

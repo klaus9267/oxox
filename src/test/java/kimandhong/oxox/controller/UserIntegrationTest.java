@@ -1,6 +1,6 @@
 package kimandhong.oxox.controller;
 
-import kimandhong.oxox.common.AbstractTest;
+import kimandhong.oxox.common.BaseTestConfiguration;
 import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.dto.user.JoinDto;
 import kimandhong.oxox.dto.user.LoginDto;
@@ -18,13 +18,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class UserControllerTest extends AbstractTest {
-  private final String END_POINT = "/api/users/";
+class UserIntegrationTest extends BaseTestConfiguration {
+  private static final String END_POINT = "/api/users/";
   @MockBean
   S3Service s3Service;
 
   @Test
-  public void join() throws Exception {
+  void join() throws Exception {
     JoinDto joinDto = new JoinDto("testtest@email.com", "test password", "test nickname");
 
     when(s3Service.uploadFile(any(MultipartFile.class), any(S3path.class))).thenReturn(null);
@@ -40,7 +40,7 @@ class UserControllerTest extends AbstractTest {
   }
 
   @Test
-  public void login() throws Exception {
+  void login() throws Exception {
     LoginDto loginDto = new LoginDto(user.getEmail(), "test password");
     mockMvc.perform(post(END_POINT + "login")
             .contentType(APPLICATION_JSON)
@@ -53,7 +53,7 @@ class UserControllerTest extends AbstractTest {
   }
 
   @Test
-  public void socialLogin() throws Exception {
+  void socialLogin() throws Exception {
     SocialLoginDto socialLoginDto = new SocialLoginDto("testSocial@email.com", "test name", "test photoUrl", "test uid");
 
     mockMvc.perform(post(END_POINT + "login/social")
