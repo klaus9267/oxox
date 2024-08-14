@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
     List<String> errorMessages = exception.getBindingResult()
         .getAllErrors()
         .stream()
-        .map(error -> (FieldError) error)
+        .map(FieldError.class::cast)
         .map(FieldError::getDefaultMessage)
         .toList();
 

@@ -1,6 +1,6 @@
 package kimandhong.oxox.controller;
 
-import kimandhong.oxox.common.AbstractTest;
+import kimandhong.oxox.common.BaseTestConfiguration;
 import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.service.S3Service;
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +19,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ProfileControllerTest extends AbstractTest {
-  private final String END_POINT = "/api/profiles";
+class ProfileIntegrationTest extends BaseTestConfiguration {
+  private static final String END_POINT = "/api/profiles";
   @MockBean
   S3Service s3Service;
 
@@ -29,7 +29,7 @@ class ProfileControllerTest extends AbstractTest {
   class updateProfile {
     @Test
     @DisplayName("사진있음")
-    public void image_exist() throws Exception {
+     void image_exist() throws Exception {
       String newNickname = "new test nickname1";
       MockMultipartFile image = new MockMultipartFile("image", "test image.jpg", MediaType.IMAGE_JPEG_VALUE, "test image required".getBytes());
 
@@ -47,7 +47,7 @@ class ProfileControllerTest extends AbstractTest {
 
     @Test
     @DisplayName("사진없음")
-    public void image_null() throws Exception {
+     void image_null() throws Exception {
       String newNickname = "new test nickname2";
 
       when(s3Service.uploadFile(any(MultipartFile.class), any(S3path.class))).thenReturn("test s3 image");

@@ -32,11 +32,11 @@ public class BulkService {
   private final SecureRandom random = new SecureRandom();
 
   @Value("${bulk.password}")
-  private String PASSWORD;
+  private String password;
 
   public void bulkUsers() {
     List<User> users = new ArrayList<>();
-    String encodedPassword = passwordEncoder.encode(PASSWORD);
+    String encodedPassword = passwordEncoder.encode(password);
     for (int i = 0; i < 1000; i++) {
       JoinDto joinDto = new JoinDto("test" + random.nextInt(9999) + "@email.com", null, "bulk nickname" + random.nextInt(9999));
 

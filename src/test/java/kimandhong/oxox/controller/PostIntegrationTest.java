@@ -1,6 +1,6 @@
 package kimandhong.oxox.controller;
 
-import kimandhong.oxox.common.AbstractTest;
+import kimandhong.oxox.common.BaseTestConfiguration;
 import kimandhong.oxox.common.enums.S3path;
 import kimandhong.oxox.controller.param.PostCondition;
 import kimandhong.oxox.domain.*;
@@ -33,8 +33,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class PostControllerTest extends AbstractTest {
-  private final String END_POINT = "/api/posts";
+class PostIntegrationTest extends BaseTestConfiguration {
+  private static final String END_POINT = "/api/posts";
   @MockBean
   S3Service s3Service;
 
@@ -46,7 +46,7 @@ class PostControllerTest extends AbstractTest {
   class createPost {
     @Test
     @DisplayName("썸네일_없음")
-    public void thumbnail_null() throws Exception {
+    void thumbnail_null() throws Exception {
       RequestPostDto requestPostDto = new RequestPostDto("Test Title", "Test Content");
 
       when(s3Service.uploadFile(any(MultipartFile.class), any(S3path.class))).thenReturn("thumbnail url");
@@ -60,7 +60,7 @@ class PostControllerTest extends AbstractTest {
 
     @Test
     @DisplayName("썸네일_있음")
-    public void thumbnail_exists() throws Exception {
+    void thumbnail_exists() throws Exception {
       RequestPostDto requestPostDto = new RequestPostDto("Test Title", "Test Content");
       MockMultipartFile thumbnail = new MockMultipartFile("thumbnail", "test.jpg", MediaType.IMAGE_JPEG_VALUE, "test image required".getBytes());
 
@@ -81,7 +81,7 @@ class PostControllerTest extends AbstractTest {
   class readPost {
     @Test
     @DisplayName("게시글_조회_로그인")
-    public void login_true() throws Exception {
+    void login_true() throws Exception {
       Post post = initPost();
 
       mockMvc.perform(get(END_POINT + "/" + post.getId())
@@ -95,7 +95,7 @@ class PostControllerTest extends AbstractTest {
 
     @Test
     @DisplayName("게시글_조회_비로그인")
-    public void login_false() throws Exception {
+    void login_false() throws Exception {
       Post post = initPost();
 
       mockMvc.perform(get(END_POINT + "/" + post.getId()))
@@ -112,13 +112,13 @@ class PostControllerTest extends AbstractTest {
   @DisplayName("게시글_목록조회")
   class readPosts {
     @BeforeEach
-    public void init() {
+    void init() {
       initPosts();
     }
 
     @Test
     @DisplayName("기본_조회(최신순)")
-    public void none() throws Exception {
+    void none() throws Exception {
       List<Post> posts = postRepository.findAll()
           .stream()
           .filter(post -> post.getCreatedAt().isAfter(LocalDateTime.now().minusDays(1)))
@@ -137,7 +137,7 @@ class PostControllerTest extends AbstractTest {
 
     @Test
     @DisplayName("인기순")
-    public void popularity() throws Exception {
+    void popularity() throws Exception {
       List<Post> posts = postRepository.findAll()
           .stream()
           .filter(post -> post.getCreatedAt().isAfter(LocalDateTime.now().minusDays(1)))
@@ -161,7 +161,7 @@ class PostControllerTest extends AbstractTest {
 
     @Test
     @DisplayName("1시간 내 투표 많은 게시글")
-    public void hot() throws Exception {
+    void hot() throws Exception {
       List<Post> posts = postRepository.findAll()
           .stream()
           .filter(post -> post.getCreatedAt().isAfter(LocalDateTime.now().minusHours(1)))
@@ -189,7 +189,7 @@ class PostControllerTest extends AbstractTest {
 
     @Test
     @DisplayName("반응 많은 게시글")
-    public void bestReaction() throws Exception {
+    void bestReaction() throws Exception {
       List<Post> posts = postRepository.findAll()
           .stream()
           .filter(post -> post.getCreatedAt().isAfter(LocalDateTime.now().minusDays(1)))
@@ -227,7 +227,7 @@ class PostControllerTest extends AbstractTest {
   class updatePost {
     @Test
     @DisplayName("썸네일_있음")
-    public void thumbnail_exists() throws Exception {
+    void thumbnail_exists() throws Exception {
       Post post = initPost();
 
       RequestPostDto requestPostDto = new RequestPostDto("Test Update Title", "Test Update Content");
@@ -245,7 +245,7 @@ class PostControllerTest extends AbstractTest {
 
     @Test
     @DisplayName("썸네일_없음")
-    public void thumbnail_null() throws Exception {
+    void thumbnail_null() throws Exception {
       Post post = initPost();
 
       RequestPostDto requestPostDto = new RequestPostDto("Test Update Title", "Test Update Content");
@@ -260,7 +260,7 @@ class PostControllerTest extends AbstractTest {
 
   @Test
   @DisplayName("게시글_삭제")
-  public void deletePost() throws Exception {
+  void deletePost() throws Exception {
     Post post = initPost();
 
     mockMvc.perform(delete(END_POINT + "/" + post.getId())

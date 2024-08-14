@@ -1,6 +1,6 @@
 package kimandhong.oxox.controller;
 
-import kimandhong.oxox.common.AbstractTest;
+import kimandhong.oxox.common.BaseTestConfiguration;
 import kimandhong.oxox.domain.Comment;
 import kimandhong.oxox.domain.Emoji;
 import kimandhong.oxox.domain.Post;
@@ -13,13 +13,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-class ReactionControllerTest extends AbstractTest {
-  private final String END_POINT = "/api/reactions";
+class ReactionIntegrationTest extends BaseTestConfiguration {
+  private static final String END_POINT = "/api/reactions";
   @Autowired
   PostRepository postRepository;
   @Autowired
@@ -29,7 +31,7 @@ class ReactionControllerTest extends AbstractTest {
 
   @Test
   @DisplayName("리액션_남기기")
-  public void react() throws Exception {
+  void react() throws Exception {
     for (Emoji emoji : Emoji.values()) {
       if (Emoji.NONE.equals(emoji)) {
         continue;
@@ -49,7 +51,7 @@ class ReactionControllerTest extends AbstractTest {
 
   @Test
   @DisplayName("리액션_수정")
-  public void updateReact() throws Exception {
+  void updateReact() throws Exception {
     for (Emoji emoji : Emoji.values()) {
       if (Emoji.NONE.getName().equals(emoji.getName())) {
         continue;
@@ -73,7 +75,7 @@ class ReactionControllerTest extends AbstractTest {
 
   @Test
   @DisplayName("리액션_삭제")
-  public void deleteReact() throws Exception {
+  void deleteReact() throws Exception {
     for (Emoji emoji : Emoji.values()) {
       if (Emoji.NONE.getName().equals(emoji.getName())) {
         continue;
@@ -86,8 +88,8 @@ class ReactionControllerTest extends AbstractTest {
               .header("Authorization", token))
           .andExpect(status().isOk());
 
-      assertThatThrownBy(() -> reactionRepository.findById(reaction.getId()).orElseThrow(RuntimeException::new))
-          .isInstanceOf(RuntimeException.class);
+      Optional<Reaction> optionalReaction = reactionRepository.findById(reaction.getId());
+      assertThatThrownBy(optionalReaction::get).isInstanceOf(RuntimeException.class);
     }
   }
 

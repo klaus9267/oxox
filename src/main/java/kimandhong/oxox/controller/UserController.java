@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserController {
   private final UserService userService;
   private final JwtUtil jwtUtil;
-  private final String TOKEN = "X-Access-Token";
+  private static final String TOKEN = "X-Access-Token";
 
   @PostMapping(value = "join", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
   @SwaggerCreated(summary = "회원가입")
