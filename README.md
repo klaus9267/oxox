@@ -30,8 +30,14 @@
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black"> <img src="https://img.shields.io/badge/Typescrit-3178C6?style=for-the-badge&logo=Typescript&logoColor=black"> <img src="https://img.shields.io/badge/Emotion/StyledComponents-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=black"> <img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white">
 
 ### Back-End
-<img src="https://img.shields.io/badge/java-007396?style=flat-square&logo=java&logoColor=white"/> <img src="https://img.shields.io/badge/Spring-6DB33F?style=flat-square&logo=Spring&logoColor=white"/> <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat- square&logo=MySQL&logoColor=white"/> <img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=flat-square&logo=amazonaws&logoColor=white"/> <img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white"/>
-</br>
+
+![oxox stack drawio](https://github.com/user-attachments/assets/cb4fc0e7-f2c7-453e-b804-b306fdeccafc)
+
+## 아키텍쳐
+
+![oxox drawio](https://github.com/user-attachments/assets/184502d7-bb95-4b5b-bc46-6f4ca2c51168)
+
+<br>
 
 ##  프로젝트 구조
 
