@@ -1,9 +1,17 @@
 package kimandhong.oxox.controller;
 
-import kimandhong.oxox.bulk.BulkService;
+import kimandhong.oxox.application.bulk.BulkService;
 import kimandhong.oxox.common.BaseTestConfiguration;
-import kimandhong.oxox.domain.*;
-import kimandhong.oxox.repository.*;
+import kimandhong.oxox.domain.comment.domain.Comment;
+import kimandhong.oxox.domain.comment.CommentRepository;
+import kimandhong.oxox.domain.post.domain.Post;
+import kimandhong.oxox.domain.post.repository.PostRepository;
+import kimandhong.oxox.domain.reaction.domain.Reaction;
+import kimandhong.oxox.domain.reaction.ReactionRepository;
+import kimandhong.oxox.domain.user.domain.User;
+import kimandhong.oxox.domain.user.UserRepository;
+import kimandhong.oxox.domain.vote.Vote;
+import kimandhong.oxox.domain.vote.VoteRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

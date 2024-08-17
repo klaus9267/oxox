@@ -1,11 +1,11 @@
 package kimandhong.oxox.controller;
 
 import kimandhong.oxox.common.BaseTestConfiguration;
-import kimandhong.oxox.common.enums.S3path;
-import kimandhong.oxox.dto.user.JoinDto;
-import kimandhong.oxox.dto.user.LoginDto;
-import kimandhong.oxox.dto.user.SocialLoginDto;
-import kimandhong.oxox.service.S3Service;
+import kimandhong.oxox.application.s3.S3path;
+import kimandhong.oxox.domain.user.dto.JoinDto;
+import kimandhong.oxox.domain.user.dto.LoginDto;
+import kimandhong.oxox.domain.user.dto.SocialLoginDto;
+import kimandhong.oxox.application.s3.S3Service;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.multipart.MultipartFile;

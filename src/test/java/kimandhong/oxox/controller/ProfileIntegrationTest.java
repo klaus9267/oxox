@@ -1,8 +1,8 @@
 package kimandhong.oxox.controller;
 
 import kimandhong.oxox.common.BaseTestConfiguration;
-import kimandhong.oxox.common.enums.S3path;
-import kimandhong.oxox.service.S3Service;
+import kimandhong.oxox.application.s3.S3path;
+import kimandhong.oxox.application.s3.S3Service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

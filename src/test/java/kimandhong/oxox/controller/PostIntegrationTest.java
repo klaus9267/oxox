@@ -1,13 +1,18 @@
 package kimandhong.oxox.controller;
 
 import kimandhong.oxox.common.BaseTestConfiguration;
-import kimandhong.oxox.common.enums.S3path;
-import kimandhong.oxox.controller.param.PostCondition;
-import kimandhong.oxox.domain.*;
-import kimandhong.oxox.dto.post.RequestPostDto;
-import kimandhong.oxox.dto.user.JoinDto;
-import kimandhong.oxox.repository.PostRepository;
-import kimandhong.oxox.service.S3Service;
+import kimandhong.oxox.application.s3.S3path;
+import kimandhong.oxox.domain.post.params.PostCondition;
+import kimandhong.oxox.domain.comment.domain.Comment;
+import kimandhong.oxox.domain.post.domain.Post;
+import kimandhong.oxox.domain.reaction.domain.Emoji;
+import kimandhong.oxox.domain.reaction.domain.Reaction;
+import kimandhong.oxox.domain.user.domain.User;
+import kimandhong.oxox.domain.vote.Vote;
+import kimandhong.oxox.domain.post.dto.RequestPostDto;
+import kimandhong.oxox.domain.user.dto.JoinDto;
+import kimandhong.oxox.domain.post.repository.PostRepository;
+import kimandhong.oxox.application.s3.S3Service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

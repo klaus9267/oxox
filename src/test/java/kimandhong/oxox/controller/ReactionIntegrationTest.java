@@ -1,14 +1,14 @@
 package kimandhong.oxox.controller;
 
 import kimandhong.oxox.common.BaseTestConfiguration;
-import kimandhong.oxox.domain.Comment;
-import kimandhong.oxox.domain.Emoji;
-import kimandhong.oxox.domain.Post;
-import kimandhong.oxox.domain.Reaction;
-import kimandhong.oxox.dto.post.RequestPostDto;
-import kimandhong.oxox.repository.CommentRepository;
-import kimandhong.oxox.repository.PostRepository;
-import kimandhong.oxox.repository.ReactionRepository;
+import kimandhong.oxox.domain.comment.domain.Comment;
+import kimandhong.oxox.domain.reaction.domain.Emoji;
+import kimandhong.oxox.domain.post.domain.Post;
+import kimandhong.oxox.domain.reaction.domain.Reaction;
+import kimandhong.oxox.domain.post.dto.RequestPostDto;
+import kimandhong.oxox.domain.comment.CommentRepository;
+import kimandhong.oxox.domain.post.repository.PostRepository;
+import kimandhong.oxox.domain.reaction.ReactionRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
