@@ -1,10 +1,10 @@
 package kimandhong.oxox.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kimandhong.oxox.auth.JwtUtil;
-import kimandhong.oxox.domain.User;
-import kimandhong.oxox.dto.user.JoinDto;
-import kimandhong.oxox.repository.UserRepository;
+import kimandhong.oxox.application.auth.JwtUtil;
+import kimandhong.oxox.domain.user.domain.User;
+import kimandhong.oxox.domain.user.dto.JoinDto;
+import kimandhong.oxox.domain.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
