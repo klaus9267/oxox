@@ -96,7 +96,6 @@ public class PostService {
   }
 
   @Transactional
-  //todo: will change to message queue
   @Scheduled(fixedDelay = 1000 * 60 * 30)
   public void updateExpiredPosts() {
     final LocalDateTime time = LocalDateTime.now().minusDays(1);
