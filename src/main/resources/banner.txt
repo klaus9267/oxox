@@ -1,0 +1,21 @@
+${AnsiColor.RED}     OOOOOOOOO     ${AnsiColor.BLUE}XXXXXXX       XXXXXXX     ${AnsiColor.RED}OOOOOOOOO     ${AnsiColor.BLUE}XXXXXXX       XXXXXXX
+${AnsiColor.RED}   OO:::::::::OO   ${AnsiColor.BLUE}X:::::X       X:::::X   ${AnsiColor.RED}OO:::::::::OO   ${AnsiColor.BLUE}X:::::X       X:::::X
+${AnsiColor.RED} OO:::::::::::::OO ${AnsiColor.BLUE}X:::::X       X:::::X ${AnsiColor.RED}OO:::::::::::::OO ${AnsiColor.BLUE}X:::::X       X:::::X
+${AnsiColor.RED}O:::::::OOO:::::::O${AnsiColor.BLUE}X::::::X     X::::::X${AnsiColor.RED}O:::::::OOO:::::::O${AnsiColor.BLUE}X::::::X     X::::::X
+${AnsiColor.RED}O::::::O   O::::::O${AnsiColor.BLUE}XXX:::::X   X:::::XXX${AnsiColor.RED}O::::::O   O::::::O${AnsiColor.BLUE}XXX:::::X   X:::::XXX
+${AnsiColor.RED}O:::::O     O:::::O   ${AnsiColor.BLUE}X:::::X X:::::X   ${AnsiColor.RED}O:::::O     O:::::O   ${AnsiColor.BLUE}X:::::X X:::::X
+${AnsiColor.RED}O:::::O     O:::::O    ${AnsiColor.BLUE}X:::::X:::::X    ${AnsiColor.RED}O:::::O     O:::::O    ${AnsiColor.BLUE}X:::::X:::::X
+${AnsiColor.RED}O:::::O     O:::::O     ${AnsiColor.BLUE}X:::::::::X     ${AnsiColor.RED}O:::::O     O:::::O     ${AnsiColor.BLUE}X:::::::::X
+${AnsiColor.RED}O:::::O     O:::::O     ${AnsiColor.BLUE}X:::::::::X     ${AnsiColor.RED}O:::::O     O:::::O     ${AnsiColor.BLUE}X:::::::::X
+${AnsiColor.RED}O:::::O     O:::::O    ${AnsiColor.BLUE}X:::::X:::::X    ${AnsiColor.RED}O:::::O     O:::::O    ${AnsiColor.BLUE}X:::::X:::::X
+${AnsiColor.RED}O:::::O     O:::::O   ${AnsiColor.BLUE}X:::::X X:::::X   ${AnsiColor.RED}O:::::O     O:::::O   ${AnsiColor.BLUE}X:::::X X:::::X
+${AnsiColor.RED}O::::::O   O::::::O${AnsiColor.BLUE}XXX:::::X   X:::::XXX${AnsiColor.RED}O::::::O   O::::::O${AnsiColor.BLUE}XXX:::::X   X:::::XXX
+${AnsiColor.RED}O:::::::OOO:::::::O${AnsiColor.BLUE}X::::::X     X::::::X${AnsiColor.RED}O:::::::OOO:::::::O${AnsiColor.BLUE}X::::::X     X::::::X
+${AnsiColor.RED} OO:::::::::::::OO ${AnsiColor.BLUE}X:::::X       X:::::X ${AnsiColor.RED}OO:::::::::::::OO ${AnsiColor.BLUE}X:::::X       X:::::X
+${AnsiColor.RED}   OO:::::::::OO   ${AnsiColor.BLUE}X:::::X       X:::::X   ${AnsiColor.RED}OO:::::::::OO   ${AnsiColor.BLUE}X:::::X       X:::::X
+${AnsiColor.RED}     OOOOOOOOO     ${AnsiColor.BLUE}XXXXXXX       XXXXXXX     ${AnsiColor.RED}OOOOOOOOO     ${AnsiColor.BLUE}XXXXXXX       XXXXXXX
+
+${AnsiColor.RED}--------------------------------------------------------------------------------
+${AnsiColor.BLUE}--------------------------------------------------------------------------------
+${AnsiColor.RED}--------------------------------------------------------------------------------
+${AnsiColor.BLUE}--------------------------------------------------------------------------------
