@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecurityUtil {
   public Long getCustomUserId() {
-    return this.getCurrentUser().getId();
+    return isLogin() ? this.getCurrentUser().getId() : null;
   }
 
   public User getCurrentUser() {
@@ -27,6 +27,6 @@ public class SecurityUtil {
 
   public boolean isLogin() {
     final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    return authentication.getPrincipal().equals("anonymousUser");
+    return !authentication.getPrincipal().equals("anonymousUser");
   }
 }
