@@ -5,8 +5,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import kimandhong.oxox.application.handler.error.CustomException;
 import kimandhong.oxox.application.handler.error.ErrorCode;
-import kimandhong.oxox.application.handler.error.exception.S3Exception;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class S3Service {
 
       return amazonS3.getUrl(bucket, fileName).toString();
     } catch (IOException e) {
-      throw new S3Exception(ErrorCode.S3_UPLOAD_FAIL);
+      throw new CustomException(ErrorCode.S3_UPLOAD_FAIL, e);
     }
   }
 
@@ -61,7 +61,7 @@ public class S3Service {
 
       return amazonS3.getUrl(bucket, fileName).toString();
     } catch (IOException e) {
-      throw new S3Exception(ErrorCode.S3_UPLOAD_FAIL);
+      throw new CustomException(ErrorCode.S3_UPLOAD_FAIL, e);
     }
   }
 
@@ -70,7 +70,7 @@ public class S3Service {
     try {
       amazonS3.deleteObject(new DeleteObjectRequest(bucket, key));
     } catch (Exception e) {
-      throw new S3Exception(ErrorCode.S3_DELETE_FAIL);
+      throw new CustomException(ErrorCode.S3_DELETE_FAIL, e);
     }
   }
 
@@ -80,7 +80,7 @@ public class S3Service {
       String decodingKey = URLDecoder.decode(url.getPath(), StandardCharsets.UTF_8);
       return decodingKey.substring(1); // 맨 앞의 '/' 제거
     } catch (MalformedURLException e) {
-      throw new S3Exception(ErrorCode.INTERNAL_SERVER_ERROR);
+      throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR, e);
     }
   }
 }

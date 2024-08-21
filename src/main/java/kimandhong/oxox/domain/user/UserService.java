@@ -1,16 +1,14 @@
 package kimandhong.oxox.domain.user;
 
+import kimandhong.oxox.application.handler.error.CustomException;
+import kimandhong.oxox.application.handler.error.ErrorCode;
+import kimandhong.oxox.application.s3.S3Service;
 import kimandhong.oxox.application.s3.S3path;
+import kimandhong.oxox.domain.profile.repository.ProfileCustomRepository;
 import kimandhong.oxox.domain.user.domain.User;
 import kimandhong.oxox.domain.user.dto.JoinDto;
 import kimandhong.oxox.domain.user.dto.LoginDto;
 import kimandhong.oxox.domain.user.dto.SocialLoginDto;
-import kimandhong.oxox.application.handler.error.ErrorCode;
-import kimandhong.oxox.application.handler.error.exception.BadRequestException;
-import kimandhong.oxox.application.handler.error.exception.ConflictException;
-import kimandhong.oxox.application.handler.error.exception.NotFoundException;
-import kimandhong.oxox.domain.profile.repository.ProfileCustomRepository;
-import kimandhong.oxox.application.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,7 +26,7 @@ public class UserService {
   @Transactional
   public User join(final JoinDto joinDto, final MultipartFile file) {
     userRepository.findByEmail(joinDto.email()).ifPresent(user -> {
-      throw new ConflictException(user.getUid() == null
+      throw new CustomException(user.getUid() == null
           ? ErrorCode.CONFLICT_EMAIL
           : ErrorCode.CONFLICT_GOOGLE);
     });
@@ -47,24 +45,24 @@ public class UserService {
     return userRepository.findByEmail(loginDto.email())
         .map(user -> {
           if (user.getPassword() == null) {
-            throw new BadRequestException(ErrorCode.CONFLICT_GOOGLE);
+            throw new CustomException(ErrorCode.CONFLICT_GOOGLE);
           }
           if (!passwordEncoder.matches(loginDto.password(), user.getPassword())) {
-            throw new NotFoundException(ErrorCode.BAD_REQUEST_LOGIN);
+            throw new CustomException(ErrorCode.BAD_REQUEST_LOGIN);
           }
           return user;
         })
-        .orElseThrow(() -> new NotFoundException(ErrorCode.BAD_REQUEST_LOGIN));
+        .orElseThrow(ErrorCode.BAD_REQUEST_LOGIN);
   }
 
   public User socialLogin(final SocialLoginDto loginDto) {
     return userRepository.findByEmail(loginDto.email())
         .map(user -> {
           if (user.getPassword() != null) {
-            throw new BadRequestException(ErrorCode.NOT_SOCIAL_USER);
+            throw new CustomException(ErrorCode.NOT_SOCIAL_USER);
           }
           if (!user.getUid().equals(loginDto.uid())) {
-            throw new BadRequestException(ErrorCode.INVALID_UID);
+            throw new CustomException(ErrorCode.INVALID_UID);
           }
           return user;
         })

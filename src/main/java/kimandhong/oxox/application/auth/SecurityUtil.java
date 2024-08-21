@@ -1,7 +1,7 @@
 package kimandhong.oxox.application.auth;
 
+import kimandhong.oxox.application.handler.error.CustomException;
 import kimandhong.oxox.application.handler.error.ErrorCode;
-import kimandhong.oxox.application.handler.error.exception.ForbiddenException;
 import kimandhong.oxox.domain.user.domain.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,12 +15,11 @@ public class SecurityUtil {
 
   public User getCurrentUser() {
     final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    if (authentication == null || authentication.getName() == null) {
-      throw new ForbiddenException(ErrorCode.NOT_FOUND_USER);
+    if (authentication == null || authentication.getName() == null || "anonymousUser".equals(authentication.getPrincipal())) {
+      final ErrorCode errorCode = authentication == null || authentication.getName() == null ? ErrorCode.NOT_FOUND_USER : ErrorCode.LOGIN_REQUIRED;
+      throw new CustomException(errorCode);
     }
-    if (authentication.getPrincipal().equals("anonymousUser")) {
-      throw new ForbiddenException(ErrorCode.LOGIN_REQUIRED);
-    }
+
 
     return (User) authentication.getPrincipal();
   }

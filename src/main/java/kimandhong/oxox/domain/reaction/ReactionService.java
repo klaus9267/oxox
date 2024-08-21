@@ -1,10 +1,10 @@
 package kimandhong.oxox.domain.reaction;
 
 import kimandhong.oxox.application.auth.SecurityUtil;
+import kimandhong.oxox.application.handler.error.CustomException;
 import kimandhong.oxox.domain.comment.domain.Comment;
 import kimandhong.oxox.domain.comment.CommentService;
 import kimandhong.oxox.application.handler.error.ErrorCode;
-import kimandhong.oxox.application.handler.error.exception.NotFoundException;
 import kimandhong.oxox.domain.reaction.domain.Emoji;
 import kimandhong.oxox.domain.reaction.domain.Reaction;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class ReactionService {
             reactionRepository.save(reaction);
             comment.incrementCount(emoji);
           } else {
-            throw new NotFoundException(ErrorCode.NOT_FOUND_COMMENT);
+            throw new CustomException(ErrorCode.NOT_FOUND_COMMENT);
           }
         });
   }
