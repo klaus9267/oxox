@@ -1,9 +1,9 @@
 package kimandhong.oxox.application.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
+import kimandhong.oxox.application.handler.error.CustomException;
 import kimandhong.oxox.application.handler.error.ErrorCode;
 import kimandhong.oxox.application.handler.error.ErrorResponse;
-import kimandhong.oxox.application.handler.error.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -26,8 +26,8 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
   }
 
-  @ExceptionHandler({NotFoundException.class, BadRequestException.class, ConflictException.class, ForbiddenException.class, S3Exception.class})
-  public ResponseEntity<ErrorResponse> handleCustomException(final BaseException exception, final HttpServletRequest request) {
+  @ExceptionHandler(CustomException.class)
+  public ResponseEntity<ErrorResponse> handleCustomException(final CustomException exception, final HttpServletRequest request) {
     log.error("[" + exception.getClass().getSimpleName() + "] : " + exception.getMessage());
     final ErrorResponse errorResponse = new ErrorResponse(exception.getErrorCode(), exception.getMessage());
 

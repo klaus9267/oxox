@@ -2,14 +2,13 @@ package kimandhong.oxox.domain.profile;
 
 import kimandhong.oxox.application.auth.SecurityUtil;
 import kimandhong.oxox.application.bulk.BulkRepository;
+import kimandhong.oxox.application.handler.error.CustomException;
+import kimandhong.oxox.application.handler.error.ErrorCode;
+import kimandhong.oxox.application.s3.S3Service;
 import kimandhong.oxox.application.s3.S3path;
 import kimandhong.oxox.domain.profile.dto.ProfileDto;
-import kimandhong.oxox.application.handler.error.ErrorCode;
-import kimandhong.oxox.application.handler.error.exception.NotFoundException;
-import kimandhong.oxox.application.handler.error.exception.S3Exception;
-import kimandhong.oxox.domain.profile.repository.ProfileRepository;
 import kimandhong.oxox.domain.profile.repository.ProfileCustomRepository;
-import kimandhong.oxox.application.s3.S3Service;
+import kimandhong.oxox.domain.profile.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,7 @@ public class ProfileService {
 
   @Transactional
   public ProfileDto updateProfile(final String nickname, final MultipartFile image) {
-    final Profile profile = profileRepository.findByUserId(securityUtil.getCustomUserId()).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_USER));
+    final Profile profile = profileRepository.findByUserId(securityUtil.getCustomUserId()).orElseThrow(ErrorCode.NOT_FOUND_USER);
     final String profileImage = image != null
         ? s3Service.changeFile(profile.getImage(), image, S3path.PROFILE)
         : profile.getImage();
@@ -51,7 +50,7 @@ public class ProfileService {
       return ProfileDto.from(profile);
     } catch (Exception e) {
       s3Service.deleteFile(profileImage);
-      throw new S3Exception(ErrorCode.S3);
+      throw new CustomException(ErrorCode.S3, e);
     }
   }
 }

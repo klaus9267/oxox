@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import java.util.function.Supplier;
+
 @Getter
 @RequiredArgsConstructor
-public enum ErrorCode {
+public enum ErrorCode implements Supplier<CustomException> {
   BAD_REQUEST(HttpStatus.BAD_REQUEST, "Invalid request."),
   BAD_REQUEST_LOGIN(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호를 확인해주세요"),
   WRONG_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호를 확인해주세요."),
@@ -35,8 +37,14 @@ public enum ErrorCode {
   S3(HttpStatus.INTERNAL_SERVER_ERROR, "s3 error"),
   S3_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "s3 upload failed"),
   S3_DELETE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "s3 delete failed"),
-  POST_CREATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "Post creation failed.");
+  POST_CREATE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "Post creation failed."),
+  ;
 
   private final HttpStatus httpStatus;
   private final String message;
+
+  @Override
+  public CustomException get() {
+    return new CustomException(this);
+  }
 }
