@@ -5,8 +5,8 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import kimandhong.oxox.application.handler.error.CustomException;
 import kimandhong.oxox.application.handler.error.ErrorCode;
-import kimandhong.oxox.application.handler.error.exception.BadRequestException;
 import kimandhong.oxox.domain.post.dto.PostDto;
 import kimandhong.oxox.domain.post.params.PostCondition;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class PostCustomRepository {
               .subtract(50).abs().loe(5)
           ).orderBy(vote.count().desc(), post.id.desc());
       case DEFAULT -> query.orderBy(post.id.desc());
-      default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
+      default -> throw new CustomException(ErrorCode.BAD_REQUEST);
     }
 
     final List<PostDto> contents = query
@@ -71,7 +71,7 @@ public class PostCustomRepository {
     switch (postCondition) {
       case WRITER -> builder.and(post.user.id.eq(userId));
       case JOIN -> builder.and(post.oneToMany.votes.any().user.id.eq(userId));
-      default -> throw new BadRequestException(ErrorCode.BAD_REQUEST);
+      default -> throw new CustomException(ErrorCode.BAD_REQUEST);
     }
 
     final JPAQuery<Long> count = this.createCountQuery().where(builder);

@@ -1,11 +1,11 @@
 package kimandhong.oxox.domain.vote;
 
 import kimandhong.oxox.application.auth.SecurityUtil;
-import kimandhong.oxox.domain.post.domain.Post;
-import kimandhong.oxox.domain.post.PostService;
-import kimandhong.oxox.domain.user.domain.User;
+import kimandhong.oxox.application.handler.error.CustomException;
 import kimandhong.oxox.application.handler.error.ErrorCode;
-import kimandhong.oxox.application.handler.error.exception.NotFoundException;
+import kimandhong.oxox.domain.post.PostService;
+import kimandhong.oxox.domain.post.domain.Post;
+import kimandhong.oxox.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +34,7 @@ public class VoteService {
             final Vote vote = Vote.from(isYes, user, post);
             voteRepository.save(vote);
           } else {
-            throw new NotFoundException(ErrorCode.NOT_FOUND_VOTE);
+            throw new CustomException(ErrorCode.NOT_FOUND_VOTE);
           }
         });
   }

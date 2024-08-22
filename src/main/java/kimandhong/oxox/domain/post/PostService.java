@@ -2,23 +2,22 @@ package kimandhong.oxox.domain.post;
 
 import kimandhong.oxox.application.auth.SecurityUtil;
 import kimandhong.oxox.application.bulk.BulkRepository;
+import kimandhong.oxox.application.handler.error.CustomException;
+import kimandhong.oxox.application.handler.error.ErrorCode;
+import kimandhong.oxox.application.s3.S3Service;
 import kimandhong.oxox.application.s3.S3path;
-import kimandhong.oxox.domain.post.domain.Post;
-import kimandhong.oxox.domain.post.params.PostCondition;
-import kimandhong.oxox.domain.post.params.PostPaginationParam;
+import kimandhong.oxox.domain.comment.CommentRepository;
 import kimandhong.oxox.domain.comment.domain.Comment;
-import kimandhong.oxox.domain.post.repository.PostRepository;
-import kimandhong.oxox.domain.user.domain.User;
+import kimandhong.oxox.domain.post.domain.Post;
 import kimandhong.oxox.domain.post.dto.PostDetailDto;
 import kimandhong.oxox.domain.post.dto.PostDto;
 import kimandhong.oxox.domain.post.dto.PostPaginationDto;
 import kimandhong.oxox.domain.post.dto.RequestPostDto;
-import kimandhong.oxox.application.handler.error.ErrorCode;
-import kimandhong.oxox.application.handler.error.exception.NotFoundException;
-import kimandhong.oxox.application.handler.error.exception.S3Exception;
-import kimandhong.oxox.domain.comment.CommentRepository;
+import kimandhong.oxox.domain.post.params.PostCondition;
+import kimandhong.oxox.domain.post.params.PostPaginationParam;
 import kimandhong.oxox.domain.post.repository.PostCustomRepository;
-import kimandhong.oxox.application.s3.S3Service;
+import kimandhong.oxox.domain.post.repository.PostRepository;
+import kimandhong.oxox.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -52,12 +51,12 @@ public class PostService {
       postRepository.save(post);
     } catch (Exception e) {
       s3Service.deleteFile(thumbnailUrl);
-      throw new S3Exception(ErrorCode.S3_UPLOAD_FAIL);
+      throw new CustomException(ErrorCode.S3_UPLOAD_FAIL);
     }
   }
 
   public PostDetailDto readPost(final Long id) {
-    final Post post = postRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
+    final Post post = postRepository.findById(id).orElseThrow(ErrorCode.NOT_FOUND_POST);
     final List<Comment> comments = commentRepository.findAllByPostId(id);
     return securityUtil.isLogin()
         ? PostDetailDto.from(post, comments)
@@ -65,7 +64,7 @@ public class PostService {
   }
 
   public Post findById(final Long id) {
-    return postRepository.findById(id).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
+    return postRepository.findById(id).orElseThrow(ErrorCode.NOT_FOUND_POST);
   }
 
   public PostPaginationDto readAllPosts(final PostPaginationParam paginationParam) {
@@ -88,7 +87,7 @@ public class PostService {
 
   @Transactional
   public void deletePost(final Long id) {
-    final Post post = postRepository.findByIdAndUserId(id, securityUtil.getCustomUserId()).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_POST));
+    final Post post = postRepository.findByIdAndUserId(id, securityUtil.getCustomUserId()).orElseThrow(ErrorCode.NOT_FOUND_POST);
     postRepository.deleteById(post.getId());
     if (post.getThumbnail() != null) {
       s3Service.deleteFile(post.getThumbnail());

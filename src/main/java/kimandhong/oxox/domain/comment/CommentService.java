@@ -1,13 +1,13 @@
 package kimandhong.oxox.domain.comment;
 
 import kimandhong.oxox.application.auth.SecurityUtil;
+import kimandhong.oxox.application.handler.error.CustomException;
 import kimandhong.oxox.domain.comment.params.CommentPaginationParam;
 import kimandhong.oxox.domain.comment.domain.Comment;
 import kimandhong.oxox.domain.post.domain.Post;
 import kimandhong.oxox.domain.comment.dto.CommentDto;
 import kimandhong.oxox.domain.comment.dto.CommentPaginationDto;
 import kimandhong.oxox.application.handler.error.ErrorCode;
-import kimandhong.oxox.application.handler.error.exception.NotFoundException;
 import kimandhong.oxox.domain.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,7 +31,7 @@ public class CommentService {
   }
 
   public Comment findById(final Long commentId) {
-    return commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
+    return commentRepository.findById(commentId).orElseThrow(ErrorCode.NOT_FOUND_COMMENT);
   }
 
   public CommentPaginationDto readAllCommentsByPostId(final CommentPaginationParam paginationParam, final Long postId) {
@@ -47,14 +47,14 @@ public class CommentService {
   @Transactional
   public void updateComment(final Long commentId, final String content) {
     final Comment comment = commentRepository.findByIdAndUserId(commentId, securityUtil.getCustomUserId())
-        .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
+        .orElseThrow(ErrorCode.NOT_FOUND_COMMENT);
     comment.updateContent(content);
   }
 
   @Transactional
   public void deleteComment(final Long commentId) {
     final Comment comment = commentRepository.findByIdAndUserId(commentId, securityUtil.getCustomUserId())
-        .orElseThrow(() -> new NotFoundException(ErrorCode.NOT_FOUND_COMMENT));
+        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_COMMENT));
     commentRepository.delete(comment);
   }
 }
