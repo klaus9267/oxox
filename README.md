@@ -24,18 +24,26 @@
 
 </br>
 
-## 🛠️ 기술 스택
+## 🛠️ 사용 기술
 
-### Front-End
-<img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black"> <img src="https://img.shields.io/badge/Typescrit-3178C6?style=for-the-badge&logo=Typescript&logoColor=black"> <img src="https://img.shields.io/badge/Emotion/StyledComponents-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=black"> <img src="https://img.shields.io/badge/firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white">
+### BackEnd
+- Java 17
+- Spring Boot 3.3.1, Spring MVC, Spring Security
+- JPA, H2, Redis, Flyway, QueryDsl
+- Junit5, Mockite, Jacoco
+- Gradle 8.x
 
-### Back-End
-
-![oxox stack drawio](https://github.com/user-attachments/assets/cb4fc0e7-f2c7-453e-b804-b306fdeccafc)
+### DevOps
+- Ubuntu 24.04
+- Jacoco
+- SonarCloud
+- Github Action, Docker
+- Prometheus, Grafana
+- AWS EC2, RDS, S3
 
 ## 아키텍쳐
 
-![oxox drawio](https://github.com/user-attachments/assets/184502d7-bb95-4b5b-bc46-6f4ca2c51168)
+![oxox drawio (1)](https://github.com/user-attachments/assets/3e008d0e-7fa9-49c8-a744-69aa17d903b0)
 
 <br>
 
