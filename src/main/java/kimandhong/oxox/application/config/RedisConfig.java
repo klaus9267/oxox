@@ -1,6 +1,8 @@
 package kimandhong.oxox.application.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -32,8 +34,14 @@ public class RedisConfig {
 
   @Bean
   public CacheManager contentCacheManager(RedisConnectionFactory cf) {
+    PolymorphicTypeValidator typeValidator = BasicPolymorphicTypeValidator
+        .builder()
+        .allowIfSubType(Object.class)
+        .build();
+
     ObjectMapper objectMapper = new ObjectMapper()
-        .registerModule(new JavaTimeModule());
+        .registerModule(new JavaTimeModule())
+        .activateDefaultTyping(typeValidator, ObjectMapper.DefaultTyping.NON_FINAL);
 
     GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 

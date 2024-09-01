@@ -2,11 +2,12 @@ package kimandhong.oxox.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kimandhong.oxox.application.auth.JwtUtil;
+import kimandhong.oxox.domain.user.UserRepository;
 import kimandhong.oxox.domain.user.domain.User;
 import kimandhong.oxox.domain.user.dto.JoinDto;
-import kimandhong.oxox.domain.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 @AutoConfigureMockMvc
+@ExtendWith(TestContainerConfig.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Disabled
 public class BaseTestConfiguration {
