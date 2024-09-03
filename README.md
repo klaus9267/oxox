@@ -54,113 +54,109 @@
 </summary>
 
 ```
+.
 ├── README.md
 ├── build.gradle
-├── docker-compose.yml
-├── dockerfile
-├── prometheus.yml
 └── src
     ├── main
     │   ├── java
     │   │   └── kimandhong
     │   │       └── oxox
     │   │           ├── OxoxApplication.java
-    │   │           ├── auth
-    │   │           │   ├── JwtFilter.java
-    │   │           │   ├── JwtUtil.java
-    │   │           │   └── SecurityUtil.java
-    │   │           ├── bulk
-    │   │           │   ├── BulkController.java
-    │   │           │   ├── BulkRepository.java
-    │   │           │   └── BulkService.java
-    │   │           ├── common
-    │   │           │   ├── enums
-    │   │           │   │   └── S3path.java
-    │   │           │   └── swagger
-    │   │           │       ├── SwaggerCreated.java
-    │   │           │       ├── SwaggerNoContent.java
-    │   │           │       └── SwaggerOK.java
-    │   │           ├── config
-    │   │           │   ├── QueryDslConfig.java
-    │   │           │   ├── S3Config.java
-    │   │           │   ├── SecurityConfig.java
-    │   │           │   ├── SwaggerConfig.java
-    │   │           │   └── WebConfig.java
-    │   │           ├── controller
-    │   │           │   ├── CommentController.java
-    │   │           │   ├── PostController.java
-    │   │           │   ├── ProfileController.java
-    │   │           │   ├── ReactionController.java
-    │   │           │   ├── UserController.java
-    │   │           │   ├── VoteController.java
-    │   │           │   └── param
-    │   │           │       ├── CommentPaginationParam.java
-    │   │           │       ├── PostCondition.java
-    │   │           │       └── PostPaginationParam.java
-    │   │           ├── domain
-    │   │           │   ├── Comment.java
-    │   │           │   ├── Emoji.java
-    │   │           │   ├── Post.java
-    │   │           │   ├── Profile.java
-    │   │           │   ├── Reaction.java
-    │   │           │   ├── TimeEntity.java
-    │   │           │   ├── User.java
-    │   │           │   └── Vote.java
-    │   │           ├── dto
-    │   │           │   ├── comment
-    │   │           │   │   ├── CommentDto.java
-    │   │           │   │   └── CommentPaginationDto.java
-    │   │           │   ├── post
-    │   │           │   │   ├── PostDetailDto.java
-    │   │           │   │   ├── PostDto.java
-    │   │           │   │   ├── PostPaginationDto.java
-    │   │           │   │   └── RequestPostDto.java
-    │   │           │   ├── profile
-    │   │           │   │   └── ProfileDto.java
-    │   │           │   └── user
-    │   │           │       ├── JoinDto.java
-    │   │           │       ├── LoginDto.java
-    │   │           │       ├── SocialLoginDto.java
-    │   │           │       └── UserDto.java
-    │   │           ├── handler
-    │   │           │   ├── GlobalExceptionHandler.java
-    │   │           │   └── error
-    │   │           │       ├── ErrorCode.java
-    │   │           │       ├── ErrorResponse.java
-    │   │           │       └── exception
-    │   │           │           ├── BadRequestException.java
-    │   │           │           ├── BaseException.java
-    │   │           │           ├── ConflictException.java
-    │   │           │           ├── ForbiddenException.java
-    │   │           │           ├── NotFoundException.java
-    │   │           │           └── S3Exception.java
-    │   │           ├── repository
-    │   │           │   ├── CommentRepository.java
-    │   │           │   ├── PostRepository.java
-    │   │           │   ├── ProfileRepository.java
-    │   │           │   ├── ReactionRepository.java
-    │   │           │   ├── UserRepository.java
-    │   │           │   ├── VoteRepository.java
-    │   │           │   └── custom
-    │   │           │       ├── PostCustomRepository.java
-    │   │           │       └── ProfileCustomRepository.java
-    │   │           └── service
-    │   │               ├── CommentService.java
-    │   │               ├── PostService.java
-    │   │               ├── ProfileService.java
-    │   │               ├── ReactionService.java
-    │   │               ├── S3Service.java
-    │   │               ├── UserService.java
-    │   │               └── VoteService.java
+    │   │           ├── application
+    │   │           │   ├── auth
+    │   │           │   │   ├── JwtFilter.java
+    │   │           │   │   ├── JwtUtil.java
+    │   │           │   │   └── SecurityUtil.java
+    │   │           │   ├── bulk
+    │   │           │   │   ├── BulkController.java
+    │   │           │   │   ├── BulkRepository.java
+    │   │           │   │   ├── BulkService.java
+    │   │           │   │   └── Sql.java
+    │   │           │   ├── config
+    │   │           │   │   ├── QueryDslConfig.java
+    │   │           │   │   ├── RedisConfig.java
+    │   │           │   │   ├── S3Config.java
+    │   │           │   │   ├── SecurityConfig.java
+    │   │           │   │   ├── SwaggerConfig.java
+    │   │           │   │   └── WebConfig.java
+    │   │           │   ├── handler
+    │   │           │   │   ├── GlobalExceptionHandler.java
+    │   │           │   │   └── error
+    │   │           │   │       ├── CustomException.java
+    │   │           │   │       ├── ErrorCode.java
+    │   │           │   │       └── ErrorResponse.java
+    │   │           │   └── s3
+    │   │           │       ├── S3Service.java
+    │   │           │       └── S3path.java
+    │   │           └── domain
+    │   │               ├── comment
+    │   │               │   ├── CommentController.java
+    │   │               │   ├── CommentRepository.java
+    │   │               │   ├── CommentService.java
+    │   │               │   ├── domain
+    │   │               │   │   ├── Comment.java
+    │   │               │   │   └── CommentOneToMany.java
+    │   │               │   ├── dto
+    │   │               │   │   ├── dtos...
+    │   │               │   └── params
+    │   │               │       └── CommentPaginationParam.java
+    │   │               ├── common
+    │   │               │   ├── TimeEntity.java
+    │   │               │   └── swagger
+    │   │               │       ├── SwaggerCreated.java
+    │   │               │       ├── SwaggerNoContent.java
+    │   │               │       └── SwaggerOK.java
+    │   │               ├── post
+    │   │               │   ├── PostController.java
+    │   │               │   ├── PostService.java
+    │   │               │   ├── domain
+    │   │               │   │   ├── Post.java
+    │   │               │   │   └── PostOneToMany.java
+    │   │               │   ├── dto
+    │   │               │   │   ├── dtos...
+    │   │               │   ├── params
+    │   │               │   │   ├── params...
+    │   │               │   └── repository
+    │   │               │       ├── PostCustomRepository.java
+    │   │               │       └── PostRepository.java
+    │   │               ├── profile
+    │   │               │   ├── Profile.java
+    │   │               │   ├── ProfileController.java
+    │   │               │   ├── ProfileService.java
+    │   │               │   ├── dto
+    │   │               │   │   └── dtos...
+    │   │               │   └── repository
+    │   │               │       ├── ProfileCustomRepository.java
+    │   │               │       └── ProfileRepository.java
+    │   │               ├── reaction
+    │   │               │   ├── ReactionController.java
+    │   │               │   ├── ReactionRepository.java
+    │   │               │   ├── ReactionService.java
+    │   │               │   └── domain
+    │   │               │       ├── Emoji.java
+    │   │               │       └── Reaction.java
+    │   │               ├── user
+    │   │               │   ├── UserController.java
+    │   │               │   ├── UserRepository.java
+    │   │               │   ├── UserService.java
+    │   │               │   ├── domain
+    │   │               │   │   ├── User.java
+    │   │               │   │   └── UserOneToMany.java
+    │   │               │   └── dto
+    │   │               │       ├── dtos...
+    │   │               └── vote
+    │   │                   ├── Vote.java
+    │   │                   ├── VoteController.java
+    │   │                   ├── VoteRepository.java
+    │   │                   └── VoteService.java
     │   └── resources
     │       ├── application.yml
+    │       ├── banner.txt
     │       └── db
     │           └── migration
     │               ├── V1__init.sql
-    │               ├── V2__Change_emoji_to_image.sql
-    │               ├── V3__change_entity_field_name.sql
-    │               ├── V4__change_reaction_emojis.sql
-    │               └── V5__change_user_password_able_null.sql
+    │               ├── ...
 
 ```
 </details>
