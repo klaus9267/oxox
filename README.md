@@ -1,6 +1,6 @@
 # ⭕️ 반반 투표 서비스 OXOX ❌
 
-- 기간 : 2024.07.03 ~ 2024.08.04
+- 기간 : 2024.07.03 - 2024.08.04
 - 배포 URL : [oxox-one.vercel.app](https://oxox-one.vercel.app/)
 - Test email : `test@email.com`
 - Test pwd : `test password`
