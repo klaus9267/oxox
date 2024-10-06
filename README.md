@@ -29,7 +29,7 @@
 ### BackEnd
 - Java 17
 - Spring Boot 3.3.1, Spring MVC, Spring Security
-- JPA, H2, Redis, Flyway, QueryDsl
+- JPA, H2, Redis, Flyway, QueryDSL
 - Junit5, Mockite, Jacoco
 - Gradle 8.x
 
