@@ -1,0 +1,47 @@
+spring:
+  output:
+    ansi:
+      enabled: always
+  profiles:
+    active: aws
+  jackson:
+    serialization:
+      indent-output: true
+  datasource:
+    url: jdbc:h2:mem:test;MODE=MYSQL;
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+    jpa:
+      database-platform: org.hibernate.dialect.H2Dialect
+      hibernate:
+        naming:
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        ddl-auto: create-drop
+      properties:
+        hibernate:
+          default_batch_fetch_size: 1000
+          show_sql: true
+
+  flyway:
+    enabled: false
+
+jwt:
+  expiration_time: 300000 #86400000 #1일
+  secret: VlwEyVBsYt9V7zq57TejMnVUyzblYcfPQye08f7MGVA9XkHa
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+bulk:
+  password: test password
+
+redis:
+  host: localhost
+  port: 6379
