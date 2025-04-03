@@ -84,6 +84,9 @@ public class PostCustomRepository {
   }
 
   private JPAQuery<PostDto> createBaseQuery(final Pageable pageable) {
+    QVote voteYes = new QVote("voteYes");
+    QVote voteNo = new QVote("voteNo");
+
     return jpaQueryFactory.select(
             Projections.constructor(PostDto.class,
                 post.id,
@@ -92,15 +95,12 @@ public class PostCustomRepository {
                 post.createdAt,
                 post.isDone,
                 post.oneToMany.comments.size(),
-                new CaseBuilder()
-                    .when(vote.isYes.isTrue()).then(1)
-                    .otherwise(0).count(),
-                new CaseBuilder()
-                    .when(vote.isYes.isFalse()).then(1)
-                    .otherwise(0).count()
+                voteYes.count(),
+                voteNo.count()
             )
         ).from(post)
-        .leftJoin(vote).on(vote.post.eq(post))
+        .leftJoin(voteYes).on(voteYes.post.eq(post).and(voteYes.isYes.isTrue()))
+        .leftJoin(voteNo).on(voteNo.post.eq(post).and(voteNo.isYes.isFalse()))
         .groupBy(post.id)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize());
