@@ -2,13 +2,14 @@ package kimandhong.oxox.domain.post.repository;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import kimandhong.oxox.application.handler.error.CustomException;
 import kimandhong.oxox.application.handler.error.ErrorCode;
 import kimandhong.oxox.domain.post.dto.PostDto;
 import kimandhong.oxox.domain.post.params.PostCondition;
+import kimandhong.oxox.domain.vote.QVote;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -91,14 +92,16 @@ public class PostCustomRepository {
                 post.createdAt,
                 post.isDone,
                 post.oneToMany.comments.size(),
-                JPAExpressions.select(vote.count())
-                    .from(vote)
-                    .where(vote.post.eq(post).and(vote.isYes.isTrue())),
-                JPAExpressions.select(vote.count())
-                    .from(vote)
-                    .where(vote.post.eq(post).and(vote.isYes.isFalse()))
+                new CaseBuilder()
+                    .when(vote.isYes.isTrue()).then(1)
+                    .otherwise(0).count(),
+                new CaseBuilder()
+                    .when(vote.isYes.isFalse()).then(1)
+                    .otherwise(0).count()
             )
         ).from(post)
+        .leftJoin(vote).on(vote.post.eq(post))
+        .groupBy(post.id)
         .offset(pageable.getOffset())
         .limit(pageable.getPageSize());
   }
